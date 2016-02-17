@@ -1,0 +1,30 @@
+<div ng-controller="welcomeController as welcomeCtrl">
+	<fieldset>
+		<legend>Register New User</legend>
+		<p style="color: red;">{{ welcomeCtrl.errors.registration }}</p>
+		<p style="color: green;">{{ welcomeCtrl.messages.registration }}</p>
+		<form ng-submit="welcomeCtrl.register(info)">
+			<label for="email">Email:</label>
+			<input type="email" required ng-model="info.email">
+
+			<label for="handle">Handle:</label>
+			<input type="text" required ng-model="info.handle" ng-pattern="/^[0-9a-zA-Z_]*$/">
+			<label for="password">Password:</label>
+			<input type="password" required ng-model="info.passA">
+			<label for="confirm">Confirm Password:</label>
+			<input type="password" required ng-model="info.passB">
+			<input type="submit" value="Register">
+		</form>
+	</fieldset>
+	<fieldset>
+		<legend>Login Existing User</legend>
+		<p style="color: red;">{{ welcomeCtrl.errors.login }}</p>
+		<form ng-submit="welcomeCtrl.login(info)">
+			<label for="handle">Email / Handle:</label>
+			<input type="text" name="handle" ng-model="info.user">
+			<label for="password">Password:</label>
+			<input type="password" ng-model="info.password">
+			<input type="submit" value="Login">
+		</form>
+	</fieldset>
+</div>

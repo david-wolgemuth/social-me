@@ -1,0 +1,10 @@
+.conversation, .message {
+	padding: 6px;
+	margin: 12px;
+	border: 1px solid gray;
+	background-color: #888;
+	cursor: pointer;
+}
+.conversation {
+	display: inline-block;
+}

@@ -1,0 +1,23 @@
+<div ng-controller="homeController as homeCtrl">
+
+	<button ng-click="homeCtrl.logout()">Log Out</button>
+
+	<h1>Hello <span ng-bind="homeCtrl.sessUser.handle"></span></h1>
+	
+	<div>
+		<h3>All Users</h3>
+		<input type="text" ng-model="userSearch" placeholder="Search">
+		<p ng-repeat="user in homeCtrl.users | filter: userSearch | filter: '!'+homeCtrl.sessUser.handle"><span ng-bind="user.handle"></span> - <button ng-click="homeCtrl.newConvo(user)">Start Conversation</button></p>
+	</div>
+
+	<div>
+		<h3>All Conversations</h3>
+		<div class="conversation" ng-repeat="convo in homeCtrl.conversations" ng-click="homeCtrl.goToConvo(convo)">
+			<h4><span ng-bind="convo.updatedAt | date: 'EEE HH:mm'"></span></h4>
+			<div ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">
+				<p ng-bind="user.handle"></p>
+			</div>
+		</div>
+	</div>
+
+</div>

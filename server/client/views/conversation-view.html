@@ -1,0 +1,20 @@
+<div ng-controller="conversationsController as convoCtrl">
+
+	<a href="#/home">Home</a>
+	<a href ng-click="convoCtrl.logout()">Log Out</a>
+
+	<h3>Conversation</h3>
+	<h4 ng-repeat="user in convoCtrl.users" ng-bind="user.handle"></h4>
+
+	<div class="message" ng-repeat="message in convoCtrl.messages">
+		<p><span ng-bind="message.createdAt | date: 'EEE HH:mm'"></span> - <span ng-bind="message._user.handle"></span></p>
+		<hr>
+		<p ng-bind="message.content"></p>
+
+	</div>
+	<form ng-submit="convoCtrl.createMessage(message)">
+		<input type="text" ng-model="message.content" placeholder="New Message">
+		<input type="submit" value="Send Message">
+	</form>
+
+</div>
