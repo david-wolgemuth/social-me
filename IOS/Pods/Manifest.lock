@@ -1,0 +1,39 @@
+PODS:
+  - FontAwesome.swift (0.7.0)
+  - JSQMessagesViewController (7.2.0):
+    - JSQSystemSoundPlayer (~> 2.0.1)
+  - JSQSystemSoundPlayer (2.0.1)
+  - KeychainSwift (3.0.11)
+  - LTMorphingLabel (0.1.1)
+  - PureLayout (3.0.1)
+  - RSKImageCropper (1.5.1)
+  - SCLAlertView (0.5)
+  - SwiftyButton (0.4.0):
+    - SwiftyButton/CustomContent (= 0.4.0)
+  - SwiftyButton/CustomContent (0.4.0):
+    - PureLayout (~> 3.0)
+  - TextFieldEffects (1.1.0)
+
+DEPENDENCIES:
+  - FontAwesome.swift
+  - JSQMessagesViewController
+  - KeychainSwift (~> 3.0)
+  - LTMorphingLabel
+  - RSKImageCropper
+  - SCLAlertView
+  - SwiftyButton
+  - TextFieldEffects
+
+SPEC CHECKSUMS:
+  FontAwesome.swift: c6e30a1a81716306ff9c81f2d38dda88ac5b8294
+  JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
+  JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
+  KeychainSwift: 0a4214c910423543a42b0f30f25987d46178b6a5
+  LTMorphingLabel: dfc40f43a0dcf81867b1f29431f34e861a5f1b35
+  PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
+  RSKImageCropper: edd65fedb3734332818deb139906d6b7f54b8a44
+  SCLAlertView: 51a328f3985e13e6bfe8dc77123543480fa615f9
+  SwiftyButton: fffcc0d82b2b5f9ec1681f20ee9c67bed0d5c73b
+  TextFieldEffects: 8e43fea8836e97be80fc4db27a1596c9e98a26ba
+
+COCOAPODS: 0.38.2

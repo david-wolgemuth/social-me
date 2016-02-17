@@ -1,0 +1,13 @@
+platform :ios,'9.2'
+use_frameworks!
+
+
+
+pod 'TextFieldEffects'
+pod 'SCLAlertView'
+pod 'SwiftyButton'
+pod 'FontAwesome.swift'
+pod 'RSKImageCropper'
+pod 'LTMorphingLabel'
+pod 'KeychainSwift', '~> 3.0'
+pod 'JSQMessagesViewController' 

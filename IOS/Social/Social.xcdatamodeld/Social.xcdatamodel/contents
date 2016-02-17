@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9525" systemVersion="15D21" minimumToolsVersion="Automatic">
+    <entity name="Friend" representedClassName=".Friend" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Message" representedClassName=".Message" syncable="YES">
+        <attribute name="context" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="receiverID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="senderID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="senderUsername" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sent_received_date" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="User" representedClassName=".User" syncable="YES">
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Friend" positionX="-63" positionY="18" width="128" height="75"/>
+        <element name="Message" positionX="-63" positionY="-9" width="128" height="120"/>
+        <element name="User" positionX="-63" positionY="-18" width="128" height="75"/>
+    </elements>
+</model>
