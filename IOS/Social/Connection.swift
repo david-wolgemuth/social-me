@@ -22,8 +22,10 @@ class Connection {
         socket = SocketIOClient(socketURL: "http://192.168.1.227:8000")
         socket.connect()
         socket.on("connect") { data, ack in
+            // Wait To Do This Until Login Success
+            // Server will send User Id, check that it's the same id as in CoreData (or maybe NSDefaults? maybe delete all messages??)
             let userId = CoreDataManager.sharedInstance.get_user()?.id
-            self.socket.emit("login",userId!)
+            self.socket.emit("login", userId!)
             print("IOS::: WE ARE USING SOCKETS!!!")
         }
     }
@@ -37,15 +39,19 @@ class Connection {
     func listenForMessages() {
         socket.on("updateMessage") {data, ack in
             print("Connection::: got message")
+            // data will be messageId
+            // send http request for message
             self.delegate?.didReceiveMessages(data[0])
         
             
         }
     }
-    
+    // Move Login Function Into This File
   
     
     func sendMessages(data: AnyObject) {
+        // Instead of emitting with socket,
+        // http POST to server (restfully: "/messages") 
         socket.emit("newMessage",data)
     }
     
