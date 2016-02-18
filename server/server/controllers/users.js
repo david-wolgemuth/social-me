@@ -1,9 +1,7 @@
 var mongoose = require("mongoose");
 var User = mongoose.model("User");
 
-
-
-module.exports = (function () {
+module.exports = function (io) {
     return {
         index: function (req, res) {
             User.find({}).select("handle").exec(function (error, users) {
@@ -13,19 +11,32 @@ module.exports = (function () {
         },
         login: function (req, res) {
             var info = req.body;
+            console.log("Login Attempt:", info);
+            // info = { user: "david@wolgemuth.com", password: "abc123" };
             User.findOne({
                 $or: [
                    { handle: info.user }, { email: info.user }
                 ]}, function (error, user) {
-                    if (error) { console.log(error); }
-                    if (user && user.password == info.password) {
-                        res.json({ success: true });
-                        req.session.user = { _id: user._id, handle: user.handle };
-                        req.session.save();
-                        return;
+                        if (error) { console.log(error); }
+
+                        if (!user) {
+                            res.json({ user: null });
+                            return;
+                        }
+                        user.comparePassword(info.password, function (error, success) {
+                            if (error) {
+                                console.log(error);
+                            } else if (success) {
+                                var sUser = { _id: user._id, handle: user.handle };
+                                req.session.user = sUser;
+                                console.log("Logged In!");
+                                res.json({ user: sUser });
+                            } else {
+                                res.json({ user: null });
+                            }
+                        });
                     }
-                    res.json({ success: false });
-                });
+                );
         },
         logout: function (req, res) {
             req.session.destroy();
@@ -34,12 +45,19 @@ module.exports = (function () {
             res.json();
         },
         current: function (req, res) {
+            console.log("Sess User:", req.session);
             res.json(req.session.user);
+        },
+        show: function (req, res) {
+            User.findById(req.params.id, function (error, user) {
+                if (error) { console.log(error); }
+                res.json(user);
+            });
         },
         create: function (req, res) {
             var info = req.body;
-            User.find({ $or: [{ 
-                "handle": info.handle }, { "email": info.email}
+            User.find({ $or: [
+                    { "handle": info.handle }, { "email": info.email}
                 ]}, function (error, users) {
                     if (error) { console.log(error); }
                     if (users.length) {
@@ -62,4 +80,4 @@ module.exports = (function () {
             });
         },
     };
-})(); 
+}; 

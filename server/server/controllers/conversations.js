@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 var Conversation = mongoose.model("Conversation");
 var User = mongoose.model("User");
 
-module.exports = (function () {
+module.exports = function (io) {
     return {
         index: function (req, res) {
             if (!req.session.user) {
@@ -43,9 +43,9 @@ module.exports = (function () {
             .deepPopulate("users messages._user")
             .exec(function (error, conversation) {
                 if (error) { console.log(error); }
-                console.log(conversation);
+                // console.log(conversation);
                 res.json(conversation);
             });
         }
     };
-})(); 
+}; 

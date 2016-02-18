@@ -1,9 +1,21 @@
-messengerModule.controller("conversationsController", function ($scope, $routeParams, $location, conversationFactory, messageFactory, userFactory) {
+messengerModule.controller("conversationsController", function ($scope, $routeParams, $location, socket, conversationFactory, messageFactory, userFactory) {
     this.users = [];
     this.messages = [];
     this.sessUser = null;
-
     var self = this;
+
+    console.log("Setting Listener");
+    socket.on("newMessage", function (data) {
+        var convoId = data.conversation;
+        if (convoId == $routeParams.id) {
+            messageFactory.show(data.message, function (message) {
+                self.messages.push(message);
+            });
+        } else {
+            console.log("Received Message, but Wrong Convo");
+        }
+    });
+
     conversationFactory.show($routeParams.id, function (conversation) {
         userFactory.getSessionUser(function (user) {
             if (!user) {
