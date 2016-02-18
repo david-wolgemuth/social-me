@@ -1,5 +1,4 @@
-messengerModule.factory("userFactory", function ($http) {
-    var users = [];
+messengerModule.factory("userFactory", function ($http, socket) {
     var factory = {};
     factory.create = function (user, callback) {
         $http({
@@ -18,9 +17,12 @@ messengerModule.factory("userFactory", function ($http) {
             method: "POST",
             data: user
         }).then(function (res) {
-            var success = res.data.success;
-            console.log("Logged In:", success);
-            if (callback) { callback(success); }
+            var sUser = res.data.user;
+            console.log("Logged In:", sUser);
+            if (sUser) {
+                socket.emit("loggedIn", sUser._id);
+            }
+            if (callback) { callback(sUser); }
         });
     };
     factory.logout = function (callback) {

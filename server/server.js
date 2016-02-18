@@ -3,7 +3,7 @@
 // Express
 var express = require("express");
 var app = express();
-app.listen(5000, function () {
+var server = app.listen(5000, function () {
     console.log("Running");
 });
 
@@ -35,4 +35,5 @@ app.use(session({
 }));
 
 // Routes
-require("./server/config/routes.js")(app);
+var io = require("socket.io")(server);
+require("./server/config/routes.js")(app, io);

@@ -12,5 +12,15 @@ messengerModule.factory("messageFactory", function ($http) {
             if (callback) { callback(message); } 
         });
     };
+    factory.show = function (id, callback) {
+        $http({
+            url: "/messages/" + id,
+            method: "GET",
+        }).then(function (res) {
+            var message = res.data;            
+            console.log("Show Message in Factory:", message);
+            if (callback) { callback(message); }
+        });
+    };
     return factory;
 });

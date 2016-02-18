@@ -86,6 +86,8 @@ var ConversationSchema = new mongoose.Schema({
     timestamps: true
 });
 
+
+// Deep Populate Rules
 var deepPopulate = require("mongoose-deep-populate");
 UserSchema.plugin(deepPopulate, { 
     populate: {
