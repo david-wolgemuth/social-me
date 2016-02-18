@@ -2,7 +2,7 @@
 //  Friend.swift
 //  Social
 //
-//  Created by Shuhan Ng on 2/15/16.
+//  Created by Shuhan Ng on 2/17/16.
 //  Copyright © 2016 Shuhan Ng. All rights reserved.
 //
 

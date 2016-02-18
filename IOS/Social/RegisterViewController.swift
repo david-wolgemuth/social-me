@@ -14,7 +14,7 @@ import CoreData
 
 
 
-class RegisterViewController: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,RSKImageCropViewControllerDelegate{
+class RegisterViewController: UIViewController,UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,RSKImageCropViewControllerDelegate,ConnectionRegisterDelegate,ConnectionLoginDelegate{
     
   
   
@@ -39,6 +39,9 @@ class RegisterViewController: UIViewController,UITextFieldDelegate,UIImagePicker
         usernameTextField.delegate = self
         emailTextField.delegate = self
         confirmPasswordTextField.delegate = self
+        
+        Connection.sharedInstance.loginDelegate = self
+        Connection.sharedInstance.RegisterDelegate = self
         
         self.addPhotoButton.imageView?.contentMode = UIViewContentMode.ScaleAspectFill
  
@@ -77,9 +80,6 @@ class RegisterViewController: UIViewController,UITextFieldDelegate,UIImagePicker
         if usernameTextField.text == "" {
             ErrorStr.append("username cannot be empty ")
         }
-        if passwordTextField.text?.characters.count < 6 {
-            ErrorStr.append("password cannot be less than 6 characters ")
-        }
         if confirmPasswordTextField.text != passwordTextField.text {
             ErrorStr.append("confirm password does not match password ")
         }
@@ -91,68 +91,39 @@ class RegisterViewController: UIViewController,UITextFieldDelegate,UIImagePicker
             }
             alert.showError("Error",subTitle: "Please re-entered: \(errors)")
         } else {
-
-            if let urlToReq = NSURL(string: "http://192.168.1.227:8000/users") {
-                let request: NSMutableURLRequest = NSMutableURLRequest(URL: urlToReq)
-                request.HTTPMethod = "POST"
-                
-                let userData: NSMutableDictionary = ["email": emailTextField.text!, "username": usernameTextField.text!,"password": passwordTextField.text!,"image": ""]
-                if let image = imageChosen {
-                    let data = UIImageJPEGRepresentation(image, 0.1)
-                    let imageData = data?.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.Encoding64CharacterLineLength)
-                    userData.setValue(imageData, forKey: "image")
-                }
-                var userJsonData: NSData?
-                do {
-                    userJsonData = try NSJSONSerialization.dataWithJSONObject(userData, options: NSJSONWritingOptions.PrettyPrinted)
-                    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-                    request.setValue(NSString(format: "%lu", userJsonData!.length) as String, forHTTPHeaderField: "Content-Length")
-                    request.HTTPBody = userJsonData!
-                    let session: NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-                    let task = session.dataTaskWithRequest(request) {
-                        (data, response ,error) in
-                        let message = NSString(data: data!, encoding: NSUTF8StringEncoding) as! String
-        
- 
-                        dispatch_async(dispatch_get_main_queue()) {
-                            
-                            if message == "error" {
-                                alert.showError("Error", subTitle: "this email has been used, please use another one")
-                                self.submitButton.enabled = true
-                            } else {
-                                CoreDataManager.sharedInstance.saveUser(message, email: self.emailTextField.text!, password: self.passwordTextField.text!)
-                                
-                                
-                                
-                              
-                                alert.addButton("Log me in",target:self, selector:  Selector("logNewUserIn"))
-                              
-                                alert.showSuccess("Success!", subTitle: "You have successfully registered!")
-                                self.submitButton.enabled = true
-
-                            }
-                        }
-                    }
-                    task.resume()
-                } catch let error {
-                    print("send http request FAILS! :::: \(error)")
-                }
-            }
+            Connection.sharedInstance.register(emailTextField.text!, username: usernameTextField.text!, password: passwordTextField.text!, profilePic: imageChosen)
         }
     }
     
     func logNewUserIn() {
-        Connection.sharedInstance
-        performSegueWithIdentifier("finishReg", sender: nil)
+        Connection.sharedInstance.login(emailTextField.text!, password: passwordTextField.text!)
+       
     }
     
-  
+    func didLogin(success: Bool) {
+        if success == true {
+            performSegueWithIdentifier("finishReg", sender: nil)
+        } else {
+            let alert = SCLAlertView()
+            alert.showError("Error",subTitle: "Email/Password is wrong.")
+        }
+    }
+    
     
   
+    func didRegister(success: Bool) {
+        let alert = SCLAlertView()
+        if success == true {
+            alert.addButton("Log me in",target:self, selector:  Selector("logNewUserIn"))
+            alert.showSuccess("Success!", subTitle: "You have successfully registered!")
+           
+        } else {
+            alert.showError("Error", subTitle: "Sorry, we could not get you registered. Makesure email and username have not been used before")
+        }
+        self.submitButton.enabled = true
+    }
 
-        
-    
-    
+
     override func viewWillDisappear(animated: Bool) {
         self.view.endEditing(true)
         super.viewWillDisappear(animated)

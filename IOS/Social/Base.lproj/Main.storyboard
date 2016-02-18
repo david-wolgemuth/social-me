@@ -62,7 +62,7 @@
                                     <segue destination="Gzp-U5-pyR" kind="presentation" id="Zyl-Sy-ipe"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="email" textAlignment="natural" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="vEb-JW-B7M" customClass="IsaoTextField" customModule="TextFieldEffects">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="email/username" textAlignment="natural" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="vEb-JW-B7M" customClass="IsaoTextField" customModule="TextFieldEffects">
                                 <rect key="frame" x="70" y="164" width="202" height="61"/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="22"/>
@@ -365,6 +365,16 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="dyJ-DP-z0D">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="IcT-fX-N67">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="JxC-Ze-LGS">
+                                <rect key="frame" x="16" y="7" width="108" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="getSessionUser"/>
+                                <connections>
+                                    <action selector="getSessionUsers:" destination="Fcb-Ed-l7c" eventType="touchUpInside" id="a0z-8p-YOe"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="q8F-hQ-UJJ">
                             <color key="tintColor" red="0.39173155939999998" green="1" blue="0.77400366389999997" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
@@ -494,6 +504,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="Kd4-i3-PgY"/>
+        <segue reference="8C4-AJ-qq9"/>
     </inferredMetricsTieBreakers>
 </document>

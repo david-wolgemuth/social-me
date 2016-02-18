@@ -12,10 +12,11 @@ import FontAwesome_swift
 import LTMorphingLabel
 import SwiftyButton
 import SCLAlertView
+import KeychainSwift
 
 
 
-class LoginViewController: UIViewController,UITextFieldDelegate,LTMorphingLabelDelegate{
+class LoginViewController: UIViewController,UITextFieldDelegate,LTMorphingLabelDelegate,ConnectionLoginDelegate{
     
     private var i = 0
     private var textArray = [
@@ -50,10 +51,12 @@ class LoginViewController: UIViewController,UITextFieldDelegate,LTMorphingLabelD
         
         timer = NSTimer.scheduledTimerWithTimeInterval(2.5, target: self, selector: Selector("changeText"), userInfo: nil,repeats:true)
         
+        let prefs = NSUserDefaults.standardUserDefaults()
+        let keychain = KeychainSwift()
         
-        if let user = CoreDataManager.sharedInstance.get_user() {
-             emailTextField.text = user.email
-            if let password = CoreDataManager.sharedInstance.password() {
+        if let user = prefs.stringForKey("user"){
+             emailTextField.text = user
+            if let password = keychain.get("password") {
                passwordTextField.text = password
             }
         }
@@ -62,35 +65,25 @@ class LoginViewController: UIViewController,UITextFieldDelegate,LTMorphingLabelD
     
     @IBOutlet weak var loginButton: SwiftyButton!
     @IBAction func loginButtonPressed(sender: SwiftyButton) {
+        
         loginButton.enabled = false
-        if let urlToReq = NSURL(string: "http://192.168.1.227:8000/users/login") {
-            let request: NSMutableURLRequest = NSMutableURLRequest(URL: urlToReq)
-            request.HTTPMethod = "POST"
-            let bodyData = "email=\(emailTextField.text!)&password=\(passwordTextField.text!)"
-            request.HTTPBody = bodyData.dataUsingEncoding(NSUTF8StringEncoding)
-            let session: NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-            let task = session.dataTaskWithRequest(request) {
-                (data,response,error) in
-                let message = NSString(data: data!, encoding: NSUTF8StringEncoding) as? String
-                
-                dispatch_async(dispatch_get_main_queue()) {
-                    
-                    if message == "wrong" {
-                        let alert = SCLAlertView()
-                        alert.showError("Error", subTitle: "Email/Password is wrong.")
-                        self.loginButton.enabled = true
-                        
-                    } else {
-                        CoreDataManager.sharedInstance.saveUser(message!, email: self.emailTextField.text!, password: self.passwordTextField.text!)
-                        Connection.sharedInstance
-                        self.performSegueWithIdentifier("finishLog", sender:nil)
-                        
-                    }
-                }
-            }
-            task.resume()
+        Connection.sharedInstance.loginDelegate = self
+        Connection.sharedInstance.login(emailTextField.text!,password: passwordTextField.text!)
+    }
+    
+    
+    func didLogin(success: Bool) {
+        if success == true {
+            self.performSegueWithIdentifier("finishLog", sender: nil)
+            
+        } else {
+            let alert = SCLAlertView()
+            alert.showError("Error",subTitle: "Email/Password is wrong.")
+            loginButton.enabled = true
         }
     }
+
+
     
     
     func changeText() {
