@@ -22,23 +22,15 @@ class CoreDataManager {
     private var Requests: [NSFetchRequest?]
     
     private init() {
-    
-        
-   
- 
-      
         Entities = [NSEntityDescription.entityForName("Message", inManagedObjectContext:managedObjectContext),NSEntityDescription.entityForName("Friend", inManagedObjectContext:managedObjectContext)]
         
         Requests = [NSFetchRequest(entityName:"Message"),NSFetchRequest(entityName:"Friend")]
-    
-        
+        self.fetch_friends()
     }
     
     func fetch_friends() {
         do{
             friends = try managedObjectContext.executeFetchRequest(Requests[1]!) as? [Friend]
-            
-            
         } catch let error {
             print("error in fetching friends....\(error)")
         }
@@ -52,7 +44,7 @@ class CoreDataManager {
     func get_friends() -> [Friend]? {
         return friends
     }
-    
+
     func get_messages(friend_id: String) -> [Message]? {
         var messages: [Message]?
         let predicate = NSPredicate(format: "(senderID == %@) OR (receiverID == %@)", friend_id,friend_id)
@@ -103,14 +95,11 @@ class CoreDataManager {
             print("error in adding new message to core data: \(error)")
             return nil
         }
-      
-        
         
     }
  
     
     func deleteAllMessages() {
-     
         Requests[0]!.includesPropertyValues = false
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: Requests[1]!)
         do {
@@ -121,13 +110,9 @@ class CoreDataManager {
         } catch let error {
             print("error in deleting messages: \(error)")
         }
-        
-        
     }
     
     func deleteAllFriends() {
-        
-   
         Requests[1]!.includesPropertyValues = false
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: Requests[1]!)
         do {
@@ -138,7 +123,6 @@ class CoreDataManager {
         } catch let error {
             print("error in deleting friends: \(error)")
         }
-        
     }
     
     

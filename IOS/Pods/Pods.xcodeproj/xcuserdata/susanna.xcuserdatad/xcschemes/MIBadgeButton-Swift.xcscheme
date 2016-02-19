@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C1459F4B708A1CEDE19F51E0"
-               BuildableName = "SCLAlertView.framework"
-               BlueprintName = "SCLAlertView"
+               BlueprintIdentifier = "A03E6EC6DC6E1CEFEF4D3F13"
+               BuildableName = "MIBadgeButton_Swift.framework"
+               BlueprintName = "MIBadgeButton-Swift"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
