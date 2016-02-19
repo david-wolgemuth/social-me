@@ -6,10 +6,9 @@
 	<h3>Conversation</h3>
 	<h4 ng-repeat="user in convoCtrl.users" ng-bind="user.handle"></h4>
 
-	<div class="message" ng-repeat="message in convoCtrl.messages">
-		<p><span ng-bind="message.createdAt | date: 'EEE HH:mm'"></span> - <span ng-bind="message._user.handle"></span></p>
-		<hr>
-		<p ng-bind="message.content"></p>
+	<div class="panel" ng-class="(message._user._id==convoCtrl.sessUser._id) ? 'blue' : 'red'" ng-repeat="message in convoCtrl.messages">
+		<div class="panel-heading"><span ng-bind="message._user.handle"></span> <span class="badge" ng-bind="message.createdAt | date: 'EEE HH:mm'"></span></div>
+		<div class="panel-body" ng-bind="message.content"></div>
 
 	</div>
 	<form ng-submit="convoCtrl.createMessage(message)">

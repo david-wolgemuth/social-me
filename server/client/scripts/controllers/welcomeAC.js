@@ -2,7 +2,7 @@ messengerModule.controller("welcomeController", function (userFactory, $location
     var self = this;
     this.errors = {};
     this.messages = {};
-
+    this.currentForm = 'login';
     // Register New User 
     this.register = function (info) {
         this.errors = {};

@@ -2,8 +2,10 @@
 	<fieldset>
 		<legend>Register New User</legend>
 		<p style="color: red;">{{ welcomeCtrl.errors.registration }}</p>
-		<p style="color: green;">{{ welcomeCtrl.messages.registration }}</p>
-		<form ng-submit="welcomeCtrl.register(info)">
+		<p style="color: green;">{{ welcomeCtrl.messages.registration }}
+		<p style="color: red;">{{ welcomeCtrl.errors.login }}</p>
+		</p>
+		<form ng-if="welcomeCtrl.currentForm=='registration'" ng-submit="welcomeCtrl.register(info)">
 			<label for="email">Email:</label>
 			<input type="email" required ng-model="info.email">
 
@@ -15,11 +17,7 @@
 			<input type="password" required ng-model="info.passB">
 			<input type="submit" value="Register">
 		</form>
-	</fieldset>
-	<fieldset>
-		<legend>Login Existing User</legend>
-		<p style="color: red;">{{ welcomeCtrl.errors.login }}</p>
-		<form ng-submit="welcomeCtrl.login(info)">
+		<form ng-if="welcomeCtrl.currentForm=='login'" ng-submit="welcomeCtrl.login(info)">
 			<label for="handle">Email / Handle:</label>
 			<input type="text" name="handle" ng-model="info.user">
 			<label for="password">Password:</label>

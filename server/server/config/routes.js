@@ -36,7 +36,7 @@ module.exports = function (app, io) {
     app.get("/friends", friends.index);
     app.get("/friends/requests", friends.requests);
     //      -> [{ _id: "_", handle: "david" }]
-    
+
     app.post("/friends", friends.create);
     //      <- { id: friendId } (must be logged in)
     //      -> { confirmed: Boolean }  (false means waiting for response)
@@ -45,7 +45,7 @@ module.exports = function (app, io) {
 
     //------------ Session -------------//
     app.post("/login", users.login);
-    //      -> { _id: "_", handle: "david" } / null (if not found)
+    //      -> { user: { _id: "_", handle: "david" }} / null (if not found)
     app.get("/logout", users.logout);
     // res.json()  (If any response, successful logout)
 
