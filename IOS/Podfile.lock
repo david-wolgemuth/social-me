@@ -5,9 +5,10 @@ PODS:
   - JSQSystemSoundPlayer (2.0.1)
   - KeychainSwift (3.0.11)
   - LTMorphingLabel (0.1.1)
+  - MIBadgeButton-Swift (0.3)
   - PureLayout (3.0.1)
   - RSKImageCropper (1.5.1)
-  - SCLAlertView (0.5)
+  - SCLAlertView (0.5.1)
   - SwiftyButton (0.4.0):
     - SwiftyButton/CustomContent (= 0.4.0)
   - SwiftyButton/CustomContent (0.4.0):
@@ -19,6 +20,7 @@ DEPENDENCIES:
   - JSQMessagesViewController
   - KeychainSwift (~> 3.0)
   - LTMorphingLabel
+  - MIBadgeButton-Swift
   - RSKImageCropper
   - SCLAlertView
   - SwiftyButton
@@ -30,9 +32,10 @@ SPEC CHECKSUMS:
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   KeychainSwift: 0a4214c910423543a42b0f30f25987d46178b6a5
   LTMorphingLabel: dfc40f43a0dcf81867b1f29431f34e861a5f1b35
+  MIBadgeButton-Swift: 3a8ce410e99ca307036040873c6836f0735c0139
   PureLayout: f35f5384c9c4e4479df041dbe33ad7577b71ddfb
   RSKImageCropper: edd65fedb3734332818deb139906d6b7f54b8a44
-  SCLAlertView: 51a328f3985e13e6bfe8dc77123543480fa615f9
+  SCLAlertView: 3ac39a863d3e10fc165662b1228b03402297aea9
   SwiftyButton: fffcc0d82b2b5f9ec1681f20ee9c67bed0d5c73b
   TextFieldEffects: 8e43fea8836e97be80fc4db27a1596c9e98a26ba
 

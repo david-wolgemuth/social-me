@@ -82,8 +82,6 @@ class LoginViewController: UIViewController,UITextFieldDelegate,LTMorphingLabelD
             loginButton.enabled = true
         }
     }
-
-
     
     
     func changeText() {

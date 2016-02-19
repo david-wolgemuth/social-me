@@ -375,12 +375,6 @@
                                 </connections>
                             </button>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="q8F-hQ-UJJ">
-                            <color key="tintColor" red="0.39173155939999998" green="1" blue="0.77400366389999997" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <action selector="addFriendsButtonPressed:" destination="Fcb-Ed-l7c" id="8wR-Yf-Uel"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
