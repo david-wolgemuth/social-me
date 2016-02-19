@@ -7,7 +7,14 @@ var UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     handle: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    friends: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", friendshipConfirmed: false }],
+    friends: [{ 
+        friendId: {
+            type: mongoose.Schema.Types.ObjectId, 
+            ref: "User",
+        },
+        confirmed: { type: Boolean, default: false }
+    }],
+
     profileImage: { type: mongoose.Schema.Types.ObjectId, ref: "Image" },
     conversations: [{
         type: mongoose.Schema.Types.ObjectId,
