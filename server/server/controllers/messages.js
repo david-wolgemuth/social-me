@@ -5,8 +5,13 @@ var Conversation = mongoose.model("Conversation");
 module.exports = function (io) {
     return {
         create: function (req, res) {
+            var user = req.session.user;
+            if (!user) {
+                console.log("Not Logged In?");
+                return;
+            }
             var message = new Message({
-                _user: req.body.userId,
+                _user: user._id,
                 _conversation: req.body.conversationId,
                 content: req.body.content
             });

@@ -4,10 +4,28 @@ var User = mongoose.model("User");
 module.exports = function (io) {
     return {
         index: function (req, res) {
-            User.find({}).select("handle").exec(function (error, users) {
-                if (error) { console.log(error); }
-                res.json(users);
-            });
+            console.log("Search Query:", req.query);
+            if (req.query.user) {
+                var user = req.query.user;
+                User.findOne({
+                    $or: [
+                       { handle: user }, { email: user }
+                    ]}, function (error, foundUser) {
+                            if (error) { console.log(error); }
+                            if (foundUser) {
+                                console.log(foundUser);
+                                res.json({ _id: foundUser._id, handle: foundUser.handle });
+                            } else {
+                                res.json(null);
+                            }
+                    }
+                );
+            } else {
+                User.find({}).select("handle").exec(function (error, users) {
+                    if (error) { console.log(error); }
+                    res.json(users);
+                });
+            }
         },
         login: function (req, res) {
             var info = req.body;
@@ -78,6 +96,6 @@ module.exports = function (io) {
                         }
                     });
             });
-        },
+        }
     };
 }; 
