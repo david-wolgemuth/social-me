@@ -1,0 +1,6 @@
+framework module CSNotificationView {
+  umbrella header "CSNotificationView-umbrella.h"
+
+  export *
+  module * { export * }
+}

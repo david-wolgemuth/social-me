@@ -11,7 +11,7 @@ import SCLAlertView
 import MIBadgeButton_Swift
 
 
-class ContactsViewController: UIViewController,ConnectionSocketDelegate,ConnectionAddFriendDelegate{
+class ContactsViewController: UIViewController,ConnectionSocketDelegate{
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -26,34 +26,28 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,Connecti
     override func viewDidLoad() {
         super.viewDidLoad()
         Connection.sharedInstance.delegate = self
-        Connection.sharedInstance.addFriendDelegate = self
-        
+            
         
         
         let userPlusImage = UIImage.fontAwesomeIconWithName(.UserPlus, textColor: UIColor(red: 100.0/255.0, green: 255.0/255.0, blue: 197.0/255.0, alpha: 1.0), size: CGSizeMake(30,30))
-        
-        Connection.sharedInstance.checkFriendRequest({
-            friendsRequest in
-            if friendsRequest.count > 0 {
-                for friends in friendsRequest {
-                    self.ToConfirm[friends["_id"]! as! String] = friends["handle"]! as! String
-                    
-                }
-                print(self.ToConfirm)
-                let button = MIBadgeButton(type: .Custom)
-                button.badgeString = String(friendsRequest.count)
-                button.frame = CGRectMake(0, 0, 70, 40)
-                button.badgeEdgeInsets = UIEdgeInsetsMake(15, 0, 0, 15)
-                button.setImage(userPlusImage, forState: .Normal)
-                button.addTarget(self, action: Selector("addFriendsButtonPressed:"), forControlEvents: UIControlEvents.TouchUpInside)
-                let barButton = UIBarButtonItem(customView: button)
-                self.navigationItem.rightBarButtonItem = barButton
-            } else {
-                self.AddFriendButton = UIBarButtonItem(image:userPlusImage, style: UIBarButtonItemStyle.Plain, target:self, action:  Selector("addFriendsButtonPressed:"))
-                self.navigationItem.rightBarButtonItem = self.AddFriendButton
-                
-            }
-        })
+        let count = Connection.sharedInstance.getFriendRequestCount()
+        if count > 0 {
+            let button = MIBadgeButton(type: .Custom)
+            button.badgeString = String(count)
+            button.frame = CGRectMake(0, 0, 70, 40)
+            button.badgeEdgeInsets = UIEdgeInsetsMake(15, 0, 0, 15)
+            button.setImage(userPlusImage, forState: .Normal)
+            button.addTarget(self, action: Selector("addFriendsButtonPressed:"), forControlEvents: UIControlEvents.TouchUpInside)
+            let barButton = UIBarButtonItem(customView: button)
+            self.navigationItem.rightBarButtonItem = barButton
+            
+        } else {
+            self.AddFriendButton = UIBarButtonItem(image:userPlusImage, style: UIBarButtonItemStyle.Plain, target:self, action:  Selector("addFriendsButtonPressed:"))
+            self.navigationItem.rightBarButtonItem = self.AddFriendButton
+           
+        }
+    }
+    
 
    
 
@@ -85,24 +79,14 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,Connecti
 //            }
 //        }
 //        Connection.sharedInstance.listenForMessages()
-    }
+//    }
  
     func didReceiveMessages(data: AnyObject) {
         //implement notification 
         
     }
     
-   
-    func parseJSON(inputData: NSData) -> NSArray? {
-        var arrOfObjects: NSArray?
-        do {
-            arrOfObjects = try NSJSONSerialization.JSONObjectWithData(inputData, options: .MutableContainers) as? NSArray
-            
-        } catch let error as NSError {
-            print(error)
-        }
-        return arrOfObjects
-    }
+
     
 //   
 //    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -159,63 +143,14 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,Connecti
 //    }
     
 
- 
-    @IBAction func getSessionUsers(sender: UIButton) {
-        Connection.sharedInstance.getSessionUsers()
-    }
+
   
     
     func addFriendsButtonPressed(sender: UIBarButtonItem) {
-        let alert = SCLAlertView()
-        let friendEmail = alert.addTextField("xxxx@xxxx.com OR xxxx")
-        var tapped: Bool = false
-        alert.addButton("Add") {
-            
-            Connection.sharedInstance.FindFriend(friendEmail.text!)
-            tapped = true
+        performSegueWithIdentifier("friendView", sender: nil)
+    }
+   
 
-        }
-        
-        alert.hideWhenBackgroundViewIsTapped = true
-        alert.showEdit("Add friend",subTitle: "Enter user's email address or username",closeButtonTitle: "Cancel")
-        if tapped {
-            AddFriendButton?.enabled = false
-        }
-        
-    }
-    
-    func didFindFriend(success: Bool) {
-        let alert = SCLAlertView()
-        AddFriendButton?.enabled = true
-     
-        if success == false {
-            alert.showError("Error!",subTitle: "No User Found!",closeButtonTitle: "Okay I get it")
-        }
-        
-        
-        
-//        
-//        if success == true {
-////            alertViewResponder = alert.showWait("Sending request..",subTitle: "")
-//         
-//        } else {
-//            alert.showCloseButton = true
-//            alert.showError("Error! No user Found!",subTitle: "",closeButtonTitle: "Okay I get it")
-//        }
-    }
-    
-    func didAcceptFriendRequest(success: Bool) {
-        let alert = SCLAlertView()
-
-        if success == true {
-            print("true")
-            alert.showError("Oops!", subTitle: "You guys are already Friend",closeButtonTitle: "Close")
-        } else {
-            print("false")
-            alert.showSuccess("Success",subTitle: "Sent Request!")
-        }
- 
-    }
     
 
     

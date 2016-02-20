@@ -4,6 +4,16 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>CSNotificationView-CSNotificationView.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>CSNotificationView.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>FontAwesome.swift-FontAwesome.swift.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -72,17 +82,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>2295836853F11671D7186FA65E137347</key>
+		<key>15339A1B6F401CD8CD8798DEF2AE76B6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>32D4CC96A951C03EF8337F311B944116</key>
+		<key>167E759BF81F6BB4F8A619506C4920D0</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>40E8FD2902D8FB84F35F75827B98765C</key>
+		<key>2DED90606696134596810345B5E56B16</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4C65CE3EBC7C21EC3B080CA3612814AC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -92,22 +107,32 @@
 			<key>primary</key>
 			<true/>
 		</dict>
+		<key>616B74C45FD740D4A13CC2AE8483F8A2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6B1F53845F55C1856DCA83264309A192</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
 		<key>6C9C6251FAB8CBA84B9ECBE7E716EB2A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>772695976659D145CBCAC0729E7218E8</key>
+		<key>870BD5660FB6251F7E30691956A72FAA</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>8262A6ADA80E3B31DE57BE06F97F8AD0</key>
+		<key>A4C708DE67648DDA0E4A142516829E5B</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AC61972254021F37482348781DCE467A</key>
+		<key>A81DE01F421730A4238CBFBADF9F4A9F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -117,12 +142,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>C2BFFBCD4BC70174595A311D858C2A65</key>
-		<dict>
-			<key>primary</key>
-			<true/>
-		</dict>
-		<key>CFAF4721F193C9BE700B961737D2D2C7</key>
+		<key>D7C87776911C60AD3209B3E9356CBC26</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -132,7 +152,7 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F5D1819456DA0467BEFEA7A0C5FFEBCE</key>
+		<key>EBD63FA2AA1183370D0C465A9A40BB85</key>
 		<dict>
 			<key>primary</key>
 			<true/>

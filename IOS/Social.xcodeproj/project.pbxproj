@@ -29,8 +29,11 @@
 		125EE2161C75424F00122531 /* SocketTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125EE2021C75424F00122531 /* SocketTypes.swift */; };
 		125EE2171C75424F00122531 /* SwiftRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125EE2031C75424F00122531 /* SwiftRegex.swift */; };
 		125EE2181C75424F00122531 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125EE2041C75424F00122531 /* WebSocket.swift */; };
+		125EE21A1C77DD9900122531 /* tabBarController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125EE2191C77DD9900122531 /* tabBarController2.swift */; };
+		125EE21C1C77E2DC00122531 /* friendRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125EE21B1C77E2DC00122531 /* friendRequestViewController.swift */; };
 		126961AA1C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 126961A91C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m */; };
 		126961B01C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 126961AF1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
+		127692471C77FE1300410D79 /* searchFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692461C77FE1300410D79 /* searchFriendViewController.swift */; };
 		127E01A91C658EFC007C38C0 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127E01A81C658EFC007C38C0 /* ContactsViewController.swift */; };
 		127E01AB1C6690E9007C38C0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127E01AA1C6690E9007C38C0 /* UserCell.swift */; };
 		12943E2D1C686B7600A8D2FC /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12943E2C1C686B7600A8D2FC /* MessageViewController.swift */; };
@@ -92,11 +95,14 @@
 		125EE2021C75424F00122531 /* SocketTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketTypes.swift; path = ../../../IOS/SocketIOClientSwift/Source/SocketTypes.swift; sourceTree = "<group>"; };
 		125EE2031C75424F00122531 /* SwiftRegex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftRegex.swift; path = ../../../IOS/SocketIOClientSwift/Source/SwiftRegex.swift; sourceTree = "<group>"; };
 		125EE2041C75424F00122531 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSocket.swift; path = ../../../IOS/SocketIOClientSwift/Source/WebSocket.swift; sourceTree = "<group>"; };
+		125EE2191C77DD9900122531 /* tabBarController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tabBarController2.swift; sourceTree = "<group>"; };
+		125EE21B1C77E2DC00122531 /* friendRequestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = friendRequestViewController.swift; sourceTree = "<group>"; };
 		126961A71C5DC3770008F8EC /* Social-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Social-Bridging-Header.h"; sourceTree = "<group>"; };
 		126961A81C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
 		126961A91C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
 		126961AE1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
 		126961AF1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
+		127692461C77FE1300410D79 /* searchFriendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = searchFriendViewController.swift; sourceTree = "<group>"; };
 		127E01A81C658EFC007C38C0 /* ContactsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		127E01AA1C6690E9007C38C0 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		12943E2C1C686B7600A8D2FC /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
@@ -210,6 +216,9 @@
 			children = (
 				12943E371C6882C000A8D2FC /* SocketIO */,
 				12943E601C693ABC00A8D2FC /* CoreDataManager.swift */,
+				127692461C77FE1300410D79 /* searchFriendViewController.swift */,
+				125EE2191C77DD9900122531 /* tabBarController2.swift */,
+				125EE21B1C77E2DC00122531 /* friendRequestViewController.swift */,
 				12A3804E1C5D4C8B00F2ADF9 /* AppDelegate.swift */,
 				12A380521C5D4C8B00F2ADF9 /* Main.storyboard */,
 				127E01AA1C6690E9007C38C0 /* UserCell.swift */,
@@ -453,6 +462,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				127692471C77FE1300410D79 /* searchFriendViewController.swift in Sources */,
 				1207C2941C5DAC2A00CBD353 /* LoginViewController.swift in Sources */,
 				125EE2111C75424F00122531 /* SocketIOClientStatus.swift in Sources */,
 				12943E331C6874B000A8D2FC /* TabBarController.swift in Sources */,
@@ -467,6 +477,7 @@
 				125EE2171C75424F00122531 /* SwiftRegex.swift in Sources */,
 				125EE2181C75424F00122531 /* WebSocket.swift in Sources */,
 				12D7F30F1C753A3600D665FF /* Message+CoreDataProperties.swift in Sources */,
+				125EE21C1C77E2DC00122531 /* friendRequestViewController.swift in Sources */,
 				126961B01C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				125EE2121C75424F00122531 /* SocketLogger.swift in Sources */,
 				125EE20F1C75424F00122531 /* SocketIOClient.swift in Sources */,
@@ -475,6 +486,7 @@
 				125EE2071C75424F00122531 /* SocketAnyEvent.swift in Sources */,
 				125EE20A1C75424F00122531 /* SocketEngineClient.swift in Sources */,
 				125EE2091C75424F00122531 /* SocketEngine.swift in Sources */,
+				125EE21A1C77DD9900122531 /* tabBarController2.swift in Sources */,
 				12A380571C5D4C8B00F2ADF9 /* Social.xcdatamodeld in Sources */,
 				12D7F30E1C753A3600D665FF /* Friend.swift in Sources */,
 				125EE20B1C75424F00122531 /* SocketEnginePacketType.swift in Sources */,

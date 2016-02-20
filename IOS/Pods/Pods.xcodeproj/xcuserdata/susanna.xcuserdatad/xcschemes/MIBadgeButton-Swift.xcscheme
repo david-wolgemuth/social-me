@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A03E6EC6DC6E1CEFEF4D3F13"
+               BlueprintIdentifier = "901072E924CD7AEAA1C423DE"
                BuildableName = "MIBadgeButton_Swift.framework"
                BlueprintName = "MIBadgeButton-Swift"
                ReferencedContainer = "container:Pods.xcodeproj">

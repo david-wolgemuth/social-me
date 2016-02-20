@@ -1,4 +1,5 @@
 PODS:
+  - CSNotificationView (0.5.4)
   - FontAwesome.swift (0.7.0)
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
@@ -16,6 +17,7 @@ PODS:
   - TextFieldEffects (1.1.0)
 
 DEPENDENCIES:
+  - CSNotificationView
   - FontAwesome.swift
   - JSQMessagesViewController
   - KeychainSwift (~> 3.0)
@@ -27,6 +29,7 @@ DEPENDENCIES:
   - TextFieldEffects
 
 SPEC CHECKSUMS:
+  CSNotificationView: 0792f5220163c2befaf1a9716aa3d5a7d6bd4fb1
   FontAwesome.swift: c6e30a1a81716306ff9c81f2d38dda88ac5b8294
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
