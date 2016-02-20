@@ -1,8 +1,9 @@
-messengerModule.controller("homeController", function (userFactory, conversationFactory, $location) {
+messengerModule.controller("homeController", function (userFactory, conversationFactory, $scope, $location, $uibModal) {
     var self = this;
     this.sessUser = null;
     this.users = [];
     this.conversations = [];
+    this.ccid = null;
 
     userFactory.getSessionUser(function (user) {
         if (!user) {
@@ -30,6 +31,23 @@ messengerModule.controller("homeController", function (userFactory, conversation
         });
     };
     this.goToConvo = function (convo) {
-        $location.path("/conversations/" + convo._id);
+        this.ccid = convo._id;
+        $scope.$broadcast("ccid", { id: this.ccid });
+        // $location.path("/conversations/" + convo._id);
+    };
+    this.findFriends = function () {
+        console.log("Trying");
+        $scope.modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: "views/find-friends-modal.html",
+            scope: $scope
+        });
+
+    };
+})
+.directive("showConvo", function ($compile) {
+    return {
+        template: "<div conversation convo-id=homeCtrl.ccid></div>",
     };
 });
+

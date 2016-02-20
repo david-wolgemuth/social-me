@@ -5062,6 +5062,11 @@ a.thumbnail.active {
   right: -21px;
   color: inherit;
 }
+.alert-primary {
+  background-color: #2c3e50;
+  border-color: #2c3e50;
+  color: #ffffff;
+}
 .alert-success {
   background-color: #18bc9c;
   border-color: #18bc9c;

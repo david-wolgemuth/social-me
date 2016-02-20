@@ -15,7 +15,6 @@ app.use(bodyParser.json());
 // Static Files
 var path = require("path");
 app.use(express.static(path.join(__dirname, "client")));
-app.use(express.static(path.join(__dirname, "bower_components")));
 
 // Database
 var connection = require("./server/config/database.js");

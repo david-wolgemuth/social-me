@@ -1,23 +1,53 @@
 <div ng-controller="homeController as homeCtrl">
 
-	<button ng-click="homeCtrl.logout()">Log Out</button>
+	<nav class="navbar navbar-inverse" role="navigation">
+		<div class="container">
+			<div class="navbar-header">
+				<a href="#/" class="navbar-brand">Social ME</a>
+			</div>
+			<button class="navbar-right navbar-btn btn btn-success" ng-click="homeCtrl.logout()">Log Out</button>
+			<!-- <div class="navbar-header navbar-right"> -->
+				<a href="#/profile" class="nav navbar-brand navbar-right">{{ homeCtrl.sessUser.handle }} | </a>
+			<!-- </div> -->
+		</div>
+	</nav>
 
-	<h1>Hello <span ng-bind="homeCtrl.sessUser.handle"></span></h1>
-	
-	<div>
-		<h3>All Users</h3>
-		<input type="text" ng-model="userSearch" placeholder="Search">
-		<p ng-repeat="user in homeCtrl.users | filter: userSearch | filter: '!'+homeCtrl.sessUser.handle"><span ng-bind="user.handle"></span> - <button ng-click="homeCtrl.newConvo(user)">Start Conversation</button></p>
-	</div>
+	<div class="container">
+		
+		<div class="col-md-3">
+			<!-- Conversations -->
+			<div class="row">
+				<div class="col-md-11">
+					<h3>Conversations</h3>
+					
+					<div class="list-group">
+						<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations" ng-click="homeCtrl.goToConvo(convo)">
+								<span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span>
+								<span class="badge">12</span>
+						</button>
+					</div>
 
-	<div>
-		<h3>All Conversations</h3>
-		<div class="conversation" ng-repeat="convo in homeCtrl.conversations" ng-click="homeCtrl.goToConvo(convo)">
-			<h4><span ng-bind="convo.updatedAt | date: 'EEE HH:mm'"></span></h4>
-			<div ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">
-				<p ng-bind="user.handle"></p>
+				</div>
+			</div>
+			<!-- Friends -->
+			<div class="row">
+				<div class="col-md-11">
+					<h3>Friends</h3>
+					<input class="form-control" type="text" ng-model="userSearch" placeholder="Search Friends">
+					<br>
+					<div class="list-group">
+						<button class="list-group-item" ng-repeat="user in homeCtrl.users | filter: userSearch | filter: '!'+homeCtrl.sessUser.handle" ng-click="homeCtrl.newConvo(user)">
+								<span ng-bind="user.handle"></span>
+								
+						</button>
+					</div>
+					<hr>
+					<button ng-click="homeCtrl.findFriends()" class="btn btn-default btn-block">Find New Friends</button>
+				</div>
 			</div>
 		</div>
-	</div>
 
+		<div show-convo class="col-md-9"></div>
+
+	</div>
 </div>

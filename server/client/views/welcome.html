@@ -1,28 +1,49 @@
 <div ng-controller="welcomeController as welcomeCtrl">
-	<fieldset>
-		<legend>Register New User</legend>
-		<p style="color: red;">{{ welcomeCtrl.errors.registration }}</p>
-		<p style="color: green;">{{ welcomeCtrl.messages.registration }}
-		<p style="color: red;">{{ welcomeCtrl.errors.login }}</p>
-		</p>
-		<form ng-if="welcomeCtrl.currentForm=='registration'" ng-submit="welcomeCtrl.register(info)">
-			<label for="email">Email:</label>
-			<input type="email" required ng-model="info.email">
+	<fieldset class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
 
-			<label for="handle">Handle:</label>
-			<input type="text" required ng-model="info.handle" ng-pattern="/^[0-9a-zA-Z_]*$/">
-			<label for="password">Password:</label>
-			<input type="password" required ng-model="info.passA">
-			<label for="confirm">Confirm Password:</label>
-			<input type="password" required ng-model="info.passB">
-			<input type="submit" value="Register">
-		</form>
-		<form ng-if="welcomeCtrl.currentForm=='login'" ng-submit="welcomeCtrl.login(info)">
-			<label for="handle">Email / Handle:</label>
-			<input type="text" name="handle" ng-model="info.user">
-			<label for="password">Password:</label>
-			<input type="password" ng-model="info.password">
-			<input type="submit" value="Login">
-		</form>
+		<div ng-show="welcomeCtrl.error" class="alert alert-danger">{{ welcomeCtrl.error }}</div>
+		<div ng-show="welcomeCtrl.message" class="alert alert-primary">{{ welcomeCtrl.message }}</div>
+
+		<div ng-show="welcomeCtrl.warning" class="alert alert-warning">{{ welcomeCtrl.warning }}</div>
+
+		<div ng-if="welcomeCtrl.currentForm=='registration'">
+			<h3>Register New User</h3>
+				
+			<form name="rForm" ng-submit="welcomeCtrl.register(info)" novalidate>
+				<label for="email">Email:</label>
+				<input class="form-control" name="email" type="email" ng-required="true" ng-model="info.email" placeholder="joseph@park.com">
+
+				<label for="handle">Handle:</label>
+				<input class="form-control" name="handle" type="text" ng-required="true" ng-model="info.handle" ng-pattern="/^[0-9a-zA-Z_]*$/" placeholder="j_park">
+				<label for="password">Password:</label>
+				<input class="form-control" name="passA" type="password" required ng-model="info.passA" placeholder="Password">
+				<label for="confirm">Confirm Password:</label>
+				<input class="form-control" name="passB" type="password" ng-required="true" ng-model="info.passB" placeholder="Confirm Password">
+				<br>
+				<span>{{ rForm.email.$valid }}</span>
+				<input class="btn btn-success btn-block" type="submit" value="Register">
+			</form>
+
+			<hr>
+
+			<a href ng-click="welcomeCtrl.changeForm('login')">Login Existing User</a>
+		</div>
+
+		<div ng-if="welcomeCtrl.currentForm=='login'">
+			<h3>Login Existing User</h3>
+			
+			<form ng-submit="welcomeCtrl.login(info)">
+				<label for="handle">Email / Handle:</label>
+				<input class="form-control" type="text" name="handle" ng-model="info.user" placeholder="j_park">
+				<label for="password">Password:</label>
+				<input class="form-control" type="password" ng-model="info.password" placeholder="Password">
+				<br>
+				<input class="btn btn-success btn-block" type="submit" value="Login">
+			</form>
+			
+			<hr>
+
+			<a href ng-click="welcomeCtrl.changeForm('registration')">Register New User</a>
+		</div>
 	</fieldset>
 </div>

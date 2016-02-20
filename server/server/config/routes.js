@@ -37,11 +37,15 @@ module.exports = function (app, io) {
     app.get("/friends/requests", friends.requests);
     //      -> [{ _id: "_", handle: "david" }]
 
-    app.post("/friends", friends.create);
+    app.post("/friends", friends.create);  // New Friend Request
     //      <- { id: friendId } (must be logged in)
-    //      -> { confirmed: Boolean }  (false means waiting for response)
-    //      friendSocket.emit("friendRequest", { user_id: user._id, confirmed: confirmed })
+    //      -> { success: Boolean, error: "some error message" }
+    //      friendSocket.emit("friendRequest", { user: { _id: user_id, handle: user_handle }} );
 
+    app.put("/friends/:id", friends.update);  // Respond to Friend Request
+    //      <- { confirmed: Boolean }  (true means "accepting", false means "ignoring")
+    //      -> { success: Boolean, error: "some error message" }
+    //     friendSocket.emit("friendAccepted", { user: { _id: user._id, handle: user.handle }} ); 
 
     //------------ Session -------------//
     app.post("/login", users.login);

@@ -8,11 +8,24 @@
 .conversation {
 	display: inline-block;
 }
-
+.align-right {
+	text-align: right;
+}
 .blue {
 	color: blue;
 }
 
 .red {
 	color: red;
+}
+.inline {
+	display: inline-block;
+}
+.bubble {
+				/* success green */
+	vertical-align: top;
+	margin-top: 21px;
+	border: 1px solid #18bc9c; 
+	border-radius: 5px;
+	padding: 12px;
 }

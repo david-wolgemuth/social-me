@@ -1,13 +1,14 @@
-messengerModule.controller("conversationsController", function ($scope, $routeParams, $location, socket, conversationFactory, messageFactory, userFactory) {
+messengerModule.controller("conversationsController", function ($scope, $routeParams, $location, 
+                                                                socket, conversationFactory, messageFactory, userFactory) {
+    this.convoId = $scope.convoId;
     this.users = [];
-    this.messages = [];
+    this.conversation = null;
     this.sessUser = null;
     var self = this;
 
-    console.log("Setting Listener");
     socket.on("newMessage", function (data) {
         var convoId = data.conversation;
-        if (convoId == $routeParams.id) {
+        if (convoId == this.convoId) {
             messageFactory.show(data.message, function (message) {
                 self.messages.push(message);
             });
@@ -15,30 +16,46 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
             console.log("Received Message, but Wrong Convo");
         }
     });
-
-    conversationFactory.show($routeParams.id, function (conversation) {
-        userFactory.getSessionUser(function (user) {
-            if (!user) {
-                $location.path("/welcome"); 
-                return;
-            }
-            self.sessUser = user;
-            var inConvo = false;
-            self.users = conversation.users;
-            self.users.forEach(function (cUser) {
-                if (cUser._id == user._id) {
-                    inConvo = true;
+    $scope.$on("ccid", function (event, value) {
+        self.convoId = value.id;
+        conversationFactory.show(self.convoId, function (conversation) {
+            userFactory.getSessionUser(function (user) {
+                if (!user || ! conversation) {
+                    $location.path("/welcome"); 
+                    return;
                 }
+                self.sessUser = user;
+                var inConvo = false;
+                self.users = conversation.users;
+                self.users.forEach(function (cUser) {
+                    if (cUser._id == user._id) {
+                        inConvo = true;
+                    }
+                });
+                if (!inConvo) {
+                    $location.path("/home");
+                    return;
+                }
+                self.messages = conversation.messages;
+                filterUserNames(self.messages);
             });
-            if (!inConvo) {
-                $location.path("/home");
-                return;
-            }
-            self.messages = conversation.messages;
         });
     });
+    function filterUserNames (messages) {
+        var lastUserId = null;
+        if (!messages) { return; }
+        messages.forEach(function (message) {
+            if (message._user._id == lastUserId) {
+                message.hideHandle = true;
+            } else {
+                message.hideHandle = false;
+                lastUserId = message._user._id;
+            }
+        });
+    }
+
     this.createMessage = function (message) {
-        message.conversationId = $routeParams.id;
+        message.conversationId = this.convoId;
         message.userId = this.sessUser._id;
         messageFactory.create(message, function (createdMessage) {
             self.messages.push(createdMessage);
@@ -51,4 +68,16 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
             $location.path("/welcome");
         });
     };
-}); 
+})
+.directive("conversation", function () {
+    return {
+        scope: { convoId: "=convoId" },
+        templateUrl: "views/conversation-view.html",
+    };
+});
+
+
+
+
+
+

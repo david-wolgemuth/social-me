@@ -38,6 +38,7 @@ messengerModule.factory("userFactory", function ($http, socket) {
             url: "/users/current",
             method: "GET"
         }).then(function (res) {
+            console.log(res);
             var user = res.data;
             if (callback) { callback(user); }
         });
