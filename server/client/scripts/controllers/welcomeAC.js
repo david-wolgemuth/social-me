@@ -1,21 +1,22 @@
 messengerModule.controller("welcomeController", function (userFactory, $location) {
     var self = this;
-    this.errors = {};
-    this.messages = {};
     this.currentForm = 'login';
+    this.changeForm = function (form) {
+        this.error = ""; this.warning = ""; this.message = "";
+        this.currentForm = form;
+    };
     // Register New User 
     this.register = function (info) {
-        this.errors = {};
-        this.messages = {};
+        this.error = ""; this.warning = ""; this.message = "";
         if (!(info.email && info.passA && info.passB)) {
-            this.errors.registration = "All Fields Required";
+            this.warning = "All Fields Required";
             return;
         }
         if (!info.handle) {
-            this.errors.registration = "User Handle Required, May Only Contain Letters, Numbers, and UnderScores";
+            this.warning = "User Handle Required, May Only Contain Letters, Numbers, and UnderScores";
         }
         if (info.passA != info.passB) {
-            this.errors.registration = "Passwords Do Not Match";
+            this.warning = "Passwords Do Not Match";
             return;
         }
         user = {
@@ -25,12 +26,12 @@ messengerModule.controller("welcomeController", function (userFactory, $location
         };
         userFactory.create(user, function (success) {
             if (success) {
-                self.messages.registration = "User Successfully Created";
+                self.message = "User Successfully Created";
                 for (var key in info) {
                     info[key] = "";
                 }
             } else {
-                self.errors.registration = "Email / Password Already Exists";
+                self.error = "Email / Password Already Exists";
                 info.passA = ""; info.passB = "";
             }
         });
@@ -43,7 +44,7 @@ messengerModule.controller("welcomeController", function (userFactory, $location
             if (success) {
                 $location.path("/home");
             } else {
-                self.errors.login = "User / Password Incorrect"
+                self.error = "User / Password Incorrect";
             }
         });
     };

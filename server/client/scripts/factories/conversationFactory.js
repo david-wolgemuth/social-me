@@ -27,7 +27,7 @@ messengerModule.factory("conversationFactory", function ($http) {
             method: "GET",
         }).then(function (res) {
             var conversation = res.data;
-            if (callback) { callback(conversation); }       
+            if (callback) { callback(conversation); } 
         });
     };
     return factory;

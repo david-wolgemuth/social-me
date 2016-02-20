@@ -6,14 +6,37 @@
 	<h3>Conversation</h3>
 	<h4 ng-repeat="user in convoCtrl.users" ng-bind="user.handle"></h4>
 
-	<div class="panel" ng-class="(message._user._id==convoCtrl.sessUser._id) ? 'blue' : 'red'" ng-repeat="message in convoCtrl.messages">
-		<div class="panel-heading"><span ng-bind="message._user.handle"></span> <span class="badge" ng-bind="message.createdAt | date: 'EEE HH:mm'"></span></div>
-		<div class="panel-body" ng-bind="message.content"></div>
-
+	<div class="row" ng-repeat="message in convoCtrl.messages">
+		<!-- Not User -->
+		<div class="col-md-8" ng-if="message._user._id!=convoCtrl.sessUser._id">
+			<!-- Header -->
+			<div class="inline">
+				<h3 ng-if="message.hideHandle==false"><span class="label label-primary" ng-bind="message._user.handle"></span></h3>
+				<h6 ng-bind="message.createdAt | date: 'EEE HH:mm'"></h6>
+			</div>
+			<div class="inline bubble" ng-bind="message.content"></div>
+		</div>
+		<!-- User -->
+		<div class="col-md-8 col-md-offset-4 align-right" ng-if="message._user._id==convoCtrl.sessUser._id">
+			<div class="inline bubble align-right" ng-bind="message.content"></div>
+			<!-- Header -->
+			<div class="inline ">
+				<h3 ng-if="message.hideHandle==false"><span class="label label-primary" ng-bind="message._user.handle"></span></h3>
+				<h6 ng-bind="message.createdAt | date: 'EEE HH:mm'"></h6>
+			</div>
+		</div>
 	</div>
-	<form ng-submit="convoCtrl.createMessage(message)">
-		<input type="text" ng-model="message.content" placeholder="New Message">
-		<input type="submit" value="Send Message">
-	</form>
+	
+	<div ng-if="convoCtrl.convoId" class="row">
+		<hr>
+		<form ng-submit="convoCtrl.createMessage(message)">
+			<div class="input-group">
+				<input class="form-control" type="text" ng-model="message.content" placeholder="New Message">
+				<span class="input-group-btn">
+					<button class="btn btn-default" type="submit">Send Message</button>
+				</span>
+			</div>
+		</form>
+	</div>
 
 </div>

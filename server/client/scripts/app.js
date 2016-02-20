@@ -1,4 +1,4 @@
-var messengerModule = angular.module("messengerApp", ['ngRoute']);
+var messengerModule = angular.module("messengerApp", ["ngRoute", "ui.bootstrap", "ui.bootstrap.modal"]);
 
 //Routes Config
 messengerModule.config(function($routeProvider){
@@ -8,9 +8,6 @@ messengerModule.config(function($routeProvider){
 	})
 	.when('/home', {
 		templateUrl: 'views/home.html'
-	})
-	.when('/conversations/:id', {
-		templateUrl: 'views/conversation-view.html'
 	})
 	.when('/users/:id', {
 		templateUrl: 'views/user.html'
