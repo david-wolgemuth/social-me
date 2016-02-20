@@ -90,6 +90,7 @@ class RegisterViewController: UIViewController,UITextFieldDelegate,UIImagePicker
                 errors += error
             }
             alert.showError("Error",subTitle: "Please re-entered: \(errors)")
+            submitButton.enabled = true
         } else {
             Connection.sharedInstance.register(emailTextField.text!, username: usernameTextField.text!, password: passwordTextField.text!, profilePic: imageChosen)
         }

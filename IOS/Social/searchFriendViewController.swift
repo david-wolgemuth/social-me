@@ -24,17 +24,25 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
     var friendFound = [Dictionary<String,String>]()
-    override func viewDidLoad() {
-        super.viewDidLoad()
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         searchBar.delegate = self
         Connection.sharedInstance.addFriendDelegate = self
         self.tableView.dataSource = self
         self.tableView.delegate = self
-
-        
     }
     
+    func backgroundTapped(sender: UITapGestureRecognizer) {   
+        self.view.endEditing(true)
+    }
+    
+    
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        let cancelGesture = UITapGestureRecognizer()
+        cancelGesture.addTarget(self, action: Selector("backgroundTapped:"))
+        self.view.addGestureRecognizer(cancelGesture)
+        cancelGesture.cancelsTouchesInView = false
         friendFound = []
         self.tableView.reloadData()
     }
@@ -45,6 +53,8 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        
         
         let cell = tableView.dequeueReusableCellWithIdentifier("UserCell")! as! UserCell
         
@@ -62,32 +72,20 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
             Connection.sharedInstance.addFriend(self.friendFound[0]["id"]!)
             
         }
-        
-        
-       
         alert.showNotice("Friend Request", subTitle: "Do you want to add this user as a friend?",closeButtonTitle: "No")
-        self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    
     }
     
     func didAcceptFriendRequest(success: Bool) {
         if success == true {
             CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: "Already Friend")
         } else {
-            CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Success, message: "Sent Request,waiting for confirmation")
+            CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Success, message: "Request Sent")
             
         }
-        
+    }
    
-        
-       
-    }
-    
-    
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        self.view.endEditing(true)
-    }
-    
-    
+ 
     
     
   
@@ -105,7 +103,6 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
     func didFindFriend(success: Bool, friendFound: Dictionary<String, String>?) {
  
         if success == true {
-         
             self.friendFound.append(friendFound!)
             self.tableView.reloadData()
         } else {
@@ -113,6 +110,11 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
             alert.showError("Error", subTitle: "No user \(searchBar.text!) was found",closeButtonTitle: "Close")
         
         }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        Connection.sharedInstance.addFriendDelegate = nil
     }
     
     

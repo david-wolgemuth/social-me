@@ -7,7 +7,7 @@
 //
 
 import UIKit
-class friendRequestViewController: UIViewController,UITableViewDataSource{
+class friendRequestViewController: UIViewController,UITableViewDataSource,UITableViewDelegate{
     
   
     
@@ -18,7 +18,7 @@ class friendRequestViewController: UIViewController,UITableViewDataSource{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.dataSource = self
-        print(friendRequests)
+        self.tableView.delegate = self
     }
     
     
@@ -42,28 +42,32 @@ class friendRequestViewController: UIViewController,UITableViewDataSource{
         return cell
     }
     
-    
-    
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        
-        
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let accept = UITableViewRowAction(style: .Normal, title: "Accept") { action, index in
-            print("Accept tapped")
+            Connection.sharedInstance.addFriend(self.friendRequests[indexPath.row]["id"]!)
+            self.friendRequests.removeAtIndex(indexPath.row)
+            let newBadgeValue = String(Int(self.tabBarItem.badgeValue!)!-1)
+            if newBadgeValue == "0" {
+                self.tabBarItem.badgeValue = nil
+            } else {
+                self.tabBarItem.badgeValue = newBadgeValue
+            }
+            self.tableView.reloadData()
         }
         accept.backgroundColor = UIColor.greenColor()
         
         let ignore = UITableViewRowAction(style: .Normal, title: "Ignore") { action, index in
-            print("Ignore")
+            
         }
         ignore.backgroundColor = UIColor.redColor()
         
-        return [accept,ignore]
+        return [ignore,accept]
     }
     
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // the cells you would like the actions to appear needs to be editable
-        return true
-    }
+   
+
+    
+    
   
 
     

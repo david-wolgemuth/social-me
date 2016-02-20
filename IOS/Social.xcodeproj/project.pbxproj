@@ -48,8 +48,6 @@
 		12A3805C1C5D4C8B00F2ADF9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12A3805A1C5D4C8B00F2ADF9 /* LaunchScreen.storyboard */; };
 		12A380671C5D4C8B00F2ADF9 /* SocialTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A380661C5D4C8B00F2ADF9 /* SocialTests.swift */; };
 		12A380721C5D4C8B00F2ADF9 /* SocialUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A380711C5D4C8B00F2ADF9 /* SocialUITests.swift */; };
-		12D7F30D1C753A3600D665FF /* Friend+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D7F3091C753A3600D665FF /* Friend+CoreDataProperties.swift */; };
-		12D7F30E1C753A3600D665FF /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D7F30A1C753A3600D665FF /* Friend.swift */; };
 		12D7F30F1C753A3600D665FF /* Message+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D7F30B1C753A3600D665FF /* Message+CoreDataProperties.swift */; };
 		12D7F3101C753A3600D665FF /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D7F30C1C753A3600D665FF /* Message.swift */; };
 		B59A45EABEBFABB0DF4332E4 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B6582082A7CF2D49566689 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -123,8 +121,6 @@
 		12A3806D1C5D4C8B00F2ADF9 /* SocialUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SocialUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		12A380711C5D4C8B00F2ADF9 /* SocialUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialUITests.swift; sourceTree = "<group>"; };
 		12A380731C5D4C8B00F2ADF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		12D7F3091C753A3600D665FF /* Friend+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Friend+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		12D7F30A1C753A3600D665FF /* Friend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
 		12D7F30B1C753A3600D665FF /* Message+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Message+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		12D7F30C1C753A3600D665FF /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		42B1D2C431B1E2CE2BE12680 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -188,8 +184,6 @@
 		12A380421C5D4C8B00F2ADF9 = {
 			isa = PBXGroup;
 			children = (
-				12D7F3091C753A3600D665FF /* Friend+CoreDataProperties.swift */,
-				12D7F30A1C753A3600D665FF /* Friend.swift */,
 				12D7F30B1C753A3600D665FF /* Message+CoreDataProperties.swift */,
 				12D7F30C1C753A3600D665FF /* Message.swift */,
 				12A3804D1C5D4C8B00F2ADF9 /* Social */,
@@ -470,7 +464,6 @@
 				125EE2061C75424F00122531 /* SocketAckManager.swift in Sources */,
 				127E01A91C658EFC007C38C0 /* ContactsViewController.swift in Sources */,
 				125EE2051C75424F00122531 /* SocketAckEmitter.swift in Sources */,
-				12D7F30D1C753A3600D665FF /* Friend+CoreDataProperties.swift in Sources */,
 				125EE2141C75424F00122531 /* SocketParsable.swift in Sources */,
 				125EE2081C75424F00122531 /* SocketClientSpec.swift in Sources */,
 				12943E2F1C686F2D00A8D2FC /* ConversationViewController.swift in Sources */,
@@ -488,7 +481,6 @@
 				125EE2091C75424F00122531 /* SocketEngine.swift in Sources */,
 				125EE21A1C77DD9900122531 /* tabBarController2.swift in Sources */,
 				12A380571C5D4C8B00F2ADF9 /* Social.xcdatamodeld in Sources */,
-				12D7F30E1C753A3600D665FF /* Friend.swift in Sources */,
 				125EE20B1C75424F00122531 /* SocketEnginePacketType.swift in Sources */,
 				125EE20E1C75424F00122531 /* SocketFixUTF8.swift in Sources */,
 				12A3804F1C5D4C8B00F2ADF9 /* AppDelegate.swift in Sources */,
