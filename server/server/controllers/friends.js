@@ -11,7 +11,7 @@ module.exports = function (io) {
         }
     };
     fCtrl.requests = function (req, res) {
-        fC.getFriends(req, res, true);
+        fCtrl.getFriends(req, res, true);
     };
     fCtrl.getFriends = function (req, res, friendRequests) {
         var user = req.session.user;
@@ -50,21 +50,29 @@ module.exports = function (io) {
 
             User.findById(friendId, function (error, friend) {
                 if (error) { console.log(error); }
-                if (!friend || !user || friend._id == user._id) {
+                if (!friend || !user || userId == friendId) {
                     console.log("No User Found?"); 
                     res.json({
                         success: false,
-                        error: "Friend Not Found? User Not Logged In?"
+                        error: "Friend Not Found? User Not Logged In? Trying to Add Yourself?"
                     });
                     return;
                 }
                 for (var i = 0; i < friend.friends.length; i++) {
-                    if (friend.friends.friendId == userId) {
-                        console.log("Request Already Sent");
-                        res.json({
-                            success: false,
-                            error: "Request Already Sent."
-                        });
+                    if (friend.friends[i].friendId == userId) {
+                        if (friend.friends[i].confirmed) {
+                            console.log("Already Friends");
+                            res.json({
+                                success: false,
+                                error: "Already Friends"
+                            })
+                        } else {
+                            console.log("Request Already Sent");
+                            res.json({
+                                success: false,
+                                error: "Request Already Sent"
+                            })
+                        }
                         return;
                     }
                 }
@@ -86,8 +94,9 @@ module.exports = function (io) {
         });
     };
     fCtrl.update = function (req, res) {
-        var friendId = req.params.friendId;
+        var friendId = req.params.id;
         var confirmed = req.body.confirmed;
+    
         User.findById(req.session.user._id, function (error, user) {
             if (error) { console.log(error); }
             if (!user) { 
@@ -110,39 +119,38 @@ module.exports = function (io) {
                     }
                 });
             } else {  // Make Friends
-                User.findById(friendId, function (error, friend) {
-                    if (error) { console.log(error); }
+                User.findById(friendId,function(error,friend) {
+                    if (error) {console.log(error);}
                     var found = false;
-                    for (var i = 0; i < friend.friends.length; i++) {
-                        if (friend.friends[i].friendId == user._id) {
-                            friend.friends[i].confirmed = true; 
+                    for (var i = 0; i <user.friends.length; i++) {
+                        if (user.friends[i].friendId.equals(friend._id)) {
+                            user.friends[i].confirmed = true;
                             found = true;
                             break;
                         }
                     }
                     if (!found) {
                         console.log("Not Found??");
-                        res.json({ success: false, error: "Friend Request Not Found?" });
+                        res.json({success: false, error: "Friend Request Not Found?"});
                         return;
-                    } else {
-                        user.friends.push({ friendId: friendId, confirmed: true });
-                        user.save(function (errorA) {
-                            friend.save(function (errorB) {
+                    }  else {
+                        friend.friends.push({friendId: user._id, confirmed: true});
+                        friend.save(function(errorA) {
+                            user.save(function(errorB) {
                                 if (errorA || errorB) {
-                                    console.log(errorA, errorB);
-                                    res.json({ success: false, error: JSON.Stringify([errorA, errorB]) });
+                                    console.log(errorA,errorB);
+                                    res.json({success:false,error: JSON.Stringify([errorA, errorB]) });
                                 } else {
-                                    res.json({ success: true });
+                                    res.json({success: true});
                                     if (io.users[friend._id]) {
-                                        io.users[friend._id].emit("friendAccepted", 
-                                            { user: { _id: user._id, handle: user.handle }}
-                                        );
+                                        io.users[friend._id].emit("friendAccepted", {user:{_id:user._id,handle: user.handle}});
                                     }
                                 }
-                            });
-                        });
+                            })
+                        })
                     }
-                });
+
+                })
             }
         });
     };

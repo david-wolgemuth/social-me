@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import CSNotificationView
+
 class friendRequestViewController: UIViewController,UITableViewDataSource,UITableViewDelegate{
     
   
@@ -42,22 +44,46 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
         return cell
     }
     
+ 
+    
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let accept = UITableViewRowAction(style: .Normal, title: "Accept") { action, index in
-            Connection.sharedInstance.addFriend(self.friendRequests[indexPath.row]["id"]!)
-            self.friendRequests.removeAtIndex(indexPath.row)
-            let newBadgeValue = String(Int(self.tabBarItem.badgeValue!)!-1)
-            if newBadgeValue == "0" {
-                self.tabBarItem.badgeValue = nil
-            } else {
-                self.tabBarItem.badgeValue = newBadgeValue
+            print("pressed")
+            
+            Connection.sharedInstance.respondFriend(self.friendRequests[indexPath.row]["id"]!, accept: true) {
+                success,error in
+                if success == false {
+                    CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)
+                } else {
+                    self.friendRequests.removeAtIndex(indexPath.row)
+                    let newBadgeValue = String(Int(self.tabBarItem.badgeValue!)!-1)
+                    if newBadgeValue == "0" {
+                        self.tabBarItem.badgeValue = nil
+                    } else {
+                        self.tabBarItem.badgeValue = newBadgeValue
+                    }
+                    self.tableView.reloadData()
+                }
             }
-            self.tableView.reloadData()
         }
         accept.backgroundColor = UIColor.greenColor()
         
         let ignore = UITableViewRowAction(style: .Normal, title: "Ignore") { action, index in
-            
+            Connection.sharedInstance.respondFriend(self.friendRequests[indexPath.row]["id"]!, accept: false) {
+                success,error in
+                if success == false {
+                    CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)
+                } else {
+                    self.friendRequests.removeAtIndex(indexPath.row)
+                    let newBadgeValue = String(Int(self.tabBarItem.badgeValue!)!-1)
+                    if newBadgeValue == "0" {
+                        self.tabBarItem.badgeValue = nil
+                    } else {
+                        self.tabBarItem.badgeValue = newBadgeValue
+                    }
+                    self.tableView.reloadData()
+                }
+            }
         }
         ignore.backgroundColor = UIColor.redColor()
         

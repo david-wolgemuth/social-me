@@ -76,15 +76,16 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
     
     }
     
-    func didAcceptFriendRequest(success: Bool) {
+    func didSuccessSendRequest(success: Bool,error: String?) {
         if success == true {
-            CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: "Already Friend")
-        } else {
             CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Success, message: "Request Sent")
+        } else {
+            CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)
             
         }
     }
-   
+    
+ 
  
     
     

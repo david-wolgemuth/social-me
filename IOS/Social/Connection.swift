@@ -24,8 +24,10 @@ protocol ConnectionRegisterDelegate {
 
 protocol ConnectionAddFriendDelegate {
     func didFindFriend(success: Bool,friendFound: Dictionary<String,String>?)
-    func didAcceptFriendRequest(success:Bool)
+    func didSuccessSendRequest(success: Bool,error:String?)
 }
+
+
 
 
 class Connection {
@@ -228,21 +230,58 @@ class Connection {
                 (data,response,error) in
                 dispatch_sync(dispatch_get_main_queue()) {
                     if let found_data = data {
-                        if let RequestInfo = self.parseJSON(found_data) {
-                            
-                            if let confirm_msg = RequestInfo["confirmed"] {
-                          
-                                if (confirm_msg! as! Int == 1) {
-                           
-                                    self.addFriendDelegate?.didAcceptFriendRequest(true)
+                        if let message = self.parseJSON(found_data) {
+                            if let success = message["success"] {
+                                if (success! as! Int == 1) {
+                                    self.addFriendDelegate?.didSuccessSendRequest(true,error: nil)
                                 } else {
-                                    self.addFriendDelegate?.didAcceptFriendRequest(false)
-                                    
+                                    let error = message["error"]
+                                    self.addFriendDelegate?.didSuccessSendRequest(false, error: error! as? String)
                                 }
                             }
                         }
+                        
                     }
                 }
+            }
+            task.resume()
+        }
+        
+    }
+    
+  
+
+
+    
+    
+    
+    func respondFriend(FriendId: String,accept: Bool,didRespondRequest:(success:Bool,error: String?)->()) {
+  
+        if let urlToReq = NSURL(string: self.url + "/friends/" + FriendId) {
+            let request: NSMutableURLRequest = NSMutableURLRequest(URL: urlToReq)
+            request.HTTPMethod = "PUT"
+            let bodyData = "confirmed=\(accept)"
+            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            request.HTTPBody = bodyData.dataUsingEncoding(NSUTF8StringEncoding)
+            let session:NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+            let task = session.dataTaskWithRequest(request) {
+                (data,response,error) in
+                dispatch_sync(dispatch_get_main_queue()) {
+                    if let found_data = data {
+                        if let message = self.parseJSON(found_data) {
+                            if let success = message["success"] {
+                                if (success! as! Int == 1) {
+                                    didRespondRequest(success: true,error:nil)
+                                } else {
+                                    let error = message["error"]
+                                    didRespondRequest(success: true,error: error! as? String)
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+
             }
             task.resume()
         }
