@@ -1,6 +1,27 @@
 <div ng-controller="findFriendsController as ffCtrl">
 	<div class="modal-header">
-		<h3 class="modal-title">Hello</h3>
-		<button class="form-control" ng-click="ffCtrl.printTest()">Test?</button>
+		<h3 class="modal-title">Search For New Friends</h3>
+		<form ng-submit="ffCtrl.search(friend_name)">
+			<input type="text" class="form-control" ng-model="friend_name">	
+			<input class="btn btn-primary btn-block" type="submit" value="Search">
+		</form>
+		<hr>
+	</div>
+	<div class="modal-body">
+		<ul class="list-group">
+			<li class="list-group-item" ng-repeat="user in ffCtrl.users">
+				<div class="well">
+					<h4>
+						<span ng-bind="user.handle"></span>
+						<span ng-if="user.isFriend==true" class="label label-default pull-right">Already Friends</span>
+						<div ng-if="user.isFriend==false">
+							<span ng-if="user.requestSent==true" class="label label-success pull-right">Request Sent</span>
+							<button ng-if="user.requestSent==false" ng-click="ffCtrl.addFriend(user)" class="pull-right btn btn-primary"></span><span class="glyphicon glyphicon-user"></span></button>
+						</div>
+						<div style="clear: both;"></div>
+					</h4>
+				</div>
+			</li>
+		</ul>
 	</div>	
 </div>

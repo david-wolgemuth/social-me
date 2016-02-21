@@ -10,6 +10,32 @@ module.exports = function (io) {
             fCtrl.getFriends(req, res);
         }
     };
+    fCtrl.search = function (req, res) {
+        console.log(req.query);
+        User.find({
+            handle: new RegExp(req.query.user, "i")
+        }).lean().exec(function(error, users) {
+            if (error) { console.log(error); } 
+            var arr = [];
+            users.forEach(function (user) {
+                console.log(user.handle);
+                user.isFriend = false;
+                for (var i = 0; i < user.friends.length; i++) {
+                    if (user.friends[i].friendId == req.session.user._id) {
+                        console.log("Is Confirmed?", user.friends[i].confirmed);
+                        if (user.friends[i].confirmed) {
+                            user.isFriend = true;
+                        } else {
+                            user.isFriend = false;
+                            user.requestSent = true;
+                        }
+                    }
+                }
+                arr.push({ _id: user._id, isFriend: user.isFriend, requestSent: Boolean(user.requestSent), handle: user.handle });
+            });
+            res.json(arr);
+        });
+    };
     fCtrl.requests = function (req, res) {
         fCtrl.getFriends(req, res, true);
     };
@@ -37,7 +63,7 @@ module.exports = function (io) {
             .select("handle")
             .exec(function (error, users) {
                 if (error) { console.log(error); }
-                console.log(users);
+                console.log("Users:", users);
                 res.json(users);
             });
         });
