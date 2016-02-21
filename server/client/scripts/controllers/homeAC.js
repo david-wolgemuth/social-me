@@ -1,9 +1,10 @@
-messengerModule.controller("homeController", function (userFactory, conversationFactory, $scope, $location, $uibModal) {
+messengerModule.controller("homeController", function (userFactory, conversationFactory, friendFactory, $scope, $location, $uibModal) {
     var self = this;
     this.sessUser = null;
     this.users = [];
     this.conversations = [];
     this.ccid = null;
+    this.requests = [];
 
     userFactory.getSessionUser(function (user) {
         if (!user) {
@@ -13,6 +14,10 @@ messengerModule.controller("homeController", function (userFactory, conversation
     });
     userFactory.index(function (users) {
         self.users = users;
+    });
+    friendFactory.requests(function (requests) {
+        console.log("Requests:", requests);
+        this.requests = requests;
     });
     conversationFactory.index(function (convos) {
         self.conversations = convos;

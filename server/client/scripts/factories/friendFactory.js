@@ -18,5 +18,13 @@ messengerModule.factory("friendFactory", function (userFactory, $http) {
             if (callback) { callback(res.data); }
         });
     };
+    factory.requests = function (callback) {
+        $http({
+            url: "/friends/requests",
+            method: "GET",
+        }).then(function (res) {
+            callback(res.data);            
+        });
+    };
     return factory;
 });
