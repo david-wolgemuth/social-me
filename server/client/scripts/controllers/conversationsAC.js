@@ -8,11 +8,17 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
 
     socket.on("newMessage", function (data) {
         var convoId = data.conversation;
-        if (convoId == this.convoId) {
+        if (convoId == self.convoId) {
             messageFactory.show(data.message, function (message) {
+                if (self.messages[self.messages.length - 1]._user._id == message._user._id) {
+                    message.hideHandle = true;
+                } else {
+                    message.hideHandle = false;
+                }
                 self.messages.push(message);
             });
         } else {
+            console.log(self.convoId, convoId);
             console.log("Received Message, but Wrong Convo");
         }
     });
@@ -30,6 +36,9 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
                 self.users.forEach(function (cUser) {
                     if (cUser._id == user._id) {
                         inConvo = true;
+                        cUser.sessUser = true;
+                    } else {
+                        cUser.sessUser = false;
                     }
                 });
                 if (!inConvo) {
@@ -58,7 +67,6 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
         message.conversationId = this.convoId;
         message.userId = this.sessUser._id;
         messageFactory.create(message, function (createdMessage) {
-            self.messages.push(createdMessage);
             message.content = "";
         });
     };

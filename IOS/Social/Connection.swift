@@ -23,15 +23,21 @@ protocol ConnectionRegisterDelegate {
 }
 
 protocol ConnectionAddFriendDelegate {
-    func didFindFriend(success: Bool)
-    func didAcceptFriendRequest(success: Bool)
+    func didFindFriend(success: Bool,friendFound: Dictionary<String,String>?)
+    func didSuccessSendRequest(success: Bool,error:String?)
 }
+
+
 
 
 class Connection {
     
     static let sharedInstance = Connection()
     private var socket: SocketIOClient
+    
+    private var friendRequest = [Dictionary<String,String>]()
+    private var Friends = [Dictionary<String,String>]()
+ 
     
     var delegate: ConnectionSocketDelegate?
     var loginDelegate: ConnectionLoginDelegate?
@@ -40,7 +46,7 @@ class Connection {
     private var url: String
     
     private init() {
-        url = "http://David.local:5000"
+        url = "http://ShuHans-MacBook-Air.local:5000"
         socket = SocketIOClient(socketURL: url)
         socket.connect()
         socket.on("connect") { data, ack in
@@ -53,29 +59,15 @@ class Connection {
         print("IOS::: user disconnected!")
         socket.disconnect()
     }
-    func getSessionUsers() {
-        if let urlToReq = NSURL(string: url+"/users/current") {
-            let request: NSMutableURLRequest = NSMutableURLRequest(URL: urlToReq)
-            request.HTTPMethod = "GET"
-            let session: NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-            let task = session.dataTaskWithRequest(request) {
-                (data,response,error) in
-                print("data: \(data)")
-                print("response: \(response)")
-                print("error: \(error)")
+  
 
-            }
-            task.resume()
-        }
-        
-    }
     
     func login(email:String,password:String){
 
         if let urlToReq = NSURL(string: url + "/login") {
             let request: NSMutableURLRequest = NSMutableURLRequest(URL: urlToReq)
             request.HTTPMethod = "POST"
-            let bodyData = "user=\(email)&password=\(password)"
+            let bodyData = "user=\(email.trim())&password=\(password)"
             request.HTTPBody = bodyData.dataUsingEncoding(NSUTF8StringEncoding)
             let session: NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
             let task = session.dataTaskWithRequest(request) {
@@ -90,11 +82,13 @@ class Connection {
                                     let prefs = NSUserDefaults.standardUserDefaults()
                                     let keychain = KeychainSwift()
                                     var setValue: Bool = false
-                                    if let saved_userId = prefs.stringForKey("id") { //we have a saved user
+                                    if let saved_userId = prefs.stringForKey("id") {//we have a saved user
                                         if saved_userId != userId as! String{
                                             CoreDataManager.sharedInstance.overwrite_user()
                                             setValue = true
+                                            
                                         }
+                                    
                                     } else {
                                         setValue = true
                                     }
@@ -116,6 +110,7 @@ class Connection {
             task.resume()
         }
     }
+    
     
 
     func register(email:String,username:String,password:String,profilePic: UIImage?) {
@@ -175,20 +170,20 @@ class Connection {
     
     
     func FindFriend(friend: String) {
-        
+    
         if let urlToReq = NSURL(string: url + "/users?user=" + friend) {
             if let data = NSData(contentsOfURL: urlToReq) {
                 if let userInfo = self.parseJSON(data) {
                     if let userId = userInfo["_id"]  {
-                        print(userId)
-                        self.addFriendDelegate?.didFindFriend(true)
-                        self.addFriend(userId! as! String)
+                        let userHandle = userInfo["handle"]
+                        
+                        self.addFriendDelegate?.didFindFriend(true,friendFound: ["id":userId! as! String,"handle":userHandle! as! String])
                         
                     } else {
-                        self.addFriendDelegate?.didFindFriend(false)
+                        self.addFriendDelegate?.didFindFriend(false,friendFound: nil)
                     }
                 } else {
-                    self.addFriendDelegate?.didFindFriend(false)
+                    self.addFriendDelegate?.didFindFriend(false,friendFound:nil)
                 }
                 
             }
@@ -196,6 +191,32 @@ class Connection {
         }
         
     }
+    
+    
+    func getFriendRequest()->[Dictionary<String,String>] {
+        return self.friendRequest
+    }
+    
+    
+    func getFriend(friendReceived:([Dictionary<String,String>])->()) {
+        self.Friends = []
+        if let urlToReq = NSURL(string: url + "/friends") {
+            if let data = NSData(contentsOfURL: urlToReq) {
+                if let friends = self.parseJSON(data) as? [AnyObject] {
+                    for friend in friends {
+                        self.Friends.append(["id":friend["_id"]! as! String, "handle": friend["handle"]! as! String])
+                    }
+                }
+                
+            }
+            
+        }
+        friendReceived(self.Friends)
+    }
+    
+    
+    
+    
     
     
     func addFriend(friend: String) {
@@ -209,20 +230,17 @@ class Connection {
                 (data,response,error) in
                 dispatch_sync(dispatch_get_main_queue()) {
                     if let found_data = data {
-                        if let RequestInfo = self.parseJSON(found_data) {
-                            print(RequestInfo)
-                            
-                            if let confirm_msg = RequestInfo["confirmed"] {
-                                print(confirm_msg)
-                                if (confirm_msg! as! Int == 1) {
-                           
-                                    self.addFriendDelegate?.didAcceptFriendRequest(true)
+                        if let message = self.parseJSON(found_data) {
+                            if let success = message["success"] {
+                                if (success! as! Int == 1) {
+                                    self.addFriendDelegate?.didSuccessSendRequest(true,error: nil)
                                 } else {
-                                    self.addFriendDelegate?.didAcceptFriendRequest(false)
-                                    
+                                    let error = message["error"]
+                                    self.addFriendDelegate?.didSuccessSendRequest(false, error: error! as? String)
                                 }
                             }
                         }
+                        
                     }
                 }
             }
@@ -231,13 +249,57 @@ class Connection {
         
     }
     
-    func checkFriendRequest(friendsReceived: ([AnyObject]) -> ()) {
+  
+
+
+    
+    
+    
+    func respondFriend(FriendId: String,accept: Bool,didRespondRequest:(success:Bool,error: String?)->()) {
+  
+        if let urlToReq = NSURL(string: self.url + "/friends/" + FriendId) {
+            let request: NSMutableURLRequest = NSMutableURLRequest(URL: urlToReq)
+            request.HTTPMethod = "PUT"
+            let bodyData = "confirmed=\(accept)"
+            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+            request.HTTPBody = bodyData.dataUsingEncoding(NSUTF8StringEncoding)
+            let session:NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+            let task = session.dataTaskWithRequest(request) {
+                (data,response,error) in
+                dispatch_sync(dispatch_get_main_queue()) {
+                    if let found_data = data {
+                        if let message = self.parseJSON(found_data) {
+                            if let success = message["success"] {
+                                if (success! as! Int == 1) {
+                                    didRespondRequest(success: true,error:nil)
+                                } else {
+                                    let error = message["error"]
+                                    didRespondRequest(success: true,error: error! as? String)
+                                }
+                            }
+                        }
+                        
+                    }
+                }
+
+            }
+            task.resume()
+        }
         
+    }
+    
+    func checkFriendRequest() {
+        self.friendRequest = []
         
         if let urlToReq = NSURL(string: url + "/friends/requests") {
             if let data = NSData(contentsOfURL: urlToReq) {
                 if let requests = self.parseJSON(data) as? [AnyObject] {
-                    friendsReceived(requests)
+                    if requests.count > 0 {
+                        for friends in requests {
+                            self.friendRequest.append(["id":friends["_id"]! as! String,"handle": friends["handle"]! as! String])
+                        }
+                        
+                    }
                 }
                 
             }
@@ -246,6 +308,11 @@ class Connection {
         
     }
     
+    
+ 
+    
+    
+    
     func listenForMessages() {
         socket.on("updateMessage") {data, ack in
             print("Connection::: got message")
@@ -253,9 +320,7 @@ class Connection {
             // send http request for message
             self.delegate?.didReceiveMessages(data[0])
         }
-    }
-    // Move Login Function Into This File
-  
+    }  
     
     func sendMessages(data: AnyObject) {
         // Instead of emitting with socket,

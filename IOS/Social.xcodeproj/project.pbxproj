@@ -29,8 +29,11 @@
 		125EE2161C75424F00122531 /* SocketTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125EE2021C75424F00122531 /* SocketTypes.swift */; };
 		125EE2171C75424F00122531 /* SwiftRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125EE2031C75424F00122531 /* SwiftRegex.swift */; };
 		125EE2181C75424F00122531 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125EE2041C75424F00122531 /* WebSocket.swift */; };
+		125EE21A1C77DD9900122531 /* tabBarController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125EE2191C77DD9900122531 /* tabBarController2.swift */; };
+		125EE21C1C77E2DC00122531 /* friendRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125EE21B1C77E2DC00122531 /* friendRequestViewController.swift */; };
 		126961AA1C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 126961A91C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m */; };
 		126961B01C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 126961AF1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
+		127692471C77FE1300410D79 /* searchFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692461C77FE1300410D79 /* searchFriendViewController.swift */; };
 		127E01A91C658EFC007C38C0 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127E01A81C658EFC007C38C0 /* ContactsViewController.swift */; };
 		127E01AB1C6690E9007C38C0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127E01AA1C6690E9007C38C0 /* UserCell.swift */; };
 		12943E2D1C686B7600A8D2FC /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12943E2C1C686B7600A8D2FC /* MessageViewController.swift */; };
@@ -45,8 +48,6 @@
 		12A3805C1C5D4C8B00F2ADF9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12A3805A1C5D4C8B00F2ADF9 /* LaunchScreen.storyboard */; };
 		12A380671C5D4C8B00F2ADF9 /* SocialTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A380661C5D4C8B00F2ADF9 /* SocialTests.swift */; };
 		12A380721C5D4C8B00F2ADF9 /* SocialUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A380711C5D4C8B00F2ADF9 /* SocialUITests.swift */; };
-		12D7F30D1C753A3600D665FF /* Friend+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D7F3091C753A3600D665FF /* Friend+CoreDataProperties.swift */; };
-		12D7F30E1C753A3600D665FF /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D7F30A1C753A3600D665FF /* Friend.swift */; };
 		12D7F30F1C753A3600D665FF /* Message+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D7F30B1C753A3600D665FF /* Message+CoreDataProperties.swift */; };
 		12D7F3101C753A3600D665FF /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D7F30C1C753A3600D665FF /* Message.swift */; };
 		B59A45EABEBFABB0DF4332E4 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B6582082A7CF2D49566689 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -92,11 +93,14 @@
 		125EE2021C75424F00122531 /* SocketTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SocketTypes.swift; path = ../../../IOS/SocketIOClientSwift/Source/SocketTypes.swift; sourceTree = "<group>"; };
 		125EE2031C75424F00122531 /* SwiftRegex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SwiftRegex.swift; path = ../../../IOS/SocketIOClientSwift/Source/SwiftRegex.swift; sourceTree = "<group>"; };
 		125EE2041C75424F00122531 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WebSocket.swift; path = ../../../IOS/SocketIOClientSwift/Source/WebSocket.swift; sourceTree = "<group>"; };
+		125EE2191C77DD9900122531 /* tabBarController2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = tabBarController2.swift; sourceTree = "<group>"; };
+		125EE21B1C77E2DC00122531 /* friendRequestViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = friendRequestViewController.swift; sourceTree = "<group>"; };
 		126961A71C5DC3770008F8EC /* Social-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Social-Bridging-Header.h"; sourceTree = "<group>"; };
 		126961A81C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TPKeyboardAvoidingScrollView.h; sourceTree = "<group>"; };
 		126961A91C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TPKeyboardAvoidingScrollView.m; sourceTree = "<group>"; };
 		126961AE1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
 		126961AF1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
+		127692461C77FE1300410D79 /* searchFriendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = searchFriendViewController.swift; sourceTree = "<group>"; };
 		127E01A81C658EFC007C38C0 /* ContactsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		127E01AA1C6690E9007C38C0 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		12943E2C1C686B7600A8D2FC /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
@@ -117,8 +121,6 @@
 		12A3806D1C5D4C8B00F2ADF9 /* SocialUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SocialUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		12A380711C5D4C8B00F2ADF9 /* SocialUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialUITests.swift; sourceTree = "<group>"; };
 		12A380731C5D4C8B00F2ADF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		12D7F3091C753A3600D665FF /* Friend+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Friend+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		12D7F30A1C753A3600D665FF /* Friend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
 		12D7F30B1C753A3600D665FF /* Message+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Message+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		12D7F30C1C753A3600D665FF /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		42B1D2C431B1E2CE2BE12680 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -182,8 +184,6 @@
 		12A380421C5D4C8B00F2ADF9 = {
 			isa = PBXGroup;
 			children = (
-				12D7F3091C753A3600D665FF /* Friend+CoreDataProperties.swift */,
-				12D7F30A1C753A3600D665FF /* Friend.swift */,
 				12D7F30B1C753A3600D665FF /* Message+CoreDataProperties.swift */,
 				12D7F30C1C753A3600D665FF /* Message.swift */,
 				12A3804D1C5D4C8B00F2ADF9 /* Social */,
@@ -210,6 +210,9 @@
 			children = (
 				12943E371C6882C000A8D2FC /* SocketIO */,
 				12943E601C693ABC00A8D2FC /* CoreDataManager.swift */,
+				127692461C77FE1300410D79 /* searchFriendViewController.swift */,
+				125EE2191C77DD9900122531 /* tabBarController2.swift */,
+				125EE21B1C77E2DC00122531 /* friendRequestViewController.swift */,
 				12A3804E1C5D4C8B00F2ADF9 /* AppDelegate.swift */,
 				12A380521C5D4C8B00F2ADF9 /* Main.storyboard */,
 				127E01AA1C6690E9007C38C0 /* UserCell.swift */,
@@ -453,6 +456,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				127692471C77FE1300410D79 /* searchFriendViewController.swift in Sources */,
 				1207C2941C5DAC2A00CBD353 /* LoginViewController.swift in Sources */,
 				125EE2111C75424F00122531 /* SocketIOClientStatus.swift in Sources */,
 				12943E331C6874B000A8D2FC /* TabBarController.swift in Sources */,
@@ -460,13 +464,13 @@
 				125EE2061C75424F00122531 /* SocketAckManager.swift in Sources */,
 				127E01A91C658EFC007C38C0 /* ContactsViewController.swift in Sources */,
 				125EE2051C75424F00122531 /* SocketAckEmitter.swift in Sources */,
-				12D7F30D1C753A3600D665FF /* Friend+CoreDataProperties.swift in Sources */,
 				125EE2141C75424F00122531 /* SocketParsable.swift in Sources */,
 				125EE2081C75424F00122531 /* SocketClientSpec.swift in Sources */,
 				12943E2F1C686F2D00A8D2FC /* ConversationViewController.swift in Sources */,
 				125EE2171C75424F00122531 /* SwiftRegex.swift in Sources */,
 				125EE2181C75424F00122531 /* WebSocket.swift in Sources */,
 				12D7F30F1C753A3600D665FF /* Message+CoreDataProperties.swift in Sources */,
+				125EE21C1C77E2DC00122531 /* friendRequestViewController.swift in Sources */,
 				126961B01C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				125EE2121C75424F00122531 /* SocketLogger.swift in Sources */,
 				125EE20F1C75424F00122531 /* SocketIOClient.swift in Sources */,
@@ -475,8 +479,8 @@
 				125EE2071C75424F00122531 /* SocketAnyEvent.swift in Sources */,
 				125EE20A1C75424F00122531 /* SocketEngineClient.swift in Sources */,
 				125EE2091C75424F00122531 /* SocketEngine.swift in Sources */,
+				125EE21A1C77DD9900122531 /* tabBarController2.swift in Sources */,
 				12A380571C5D4C8B00F2ADF9 /* Social.xcdatamodeld in Sources */,
-				12D7F30E1C753A3600D665FF /* Friend.swift in Sources */,
 				125EE20B1C75424F00122531 /* SocketEnginePacketType.swift in Sources */,
 				125EE20E1C75424F00122531 /* SocketFixUTF8.swift in Sources */,
 				12A3804F1C5D4C8B00F2ADF9 /* AppDelegate.swift in Sources */,

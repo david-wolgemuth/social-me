@@ -42,6 +42,9 @@ module.exports = function (app, io) {
     app.get("/friends/requests", friends.requests);
     //      -> [{ _id: "_", handle: "david" }]
 
+    app.get("/friends/:id", friends.show);
+    //      -> { friend: { _id: friend._id, handle: friend.handle }, conversation: conversation }
+
     app.post("/friends", friends.create);  // New Friend Request
     //      <- { id: friendId } (must be logged in)
     //      -> { success: Boolean, error: "some error message" }

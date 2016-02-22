@@ -1,0 +1,31 @@
+
+<div ng-controller="friendRequestsController as frCtrl">
+	<div class="modal-header">
+		<h3 class="modal-title">Friend Requests</h3>
+	</div>
+	<hr>
+	<div class="modal-body">
+		<ul class="list-group">
+			<li class="list-group-item" ng-repeat="request in frCtrl.requests">
+				<div class="well">
+					<h4>
+						<span ng-bind="request.handle"></span>
+						<span ng-if="request.isFriend==true" class="label label-success pull-right">Friends! <span class="=glyphicon glyphicon-okay"></span></span>
+						<div ng-if="request.isFriend==false">
+							<button ng-click="frCtrl.accept(request, true)" class="pull-right btn btn-xs btn-primary">
+								Accept <span class="glyphicon glyphicon-ok"></span>
+							</button>
+							<button class="pull-right btn btn-xs btn-default" ng-click="frCtrl.accept(request, false)">
+								Ignore <span class="glyphicon glyphicon-remove"></span>	
+							</button>
+						</div>
+						<div style="clear: both;"></div>
+					</h4>
+				</div>
+			</li>
+		</ul>
+	</div>	
+	<div class="modal-footer">
+		<button class="pull-right btn btn-default" ng-click="frCtrl.close()">Close</button>
+	</div>
+</div>

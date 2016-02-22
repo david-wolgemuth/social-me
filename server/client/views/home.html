@@ -1,6 +1,6 @@
-<div ng-controller="homeController as homeCtrl">
+<div class="height-100" ng-controller="homeController as homeCtrl">
 
-	<nav class="navbar navbar-inverse" role="navigation">
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
 			<div class="navbar-header">
 				<a href="#/" class="navbar-brand">Social ME <span class="glyphicon glyphicon-fire"></span></a>
@@ -10,62 +10,57 @@
 				<button id="user-button" class="btn navbar-btn btn-success droptown-toggle" uib-dropdown-toggle ng-disabled="disabled">
 					<!-- <span class="glyphicon glyphicon-user"></span> -->
 					<span ng-bind="homeCtrl.sessUser.handle"></span>
-					<span class="glyphicon glyphicon-exclamation-sign"></span>
+					<span ng-show="!!homeCtrl.requests.length" class="glyphicon glyphicon-exclamation-sign"></span>
 					<!-- <span class="badge">!</span> -->
 					<span class="glyphicon glyphicon-menu-down"></span>
 				</button>
 				<ul uib-dropdown-menu role="menu" aria-labelledby="user-button">
 					<li><a href ng-click="">User Info <span class="glyphicon glyphicon-edit pull-right"></span></a></li>
-					<li class="disabled"><a href ng-click="">Friend Requests</a></li>
+					<li ng-class="{ 'disabled' : homeCtrl.requests.length==0 }"><a href ng-click="homeCtrl.showRequests()">Friend Requests <span class="badge" ng-bind="homeCtrl.requests.length"></span></a></li>
 					<li><a href ng-click="homeCtrl.findFriends()" class="">Find New Friends</a></li>
 					<li class="divider"></li>
 					<li role="menuitem"><a href ng-click="homeCtrl.logout()">Log Out <span class="pull-right glyphicon glyphicon-log-out"></span></a></li>
 				</ul>
 			</div>
-<!-- 
-			<button class="navbar-right navbar-btn btn btn-success" ng-click="homeCtrl.logout()">Log Out <span class="glyphicon glyphicon-log-out"></span></button>
-			<div class="navbar-header navbar-right">
-				<a href="#/profile" class="nav navbar-brand navbar-right">{{ homeCtrl.sessUser.handle }} <span class="glyphicon glyphicon-user"></span> </a> -->
-			<!-- </div> -->
 		</div>
 	</nav>
 
 	<div class="container">
-		
-		<div class="col-md-3">
-			<!-- Conversations -->
-			<div class="row">
-				<div class="col-md-11">
-					<h3>Conversations</h3>
-					
-					<div class="list-group">
-						<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations" ng-click="homeCtrl.goToConvo(convo)">
-								<span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span>
-								<span class="badge">12</span>
-						</button>
-					</div>
+		<div id="left-nav" class="container">
+			<div class="col-md-3">
+				<!-- Conversations -->
+				<div class="row">
+					<div class="col-md-11">
+						<h3>Conversations</h3>
+						
+						<div class="list-group">
+							<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations | filter: convo.private==false" ng-click="homeCtrl.showConvo(convo, false)">
+									<span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span>
+									<span class="badge">12</span>
+							</button>
+						</div>
 
-				</div>
-			</div>
-			<!-- Friends -->
-			<div class="row">
-				<div class="col-md-11">
-					<h3>Friends</h3>
-					<input class="form-control" type="text" ng-model="userSearch" placeholder="Search Friends">
-					<br>
-					<div class="list-group">
-						<button class="list-group-item" ng-repeat="user in homeCtrl.users | filter: userSearch | filter: '!'+homeCtrl.sessUser.handle" ng-click="homeCtrl.newConvo(user)">
-								<span ng-bind="user.handle"></span>
-								
-						</button>
 					</div>
-					<hr>
-					<!-- <button ng-click="homeCtrl.findFriends()" class="btn btn-default btn-block">Find New Friends</button> -->
+				</div>
+				<!-- Friends -->
+				<div class="row">
+					<div class="col-md-11">
+						<h3>Friends</h3>
+						<input class="form-control" type="text" ng-model="friendSearch" placeholder="Search Friends">
+						<br>
+						<div class="list-group">
+							<button class="list-group-item" ng-repeat="friend in homeCtrl.friends | filter: friendSearch | filter: '!'+homeCtrl.sessUser.handle" ng-click="homeCtrl.showFriend(friend._id, true)">
+									<span ng-bind="friend.handle"></span>
+									
+							</button>
+						</div>
+						<hr>
+					</div>
 				</div>
 			</div>
 		</div>
-
-		<div show-convo class="col-md-9"></div>
+		<div class="col-md-3"></div>
+		<div show-convo class="col-md-9 height-100"></div>
 
 	</div>
 </div>

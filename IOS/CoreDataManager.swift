@@ -16,8 +16,6 @@ class CoreDataManager {
     private var managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
 
     
-    private var friends: [Friend]?
-    
     private var Entities: [NSEntityDescription?]
     private var Requests: [NSFetchRequest?]
     
@@ -25,25 +23,16 @@ class CoreDataManager {
         Entities = [NSEntityDescription.entityForName("Message", inManagedObjectContext:managedObjectContext),NSEntityDescription.entityForName("Friend", inManagedObjectContext:managedObjectContext)]
         
         Requests = [NSFetchRequest(entityName:"Message"),NSFetchRequest(entityName:"Friend")]
-        self.fetch_friends()
+     
     }
     
-    func fetch_friends() {
-        do{
-            friends = try managedObjectContext.executeFetchRequest(Requests[1]!) as? [Friend]
-        } catch let error {
-            print("error in fetching friends....\(error)")
-        }
-    }
-    
+   
     func overwrite_user() {
-        self.deleteAllFriends()
+     
         self.deleteAllMessages()
     }
 
-    func get_friends() -> [Friend]? {
-        return friends
-    }
+   
 
     func get_messages(friend_id: String) -> [Message]? {
         var messages: [Message]?
@@ -60,27 +49,6 @@ class CoreDataManager {
     
 
 
-    
-    
-    func add_friend(friend_arr: [AnyObject]) {
-
-        for index in 0..<friend_arr.count {
-            let friendToSave =  NSManagedObject(entity: Entities[2]!, insertIntoManagedObjectContext: self.managedObjectContext)
-            
-            let id = friend_arr[index]["_id"] as? String
-
-            let username = friend_arr[index]["username"] as? String
-            friendToSave.setValue(id,forKey: "id")
-            friendToSave.setValue(username, forKey:"username")
-            do {
-                try self.managedObjectContext.save()
-                friends?.append((friendToSave as? Friend)!)
-            } catch let error {
-                print("error in saving user to coredata:: \(error)")
-            }
-         
-        }
-    }
     
     
     
@@ -112,19 +80,7 @@ class CoreDataManager {
         }
     }
     
-    func deleteAllFriends() {
-        Requests[1]!.includesPropertyValues = false
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: Requests[1]!)
-        do {
-            try self.managedObjectContext.executeRequest(deleteRequest)
-            self.friends = []
-            print("success in deleting friends")
-            
-        } catch let error {
-            print("error in deleting friends: \(error)")
-        }
-    }
-    
+   
     
     
   

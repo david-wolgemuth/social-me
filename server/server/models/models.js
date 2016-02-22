@@ -5,14 +5,15 @@ var bcrypt = require("bcrypt");
 //------------ Users -------------//
 var UserSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
-    handle: { type: String, required: true, unique: true },
+    handle: { type: String, required: true, unique: true ,trim:true},
     password: { type: String, required: true },
     friends: [{ 
         friendId: {
             type: mongoose.Schema.Types.ObjectId, 
             ref: "User",
         },
-        confirmed: { type: Boolean, default: false }
+        confirmed: { type: Boolean, default: false },
+        conversation: { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" }
     }],
 
     profileImage: { type: mongoose.Schema.Types.ObjectId, ref: "Image" },
@@ -81,6 +82,8 @@ var ImageSchema = new mongoose.Schema({
 
 //------------ Conversations -------------//
 var ConversationSchema = new mongoose.Schema({
+    title: String,
+    private: { type: Boolean, default: false },  // Private Conversations Are Created When Friends Are Added
     users: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
@@ -92,7 +95,6 @@ var ConversationSchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
-
 
 // Deep Populate Rules
 var deepPopulate = require("mongoose-deep-populate");

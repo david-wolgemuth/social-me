@@ -116,7 +116,6 @@ public class SCLAlertView: UIViewController {
     
     // UI Options
     public var showCloseButton = true
-    public var hideWhenBackgroundViewIsTapped = false
     public var showCircularIcon = true
     public var contentViewCornerRadius : CGFloat = 5.0
     public var fieldCornerRadius : CGFloat = 3.0
@@ -182,16 +181,10 @@ public class SCLAlertView: UIViewController {
         viewText.textColor = UIColorFromRGB(0x4D4D4D)
         contentView.layer.borderColor = UIColorFromRGB(0xCCCCCC).CGColor
         //Gesture Recognizer for tapping outside the textinput
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: Selector("tapped:"))
+        let tapGesture = UITapGestureRecognizer(target: self, action: Selector("dismissKeyboard"))
         tapGesture.numberOfTapsRequired = 1
         self.view.addGestureRecognizer(tapGesture)
-
     }
-    
-    
-    
-    
     
     override public init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName:nibNameOrNil, bundle:nibBundleOrNil)
@@ -389,13 +382,9 @@ public class SCLAlertView: UIViewController {
         }
     }
     
-   
-    
-    func tapped(gestureRecognizer: UITapGestureRecognizer){
+    //Dismiss keyboard when tapped outside textfield
+    func dismissKeyboard(){
         self.view.endEditing(true)
-        if let tappedView = gestureRecognizer.view where tappedView.hitTest(gestureRecognizer.locationInView(tappedView), withEvent: nil) == baseView && hideWhenBackgroundViewIsTapped {
-            hideView()
-        }
     }
     
     // showSuccess(view, title, subTitle)
