@@ -35,7 +35,7 @@ module.exports = function (io) {
                         }
                     }
                 }
-                arr.push({ _id: user._id, isFriend: user.isFriend, requestSent: Boolean(user.requestSent), handle: user.handle });
+                arr.push({ _id: user._id, isFriend: user.isFriend, requestSent: Boolean(user.requestSent), requestFromFriend: Boolean(), handle: user.handle });
             });
             res.json(arr);
         });

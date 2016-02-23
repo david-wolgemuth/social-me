@@ -79,7 +79,7 @@ messengerModule.controller("homeController", function (userFactory, conversation
 })
 .directive("showConvo", function ($compile) {
     return {
-        template: "<div conversation convo-id=homeCtrl.ccid></div>",
+        template: "<div conversation convo-id=homeCtrl.ccid class='height-100'></div>",
     };
 });
 

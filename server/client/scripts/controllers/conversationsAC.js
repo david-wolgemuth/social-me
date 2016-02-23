@@ -1,4 +1,4 @@
-messengerModule.controller("conversationsController", function ($scope, $routeParams, $location, 
+messengerModule.controller("conversationsController", function ($scope, $routeParams, $location, $timeout,
                                                                 socket, conversationFactory, messageFactory, userFactory) {
     this.convoId = $scope.convoId;
     this.users = [];
@@ -16,6 +16,7 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
                     message.hideHandle = false;
                 }
                 self.messages.push(message);
+                self.scrollToBottom();
             });
         } else {
             console.log(self.convoId, convoId);
@@ -47,6 +48,7 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
                 }
                 self.messages = conversation.messages;
                 filterUserNames(self.messages);
+                self.scrollToBottom();
             });
         });
     });
@@ -68,6 +70,7 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
         message.userId = this.sessUser._id;
         messageFactory.create(message, function (createdMessage) {
             message.content = "";
+            self.scrollToBottom();
         });
     };
     this.logout = function () {
@@ -76,6 +79,12 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
             $location.path("/welcome");
         });
     };
+    this.scrollToBottom = function () {
+        $timeout(function () {
+        var scroller = document.getElementById("conversation-box");
+            scroller.scrollTop = scroller.scrollHeight;
+        }, 0, false);
+    }
 })
 .directive("conversation", function () {
     return {

@@ -1,4 +1,4 @@
-<div class="height-100" ng-controller="homeController as homeCtrl">
+<div class="height-100 test-border" ng-controller="homeController as homeCtrl">
 
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
@@ -25,42 +25,40 @@
 		</div>
 	</nav>
 
-	<div class="container">
-		<div id="left-nav" class="container">
-			<div class="col-md-3">
-				<!-- Conversations -->
-				<div class="row">
-					<div class="col-md-11">
-						<h3>Conversations</h3>
-						
-						<div class="list-group">
-							<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations | filter: convo.private==false" ng-click="homeCtrl.showConvo(convo, false)">
-									<span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span>
-									<span class="badge">12</span>
-							</button>
-						</div>
+	<div id="test-border" class="container height-100">
+		<div id="left-nav" class="col-md-3">
+			<!-- Conversations -->
+			<div class="row">
+				<div class="col-md-11">
+					<h3>Conversations</h3>
+					
+					<div class="list-group">
+						<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations | filter: convo.private==false" ng-click="homeCtrl.showConvo(convo, false)">
+								<span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span>
+								<span class="badge">12</span>
+						</button>
+					</div>
 
-					</div>
 				</div>
-				<!-- Friends -->
-				<div class="row">
-					<div class="col-md-11">
-						<h3>Friends</h3>
-						<input class="form-control" type="text" ng-model="friendSearch" placeholder="Search Friends">
-						<br>
-						<div class="list-group">
-							<button class="list-group-item" ng-repeat="friend in homeCtrl.friends | filter: friendSearch | filter: '!'+homeCtrl.sessUser.handle" ng-click="homeCtrl.showFriend(friend._id, true)">
-									<span ng-bind="friend.handle"></span>
-									
-							</button>
-						</div>
-						<hr>
+			</div>
+			<!-- Friends -->
+			<div class="row">
+				<div class="col-md-11">
+					<h3>Friends</h3>
+					<input class="form-control" type="text" ng-model="friendSearch" placeholder="Search Friends">
+					<br>
+					<div class="list-group">
+						<button class="list-group-item" ng-repeat="friend in homeCtrl.friends | filter: friendSearch | filter: '!'+homeCtrl.sessUser.handle" ng-click="homeCtrl.showFriend(friend._id, true)">
+								<span ng-bind="friend.handle"></span>
+								
+						</button>
 					</div>
+					<hr>
 				</div>
 			</div>
 		</div>
-		<div class="col-md-3"></div>
-		<div show-convo class="col-md-9 height-100"></div>
+		<div id="testing" show-convo class="col-md-9 height-100 test-border"></div>
+	</div>
 
 	</div>
 </div>

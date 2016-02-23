@@ -1,8 +1,8 @@
-<div ng-controller="conversationsController as convoCtrl">
+<div ng-controller="conversationsController as convoCtrl" class="height-100 test-border">
 
 	<h4><span ng-repeat="user in convoCtrl.users | filter: user.sessUser=false"> {{ user.handle }} </span></h4>
 
-	<div id="conversation-box" class="row">
+	<div id="conversation-box" class="row flexcroll">
 		<div class="row" ng-repeat="message in convoCtrl.messages">
 			<!-- Not User -->
 			<div class="col-md-8" ng-if="message._user._id!=convoCtrl.sessUser._id">
@@ -24,21 +24,17 @@
 			</div>
 		</div>
 	</div>
-	
+	<hr>
 	<div ng-if="convoCtrl.convoId" class="row">
-		<hr>
-		<nav class="navbar navbar-fixed-bottom">
-			<div class="container">
-				<form ng-submit="convoCtrl.createMessage(message)">
-					<div class="input-group">
-						<input class="form-control" type="text" ng-model="message.content" placeholder="New Message">
-						<span class="input-group-btn">
-							<button class="btn btn-default" type="submit">Send Message</button>
-						</span>
-					</div>
-				</form>
-			</div>
-		</nav>
+			<form ng-submit="convoCtrl.createMessage(message)">
+				<div class="input-group">
+					<input class="form-control" type="text" ng-model="message.content" placeholder="New Message">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="submit">Send Message</button>
+					</span>
+				</div>
+			</form>
 	</div>
+	
 
 </div>
