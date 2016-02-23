@@ -1,42 +1,40 @@
-<div ng-controller="conversationsController as convoCtrl">
+<div ng-controller="conversationsController as convoCtrl" class="height-100 test-border">
 
-	<a href="#/home">Home</a>
-	<a href ng-click="convoCtrl.logout()">Log Out</a>
+	<h4><span ng-repeat="user in convoCtrl.users | filter: user.sessUser=false"> {{ user.handle }} </span></h4>
 
-	<h3>Conversation</h3>
-	<h4 ng-repeat="user in convoCtrl.users" ng-bind="user.handle"></h4>
-
-	<div class="row" ng-repeat="message in convoCtrl.messages">
-		<!-- Not User -->
-		<div class="col-md-8" ng-if="message._user._id!=convoCtrl.sessUser._id">
-			<!-- Header -->
-			<div class="inline">
-				<h3 ng-if="message.hideHandle==false"><span class="label label-primary" ng-bind="message._user.handle"></span></h3>
-				<h6 ng-bind="message.createdAt | date: 'EEE HH:mm'"></h6>
+	<div id="conversation-box" class="row flexcroll">
+		<div class="row" ng-repeat="message in convoCtrl.messages">
+			<!-- Not User -->
+			<div class="col-md-8" ng-if="message._user._id!=convoCtrl.sessUser._id">
+				<!-- Header -->
+				<div class="inline">
+					<h3 ng-if="message.hideHandle==false"><span class="label label-primary" ng-bind="message._user.handle"></span></h3>
+					<h6 ng-bind="message.createdAt | date: 'EEE HH:mm'"></h6>
+				</div>
+				<div class="inline bubble" ng-bind="message.content"></div>
 			</div>
-			<div class="inline bubble" ng-bind="message.content"></div>
-		</div>
-		<!-- User -->
-		<div class="col-md-8 col-md-offset-4 align-right" ng-if="message._user._id==convoCtrl.sessUser._id">
-			<div class="inline bubble align-right" ng-bind="message.content"></div>
-			<!-- Header -->
-			<div class="inline ">
-				<h3 ng-if="message.hideHandle==false"><span class="label label-primary" ng-bind="message._user.handle"></span></h3>
-				<h6 ng-bind="message.createdAt | date: 'EEE HH:mm'"></h6>
+			<!-- User -->
+			<div class="col-md-8 col-md-offset-4 align-right" ng-if="message._user._id==convoCtrl.sessUser._id">
+				<div class="inline bubble align-right" ng-bind="message.content"></div>
+				<!-- Header -->
+				<div class="inline">
+					<h3 ng-if="message.hideHandle==false"><span class="label label-primary" ng-bind="message._user.handle"></span></h3>
+					<h6 ng-bind="message.createdAt | date: 'EEE HH:mm'"></h6>
+				</div>
 			</div>
 		</div>
+	</div>
+	<hr>
+	<div ng-if="convoCtrl.convoId" class="row">
+			<form ng-submit="convoCtrl.createMessage(message)">
+				<div class="input-group">
+					<input class="form-control" type="text" ng-model="message.content" placeholder="New Message">
+					<span class="input-group-btn">
+						<button class="btn btn-default" type="submit">Send Message</button>
+					</span>
+				</div>
+			</form>
 	</div>
 	
-	<div ng-if="convoCtrl.convoId" class="row">
-		<hr>
-		<form ng-submit="convoCtrl.createMessage(message)">
-			<div class="input-group">
-				<input class="form-control" type="text" ng-model="message.content" placeholder="New Message">
-				<span class="input-group-btn">
-					<button class="btn btn-default" type="submit">Send Message</button>
-				</span>
-			</div>
-		</form>
-	</div>
 
 </div>

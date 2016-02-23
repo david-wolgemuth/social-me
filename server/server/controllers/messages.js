@@ -24,7 +24,7 @@ module.exports = function (io) {
                         savedMessage.deepPopulate("_user", function () {
                             conversation.users.forEach(function (user_id) {
                                 console.log("Should I emit to", user_id);
-                                if (io.users[user_id] && user_id != user._id) {
+                                if (io.users[user_id]) {
                                     io.users[user_id].emit("newMessage", { 
                                         message: savedMessage._id, 
                                         conversation: conversation._id 

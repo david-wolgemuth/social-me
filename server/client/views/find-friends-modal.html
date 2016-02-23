@@ -1,3 +1,4 @@
+
 <div ng-controller="findFriendsController as ffCtrl">
 	<div class="modal-header">
 		<h3 class="modal-title">Search For New Friends</h3>
@@ -13,10 +14,11 @@
 				<div class="well">
 					<h4>
 						<span ng-bind="user.handle"></span>
-						<span ng-if="user.isFriend==true" class="label label-default pull-right">Already Friends</span>
+						<span ng-if="user.isFriend==true" class="label label-default pull-right">Already Friends <span class="=glyphicon glyphicon-okay"></span></span>
 						<div ng-if="user.isFriend==false">
-							<span ng-if="user.requestSent==true" class="label label-success pull-right">Request Sent</span>
-							<button ng-if="user.requestSent==false" ng-click="ffCtrl.addFriend(user)" class="pull-right btn btn-primary"></span><span class="glyphicon glyphicon-user"></span></button>
+							<span ng-if="user.requestSent==true" class="label label-success pull-right">Request Sent <span class="glyphicon glyphicon-send"></span></span>
+							<button ng-if="user.requestSent==false" ng-click="ffCtrl.addFriend(user)" class="pull-right btn btn-xs btn-primary">
+							Add Friend <span class="glyphicon glyphicon-plus"></span></button>
 						</div>
 						<div style="clear: both;"></div>
 					</h4>
@@ -24,4 +26,7 @@
 			</li>
 		</ul>
 	</div>	
+	<div class="modal-footer">
+		<button class="pull-right btn btn-default" ng-click="ffCtrl.close()">Close</button>
+	</div>
 </div>

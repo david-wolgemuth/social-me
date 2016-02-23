@@ -34,8 +34,16 @@ module.exports = function (app, io) {
 
     //------------ Friends -------------//
     app.get("/friends", friends.index);
+    //      -> [{ _id: "_", handle: "david" }]
+    // 
+    //      Can Search For Friends using "/friends?user=joe"
+    //      -> [{ _id: " _ ", handle: "david", isFriend: false, requestSent: true }]
+    
     app.get("/friends/requests", friends.requests);
     //      -> [{ _id: "_", handle: "david" }]
+
+    app.get("/friends/:id", friends.show);
+    //      -> { friend: { _id: friend._id, handle: friend.handle }, conversation: conversation }
 
     app.post("/friends", friends.create);  // New Friend Request
     //      <- { id: friendId } (must be logged in)

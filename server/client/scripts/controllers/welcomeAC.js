@@ -1,6 +1,6 @@
 messengerModule.controller("welcomeController", function (userFactory, $location) {
     var self = this;
-    this.currentForm = 'login';
+    this.currentForm = "login";
     this.changeForm = function (form) {
         this.error = ""; this.warning = ""; this.message = "";
         this.currentForm = form;
@@ -30,6 +30,7 @@ messengerModule.controller("welcomeController", function (userFactory, $location
                 for (var key in info) {
                     info[key] = "";
                 }
+                self.currentForm = "login";
             } else {
                 self.error = "Email / Password Already Exists";
                 info.passA = ""; info.passB = "";

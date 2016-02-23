@@ -21,6 +21,8 @@ module.exports = function (io) {
             });
         },
         create: function (req, res) {
+            var sUser = req.session.user;
+            if (!sUser) { res.json({ conversation: null, error: "Not Logged In." })}
             var conversation = new Conversation({
                 users: req.body
             });
