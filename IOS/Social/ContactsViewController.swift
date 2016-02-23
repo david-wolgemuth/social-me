@@ -8,40 +8,58 @@
 
 import UIKit
 import SCLAlertView
+import CSNotificationView
 import MIBadgeButton_Swift
+import AVFoundation
 
 
-class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableViewDataSource{
+class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableViewDataSource,friendRequestDelegate{
     
     @IBOutlet weak var tableView: UITableView!
     
-    var ToConfirm = [String: String]()
-    
-   
-    var count = 0
     var AddFriendButton: UIBarButtonItem?
-    var Friends = [Dictionary<String,String>]()
+    
+    var Friends = Connection.sharedInstance.getFriends()
+    
+
+    
+    
+ 
+    
+    var audioPlayer:AVAudioPlayer?
+    
+    var button = MIBadgeButton(type: .Custom)
+    let userPlusImage = UIImage.fontAwesomeIconWithName(.UserPlus, textColor: UIColor(red: 100.0/255.0, green: 255.0/255.0, blue: 197.0/255.0, alpha: 1.0), size: CGSizeMake(30,30))
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("view loaded")
         Connection.sharedInstance.delegate = self
         self.tableView.dataSource = self
+        button.frame = CGRectMake(0,0,70,40)
+        button.badgeEdgeInsets = UIEdgeInsetsMake(15, 0, 0, 15)
+        button.setImage(userPlusImage, forState: .Normal)
+        button.addTarget(self, action: Selector("addFriendsButtonPressed:"), forControlEvents: UIControlEvents.TouchUpInside)
+ 
+        
+        Connection.sharedInstance.listenForFriendUpdate()
+        let requestSound = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("request", ofType: "wav")!)
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOfURL: requestSound)
+            audioPlayer?.prepareToPlay()
+        } catch let error {
+            print("error ::: \(error)")
+            
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        Connection.sharedInstance.checkFriendRequest()
         
-        let userPlusImage = UIImage.fontAwesomeIconWithName(.UserPlus, textColor: UIColor(red: 100.0/255.0, green: 255.0/255.0, blue: 197.0/255.0, alpha: 1.0), size: CGSizeMake(30,30))
         
-        count = Connection.sharedInstance.getFriendRequest().count
+        let count = Connection.sharedInstance.getFriendRequestCount()
         if count > 0 {
-            let button = MIBadgeButton(type: .Custom)
             button.badgeString = String(count)
-            button.frame = CGRectMake(0, 0, 70, 40)
-            button.badgeEdgeInsets = UIEdgeInsetsMake(15, 0, 0, 15)
-            button.setImage(userPlusImage, forState: .Normal)
-            button.addTarget(self, action: Selector("addFriendsButtonPressed:"), forControlEvents: UIControlEvents.TouchUpInside)
             let barButton = UIBarButtonItem(customView: button)
             self.navigationItem.rightBarButtonItem = barButton
             
@@ -49,15 +67,10 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
             self.AddFriendButton = UIBarButtonItem(image:userPlusImage, style: UIBarButtonItemStyle.Plain, target:self, action:  Selector("addFriendsButtonPressed:"))
             self.navigationItem.rightBarButtonItem = self.AddFriendButton
         }
-        Connection.sharedInstance.getFriend({
-            friends in
-            self.Friends = friends
-            self.tableView.reloadData()
-            
-        })
+        
 
     }
-    
+  
 
    
 
@@ -73,6 +86,8 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
         //implement notification 
         
     }
+    
+  
     
 
     
@@ -127,22 +142,42 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
 //        }
         if segue.identifier == "friendView" {
             let tabBar = segue.destinationViewController as! TabBarController2
-            tabBar.count = self.count
-            
+            let controller = tabBar.viewControllers![1] as! friendRequestViewController
+            controller.delegate = self
         }
-        
-      
 
     }
     
-
-
-  
+    func didConfirmNewFriendRequest() {
+        self.Friends = Connection.sharedInstance.getFriends()
+        self.tableView.reloadData()
+       
+    }
+ 
     
     func addFriendsButtonPressed(sender: UIBarButtonItem) {
         performSegueWithIdentifier("friendView", sender: nil)
     }
    
+    func didReceiveFriendUpdate(action: String) {
+   
+        
+        if action == "Request" {
+            print("new request")
+            button.badgeString = String(Connection.sharedInstance.getFriendRequestCount())
+            let barButton = UIBarButtonItem(customView: button)
+            self.navigationItem.rightBarButtonItem = barButton
+            audioPlayer?.play()
+            
+        } else { //new friend from confirming request
+            print("new friend")
+            Friends = Connection.sharedInstance.getFriends()
+            self.tableView.reloadData()
+            audioPlayer?.play()
+        }
+    }
+    
+ 
 
     
 

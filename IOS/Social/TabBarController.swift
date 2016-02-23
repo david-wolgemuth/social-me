@@ -14,5 +14,6 @@ class TabBarController: UITabBarController {
    
         self.tabBar.items![0].image = UIImage.fontAwesomeIconWithName(.Users, textColor: UIColor.blackColor(), size: CGSizeMake(30, 30))
         self.tabBar.items![1].image = UIImage.fontAwesomeIconWithName(.Commenting, textColor: UIColor.blackColor(), size: CGSizeMake(30, 30))
+        self.tabBar.items![2].image = UIImage.fontAwesomeIconWithName(.Cog, textColor: UIColor.blackColor(), size: CGSizeMake(30, 30))
     }
 }

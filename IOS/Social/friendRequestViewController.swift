@@ -9,22 +9,36 @@
 import UIKit
 import CSNotificationView
 
-class friendRequestViewController: UIViewController,UITableViewDataSource,UITableViewDelegate{
+
+protocol friendRequestDelegate {
+    func didConfirmNewFriendRequest()
+}
+
+class friendRequestViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,ConnectionSocketDelegate{
     
   
     
     
     var friendRequests: [Dictionary<String,String>] = Connection.sharedInstance.getFriendRequest()
+    var delegate: friendRequestDelegate?
     
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
         self.tableView.dataSource = self
         self.tableView.delegate = self
+        Connection.sharedInstance.delegate = self
     }
     
     
+    func didReceiveFriendUpdate(action: String) {
+        if action == "Request" {
+            friendRequests = Connection.sharedInstance.getFriendRequest()
+            self.tableView.reloadData()
+        }
+    }
     
+
 
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -47,10 +61,9 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
  
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let accept = UITableViewRowAction(style: .Normal, title: "Accept") { action, index in
-            print("pressed")
+        let accept = UITableViewRowAction(style: .Normal, title: "\u{2713} \n Accept") { action, index in
             
-            Connection.sharedInstance.respondFriend(self.friendRequests[indexPath.row]["id"]!, accept: true) {
+            Connection.sharedInstance.respondFriend(indexPath.row, accept: true) {
                 success,error in
                 if success == false {
                     CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)
@@ -62,14 +75,15 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
                     } else {
                         self.tabBarItem.badgeValue = newBadgeValue
                     }
+                    self.delegate?.didConfirmNewFriendRequest()
                     self.tableView.reloadData()
                 }
             }
         }
-        accept.backgroundColor = UIColor.greenColor()
+        accept.backgroundColor = UIColor(red: 0, green: 192.0/255.0, blue: 0, alpha: 1.0)
         
-        let ignore = UITableViewRowAction(style: .Normal, title: "Ignore") { action, index in
-            Connection.sharedInstance.respondFriend(self.friendRequests[indexPath.row]["id"]!, accept: false) {
+        let ignore = UITableViewRowAction(style: .Normal, title: "\u{0FBE} \n Ignore") { action, index in
+            Connection.sharedInstance.respondFriend(indexPath.row, accept: false) {
                 success,error in
                 if success == false {
                     CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)

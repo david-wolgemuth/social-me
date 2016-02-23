@@ -34,6 +34,9 @@
 		126961AA1C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 126961A91C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m */; };
 		126961B01C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 126961AF1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m */; };
 		127692471C77FE1300410D79 /* searchFriendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692461C77FE1300410D79 /* searchFriendViewController.swift */; };
+		127692511C7A7EB800410D79 /* request.wav in Resources */ = {isa = PBXBuildFile; fileRef = 127692501C7A7EB800410D79 /* request.wav */; };
+		127692531C7AD26A00410D79 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692521C7AD26A00410D79 /* SettingsTableViewController.swift */; };
+		127692551C7BDC3F00410D79 /* SearchFriendUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692541C7BDC3F00410D79 /* SearchFriendUserCell.swift */; };
 		127E01A91C658EFC007C38C0 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127E01A81C658EFC007C38C0 /* ContactsViewController.swift */; };
 		127E01AB1C6690E9007C38C0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127E01AA1C6690E9007C38C0 /* UserCell.swift */; };
 		12943E2D1C686B7600A8D2FC /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12943E2C1C686B7600A8D2FC /* MessageViewController.swift */; };
@@ -101,6 +104,9 @@
 		126961AE1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+TPKeyboardAvoidingAdditions.h"; sourceTree = "<group>"; };
 		126961AF1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+TPKeyboardAvoidingAdditions.m"; sourceTree = "<group>"; };
 		127692461C77FE1300410D79 /* searchFriendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = searchFriendViewController.swift; sourceTree = "<group>"; };
+		127692501C7A7EB800410D79 /* request.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = request.wav; sourceTree = "<group>"; };
+		127692521C7AD26A00410D79 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		127692541C7BDC3F00410D79 /* SearchFriendUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchFriendUserCell.swift; sourceTree = "<group>"; };
 		127E01A81C658EFC007C38C0 /* ContactsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		127E01AA1C6690E9007C38C0 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		12943E2C1C686B7600A8D2FC /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
@@ -210,6 +216,8 @@
 			children = (
 				12943E371C6882C000A8D2FC /* SocketIO */,
 				12943E601C693ABC00A8D2FC /* CoreDataManager.swift */,
+				127692521C7AD26A00410D79 /* SettingsTableViewController.swift */,
+				127692541C7BDC3F00410D79 /* SearchFriendUserCell.swift */,
 				127692461C77FE1300410D79 /* searchFriendViewController.swift */,
 				125EE2191C77DD9900122531 /* tabBarController2.swift */,
 				125EE21B1C77E2DC00122531 /* friendRequestViewController.swift */,
@@ -224,6 +232,7 @@
 				1207C2951C5DBB6500CBD353 /* RegisterViewController.swift */,
 				126961A81C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.h */,
 				126961AE1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.h */,
+				127692501C7A7EB800410D79 /* request.wav */,
 				126961A91C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m */,
 				126961A71C5DC3770008F8EC /* Social-Bridging-Header.h */,
 				126961AF1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m */,
@@ -381,6 +390,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				127692511C7A7EB800410D79 /* request.wav in Resources */,
 				12A3805C1C5D4C8B00F2ADF9 /* LaunchScreen.storyboard in Resources */,
 				12A380591C5D4C8B00F2ADF9 /* Assets.xcassets in Resources */,
 				12A380541C5D4C8B00F2ADF9 /* Main.storyboard in Resources */,
@@ -470,9 +480,11 @@
 				125EE2171C75424F00122531 /* SwiftRegex.swift in Sources */,
 				125EE2181C75424F00122531 /* WebSocket.swift in Sources */,
 				12D7F30F1C753A3600D665FF /* Message+CoreDataProperties.swift in Sources */,
+				127692531C7AD26A00410D79 /* SettingsTableViewController.swift in Sources */,
 				125EE21C1C77E2DC00122531 /* friendRequestViewController.swift in Sources */,
 				126961B01C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				125EE2121C75424F00122531 /* SocketLogger.swift in Sources */,
+				127692551C7BDC3F00410D79 /* SearchFriendUserCell.swift in Sources */,
 				125EE20F1C75424F00122531 /* SocketIOClient.swift in Sources */,
 				125EE2131C75424F00122531 /* SocketPacket.swift in Sources */,
 				126961AA1C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m in Sources */,

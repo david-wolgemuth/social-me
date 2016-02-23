@@ -9,6 +9,7 @@
 import UIKit
 import SCLAlertView
 import CSNotificationView
+import SwiftyButton
 
 extension String
 {
@@ -23,7 +24,10 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
-    var friendFound = [Dictionary<String,String>]()
+    var friendFound = [Dictionary<String,AnyObject>]()
+    var changeQuery: Bool = false
+    var SubmitRequest: Bool = false
+    var friendIndex: Int = -1
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -43,8 +47,9 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
         cancelGesture.addTarget(self, action: Selector("backgroundTapped:"))
         self.view.addGestureRecognizer(cancelGesture)
         cancelGesture.cancelsTouchesInView = false
-        friendFound = []
-        self.tableView.reloadData()
+        if SubmitRequest {
+            changeQuery = true
+        }
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -56,60 +61,67 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
         
         
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("UserCell")! as! UserCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("SearchUserCell")! as! SearchFriendUserCell
         
-        cell.usernameLabel?.text = friendFound[indexPath.row]["handle"]
-        cell.profilePicView.image = UIImage(named: "profile") //fetch image later
-        
-        return cell
-    }
-    
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let alert = SCLAlertView()
-        
-        alert.addButton("Yes") {
-            Connection.sharedInstance.addFriend(self.friendFound[0]["id"]!)
+        cell.usernameLabel?.text = friendFound[indexPath.row]["handle"] as? String
+        let friendAlready = friendFound[indexPath.row]["isFriend"]! as! Int
+        let requestSentAlready = friendFound[indexPath.row]["requestSent"] as! Int
+        cell.AddFriendButton.titleLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        cell.AddFriendButton.titleLabel?.textAlignment = .Center
+     
+        if friendAlready == 1 || requestSentAlready == 1{
+            if friendAlready == 1 {
+                cell.AddFriendButton.setTitle("Already\nFriends", forState: .Normal)
+                
+            } else if requestSentAlready == 1 {
+                cell.AddFriendButton.setTitle("Request\nSent", forState: .Normal)
+                
+            }
+            cell.AddFriendButton.enabled = false;
+            
+        } else {
+            cell.AddFriendButton.setTitle("Add\nFriend",forState:  .Normal)
+            cell.AddFriendButton.tag = indexPath.row
+            cell.AddFriendButton.addTarget(self, action: Selector("sendFriendRequest:"), forControlEvents: UIControlEvents.TouchUpInside)
             
         }
-        alert.showNotice("Friend Request", subTitle: "Do you want to add this user as a friend?",closeButtonTitle: "No")
-    
+  
+        cell.profilePicView.image = UIImage(named: "profile") //fetch image later
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
+  
+
+        return cell
     }
     
     func didSuccessSendRequest(success: Bool,error: String?) {
         if success == true {
-            CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Success, message: "Request Sent")
+            self.friendFound[friendIndex]["requestSent"] = 1
+            self.tableView.reloadData()
         } else {
             CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)
-            
         }
+        SubmitRequest = false
     }
     
- 
- 
-    
-    
-  
-    
-    
-    
-    
+
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         let trimText = self.searchBar.text!.trim()
         Connection.sharedInstance.FindFriend(trimText)
         searchBar.resignFirstResponder()
     }
     
-    
-    func didFindFriend(success: Bool, friendFound: Dictionary<String, String>?) {
- 
-        if success == true {
-            self.friendFound.append(friendFound!)
-            self.tableView.reloadData()
-        } else {
-            let alert = SCLAlertView()
-            alert.showError("Error", subTitle: "No user \(searchBar.text!) was found",closeButtonTitle: "Close")
+    func sendFriendRequest(sender: SwiftyButton) {
+        let index = sender.tag
+        friendIndex = index
+        Connection.sharedInstance.addFriend(self.friendFound[index]["id"] as! String)
+        SubmitRequest = true
         
+    }
+
+    func didFindFriend(success: Bool, friendFound: [Dictionary<String, AnyObject>]?) {
+        if success == true {
+            self.friendFound = friendFound!
+            self.tableView.reloadData()
         }
     }
     

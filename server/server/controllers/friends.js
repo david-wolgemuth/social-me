@@ -17,6 +17,7 @@ module.exports = function (io) {
         }).lean().exec(function(error, users) {
             if (error) { console.log(error); } 
             var arr = [];
+            console.log(users);
             users.forEach(function (user) {
                 console.log(user.handle);
                 user.isFriend = false;
@@ -74,6 +75,19 @@ module.exports = function (io) {
         User.findById(userId, function (error, user) {
             if (error) { console.log(error); }
 
+            for (var i = 0; i < user.friends.length; i ++) {
+                if (user.friends[i].friendId.equals(friendId)) {
+                    if (!user.friends[i].confirmed) {
+                        console.log("Check your Friend Request");
+                        res.json({
+                            success: false,
+                            error: "Please Confirm your Friend Request"
+                        })
+                        return;
+                    }
+                }
+            }
+
             User.findById(friendId, function (error, friend) {
                 if (error) { console.log(error); }
                 if (!friend || !user || userId == friendId) {
@@ -85,7 +99,8 @@ module.exports = function (io) {
                     return;
                 }
                 for (var i = 0; i < friend.friends.length; i++) {
-                    if (friend.friends[i].friendId == userId) {
+
+                    if (friend.friends[i].friendId.equals(user._id)){
                         if (friend.friends[i].confirmed) {
                             console.log("Already Friends");
                             res.json({
@@ -128,7 +143,9 @@ module.exports = function (io) {
             if (!user) { 
                 return res.json({ success: false, error: "Not Logged In"}); 
             }
-            if (!confirmed) {  // Ignore Request
+            console.log(req.body);
+            if (confirmed == 'false' || !confirmed) {  // Ignore Request
+                console.log("ignore");
                 for (var i = 0; i < user.friends.length; i++) {
                     if (String(user.friends[i].friendId) == friendId) {
                         user.friends.splice(i, 1);
