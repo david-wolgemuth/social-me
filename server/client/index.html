@@ -1,36 +1,45 @@
 <!DOCTYPE html>
 <html ng-app="messengerApp">
-<head>
-		<title>Messenger App</title>
-		<!-- Requirements -->
-		<script src="bower_components/angular/angular.js"></script>
-		<script src="bower_components/angular-route/angular-route.js"></script>
-		<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-		<script src="socket.io/socket.io.js"></script>
+	<head>
+	<title>Social Me</title>
 
-		<!-- Main App -->
-		<script src="scripts/app.js"></script>
+	<!-- Meta Data -->
+	<meta name="viewport" content="width=device-width, initial-scale=0.8">
+	<meta charset="UTF-8">
 
-		<!-- Factories -->
-		<script src="scripts/factories/socket.js"></script>
-		<script src="scripts/factories/userFactory.js"></script>
-		<script src="scripts/factories/conversationFactory.js"></script>
-		<script src="scripts/factories/messageFactory.js"></script>
-		<script src="scripts/factories/friendFactory.js"></script>
+	<!-- Requirements -->
+	<script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-route/angular-route.js"></script>
+	<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+	<script src="bower_components/angular-animate/angular-animate.js"></script>
+	<script src="socket.io/socket.io.js"></script>
 
-		<!-- Controllers -->
-		<script src="scripts/controllers/welcomeAC.js"></script>
-		<script src="scripts/controllers/homeAC.js"></script>
-		<script src="scripts/controllers/conversationsAC.js"></script>
-		<script src="scripts/controllers/findFriendsAC.js"></script>
+	<!-- Main App -->
+	<script src="scripts/app.js"></script>
 
-		<!-- StyleSheets -->
-		<link rel="stylesheet" href="styles/flatly.bootstrap.css">
-		<link rel="stylesheet" href="styles/custom-styles.css">
+	<!-- Factories -->
+	<script src="scripts/factories/socket.js"></script>
+	<script src="scripts/factories/userFactory.js"></script>
+	<script src="scripts/factories/conversationFactory.js"></script>
+	<script src="scripts/factories/messageFactory.js"></script>
+	<script src="scripts/factories/friendFactory.js"></script>
+	<script src="scripts/factories/imageFactory.js"></script>
+
+	<!-- Controllers -->
+	<script src="scripts/controllers/mainController.js"></script>
+	<script src="scripts/controllers/welcomeAC.js"></script>
+	<script src="scripts/controllers/homeAC.js"></script>
+	<script src="scripts/controllers/conversationsAC.js"></script>
+	<script src="scripts/controllers/findFriendsAC.js"></script>
+
+	<!-- StyleSheets -->
+	<link rel="stylesheet" href="styles/flatly.bootstrap.css">
+	<link rel="stylesheet" href="styles/custom-styles.css">
 </head>
-<body>
+<body ng-controller="mainController" style="{{ currentBackground }}">
 
 <div class="height-100" ng-view=""></div>
+
 
 
 </body>

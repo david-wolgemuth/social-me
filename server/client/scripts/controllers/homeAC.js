@@ -1,19 +1,25 @@
-messengerModule.controller("homeController", function (userFactory, conversationFactory, socket, friendFactory, $scope, $location, $uibModal) {
+messengerModule.controller("homeController", function (userFactory, conversationFactory, imageFactory, socket, friendFactory, $scope, $location, $uibModal) {
     var self = this;
     this.sessUser = null;
     this.friends = [];
     this.conversations = [];
     this.ccid = null;
     this.requests = [];
+    this.slideDown = false;
+
+    this.showFriendList = function () {
+        console.log("SHOWING");
+        this.slideDown = !this.slideDown;
+    };
     socket.on("friendRequest", function (request) {  // { user: { _id: user._id, handle: user.handle }}
-        console.log("Request:", request);
-        self.requests.push(request.user);
+        $scope.$apply(function () {
+            self.requests.push(request.user);
+        });
     });
     socket.on("friendAccepted", function (friendship) {
-        console.log("BEFORE:", self.friends);
-        console.log("Friend Accepted:", friendship);
-        self.friends.push(friendship.user);
-        console.log("AFTER:", self.friends);
+        $scope.$apply(function () {
+            self.friends.push(friendship.user);
+        });
     });
         
     userFactory.getSessionUser(function (user) {
@@ -22,13 +28,15 @@ messengerModule.controller("homeController", function (userFactory, conversation
         }
         self.sessUser = user;
     });
-    friendFactory.index(function (friends) {
-        self.friends = friends;
-    });
-    friendFactory.requests(function (requests) {
-        console.log("Requests:", requests);
-        self.requests = requests;
-    });
+    this.resetFriendsAndRequests = function () {
+        friendFactory.index(function (friends) {
+            self.friends = friends;
+        });
+        friendFactory.requests(function (requests) {
+            self.requests = requests;
+        });
+    }
+    this.resetFriendsAndRequests();
     conversationFactory.index(function (convos) {
         self.conversations = convos;
     });
@@ -48,6 +56,7 @@ messengerModule.controller("homeController", function (userFactory, conversation
     this.showFriend = function (friendId) {
         friendFactory.show(friendId, function (friendship) {
             self.ccid = friendship.conversation._id;
+            self.slideDown = false;
             $scope.$broadcast("ccid", { id: self.ccid });
         });
     };
@@ -61,20 +70,15 @@ messengerModule.controller("homeController", function (userFactory, conversation
             templateUrl: "views/find-friends-modal.html",
             scope: $scope
         });
+        $scope.modalInstance.result.then(this.resetFriendsAndRequests, this.resetFriendsAndRequests);
     };
     this.showRequests = function () {
-        console.log("Friend Requests Clicked");
         $scope.modalInstance = $uibModal.open({
             animation: true,
             templateUrl: "views/friend-requests.html",
             scope: $scope
         });
-        $scope.modalInstance.result.then(function () {}, function () {
-            friendFactory.requests(function (requests) {
-                console.log("Requests:", requests);
-                self.requests = requests;
-            });        
-        });
+        $scope.modalInstance.result.then(this.resetFriendsAndRequests, this.resetFriendsAndRequests);
     };
 })
 .directive("showConvo", function ($compile) {

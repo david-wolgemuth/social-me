@@ -1,4 +1,4 @@
-messengerModule.controller("conversationsController", function ($scope, $routeParams, $location, $timeout,
+messengerModule.controller("conversationsController", function ($scope, $routeParams, $location, $timeout, imageFactory,
                                                                 socket, conversationFactory, messageFactory, userFactory) {
     this.convoId = $scope.convoId;
     this.users = [];
@@ -7,10 +7,11 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
     var self = this;
 
     socket.on("newMessage", function (data) {
+        console.log("New Message!");
         var convoId = data.conversation;
         if (convoId == self.convoId) {
             messageFactory.show(data.message, function (message) {
-                if (self.messages[self.messages.length - 1]._user._id == message._user._id) {
+                if (self.messages.length && self.messages[self.messages.length - 1]._user._id == message._user._id) {
                     message.hideHandle = true;
                 } else {
                     message.hideHandle = false;
@@ -47,6 +48,7 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
                     return;
                 }
                 self.messages = conversation.messages;
+                
                 filterUserNames(self.messages);
                 self.scrollToBottom();
             });
