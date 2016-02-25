@@ -1,5 +1,7 @@
 // Messenger Server Routes
 
+var fs = require("fs");
+
 module.exports = function (app, io) {
     // Sockets
     io.users = {};
@@ -73,4 +75,14 @@ module.exports = function (app, io) {
     app.get("/conversations", conversations.index);
     app.get("/conversations/:id", conversations.show);
 
+    app.get("/backgrounds", function (req, res) {
+        backgrounds = [];
+        backgrounds_path = __dirname + "/../../client/styles/background-images";
+        fs.readdirSync(backgrounds_path).forEach(function (file) {
+            console.log(file);
+            backgrounds.push(file);
+        });
+        console.log("Backgrounds:", backgrounds);
+        res.json(backgrounds);
+    });
 };

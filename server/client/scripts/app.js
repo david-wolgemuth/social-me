@@ -1,4 +1,4 @@
-var messengerModule = angular.module("messengerApp", ["ngRoute", "ui.bootstrap", "ui.bootstrap.modal"]);
+var messengerModule = angular.module("messengerApp", ["ngRoute", "ui.bootstrap", "ui.bootstrap.modal", "ngAnimate"]);
 
 //Routes Config
 messengerModule.config(function($routeProvider){
@@ -20,5 +20,19 @@ messengerModule.config(function($routeProvider){
 messengerModule.filter("isoDate", function () {
 	return function (input) {
 		return Date.parse(input);
+	};
+});
+
+messengerModule.filter("convoTitle", function () {
+	return function (convo) {
+		if (convo.title) {
+			return convo.title;
+		} else {
+			var names = [];
+			convo.users.forEach(function (user) {
+				names.push(user.handle);
+			});
+			return names.join(" | ");
+		}
 	};
 });

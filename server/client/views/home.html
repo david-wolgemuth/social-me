@@ -1,41 +1,61 @@
 <div class="height-100 test-border" ng-controller="homeController as homeCtrl">
 
 	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-		<div class="container">
-			<div class="navbar-header">
-				<a href="#/" class="navbar-brand">Social ME <span class="glyphicon glyphicon-fire"></span></a>
+		<div class="container-fluid">
+			<div class="col-xs-5">
+				<div class="visible-xs visible-sm navbar-header pull-left">
+					<button class="btn navbar-btn btn-success" ng-click="homeCtrl.showFriendList()"><span class="glyphicon glyphicon-list"></span></button>
+				</div>
+				<div class="navbar-header">
+					<a href class="navbar-brand"><span class="hidden-xs">Social ME</span> <span class="glyphicon glyphicon-fire"></span></a>
+				</div>
 			</div>
-			
-			<div class="btn-group navbar-right" uib-dropdown is-open="status.isopen">
-				<button id="user-button" class="btn navbar-btn btn-success droptown-toggle" uib-dropdown-toggle ng-disabled="disabled">
-					<!-- <span class="glyphicon glyphicon-user"></span> -->
-					<span ng-bind="homeCtrl.sessUser.handle"></span>
-					<span ng-show="!!homeCtrl.requests.length" class="glyphicon glyphicon-exclamation-sign"></span>
-					<!-- <span class="badge">!</span> -->
-					<span class="glyphicon glyphicon-menu-down"></span>
-				</button>
-				<ul uib-dropdown-menu role="menu" aria-labelledby="user-button">
-					<li><a href ng-click="">User Info <span class="glyphicon glyphicon-edit pull-right"></span></a></li>
-					<li ng-class="{ 'disabled' : homeCtrl.requests.length==0 }"><a href ng-click="homeCtrl.showRequests()">Friend Requests <span class="badge" ng-bind="homeCtrl.requests.length"></span></a></li>
-					<li><a href ng-click="homeCtrl.findFriends()" class="">Find New Friends</a></li>
-					<li class="divider"></li>
-					<li role="menuitem"><a href ng-click="homeCtrl.logout()">Log Out <span class="pull-right glyphicon glyphicon-log-out"></span></a></li>
-				</ul>
+			<div class="col-xs-3">
+				<div class="navbar-header ellipis">
+					<a href class="navbar-brand"><span ng-bind="homeCtrl.currentConversationTitle.text" class="ellipis"></span></a>
+				</div>
 			</div>
+				
+			<div class="col-xs-4">
+				<div class="btn-group navbar-right pull-right" uib-dropdown is-open="status.isopen">
+					<button id="user-button" class="btn navbar-btn btn-success droptown-toggle" uib-dropdown-toggle ng-disabled="disabled">
+						<span class="hidden-xs" ng-bind="homeCtrl.sessUser.handle"></span>
+						<span ng-show="!!homeCtrl.requests.length" class="glyphicon glyphicon-exclamation-sign"></span>
+						<span class="visible-xs pull-left glyphicon glyphicon-user"></span>
+						<span class="glyphicon glyphicon-menu-down"></span>
+					</button>
+					<ul uib-dropdown-menu role="menu" aria-labelledby="user-button">
+						<li><a href ng-click="">User Info <span class="glyphicon glyphicon-edit pull-right"></span></a></li>
+						<li ng-class="{ 'disabled' : homeCtrl.requests.length==0 }"><a href ng-click="homeCtrl.showRequests()">Friend Requests <span class="badge" ng-bind="homeCtrl.requests.length"></span></a></li>
+						<li><a href ng-click="homeCtrl.findFriends()">Find New Friends</a></li>
+						<li><a href ng-click="homeCtrl.newConvo()">New Conversation</a></li>
+						<li class="visible-xs"><a href ng-click="changeBackground()">Change Background</a>	</li>
+						<li class="divider"></li>
+						<li role="menuitem"><a href ng-click="homeCtrl.logout()">Log Out <span class="pull-right glyphicon glyphicon-log-out"></span></a></li>
+					</ul>
+				</div>
+			</div>	
 		</div>
 	</nav>
-
-	<div id="test-border" class="container height-100">
-		<div id="left-nav" class="col-md-3">
+	<div class="container height-100">
+		<div id="left-nav" class="col-md-3 hidden-sm hidden-xs">
 			<!-- Conversations -->
-			<div class="row">
+			<div class="row push-from-nav">
 				<div class="col-md-11">
-					<h3>Conversations</h3>
+					<h3>
+						<span class="label label-default label-block">Conversations 
+							<button ng-click="homeCtrl.newConvo()" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</button>
+						</span>
+					</h3>
 					
+					<input class="form-control" type="text" ng-model="convoSearch" placeholder="Search Conversations">
 					<div class="list-group">
-						<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations | filter: convo.private==false" ng-click="homeCtrl.showConvo(convo, false)">
-								<span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span>
-								<span class="badge">12</span>
+						<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations | filter: convo.private==false | filter:homeCtrl.searchConvos(convoSearch) | limitTo: 6" ng-click="homeCtrl.showConvo(convo, false)">
+							<span class="ellipis" ng-bind="convo | convoTitle"></span>
+								<!-- <span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span> -->
+								<!-- <span class="badge">12</span> -->
 						</button>
 					</div>
 
@@ -44,7 +64,13 @@
 			<!-- Friends -->
 			<div class="row">
 				<div class="col-md-11">
-					<h3>Friends</h3>
+					<h3>
+						<span class="label label-default label-block">Friends
+							<button ng-click="homeCtrl.findFriends()" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</button>
+						</span>
+					</h3>
 					<input class="form-control" type="text" ng-model="friendSearch" placeholder="Search Friends">
 					<br>
 					<div class="list-group">
@@ -57,8 +83,29 @@
 				</div>
 			</div>
 		</div>
-		<div id="testing" show-convo class="col-md-9 height-100 test-border"></div>
+
+		<div id="slide-nav" ng-show="homeCtrl.slideDown"  class="flexcroll row visible-xs visible-sm">
+			<div class="col-md-11">
+				<input class="form-control" type="text" ng-model="friendSearch" placeholder="Search Friends">
+				<br>
+				<div class="list-group">
+					<button class="list-group-item" ng-repeat="friend in homeCtrl.friends | filter: friendSearch | filter: '!'+homeCtrl.sessUser.handle" ng-click="homeCtrl.showFriend(friend._id, true)">
+							<span ng-bind="friend.handle"></span>
+							
+					</button>
+				</div>
+				<hr>
+			</div>
+		</div>
+		
+
+
+		<div show-convo class="col-md-9 height-100 test-border"></div>
 	</div>
 
+	<div id="change-backgound-button" class="hidden-xs">
+		<button ng-click="changeBackground()" class="btn btn-default btn-sm">Change Background</button>	
 	</div>
+
+
 </div>

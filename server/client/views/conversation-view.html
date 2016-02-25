@@ -25,12 +25,12 @@
 		</div>
 	</div>
 	<hr>
-	<div ng-if="convoCtrl.convoId" class="row">
+	<div id="message-input" ng-if="convoCtrl.convoId" class="row">
 			<form ng-submit="convoCtrl.createMessage(message)">
 				<div class="input-group">
-					<input class="form-control" type="text" ng-model="message.content" placeholder="New Message">
+					<input class="form-control input-sm" type="text" ng-model="message.content" placeholder="New Message">
 					<span class="input-group-btn">
-						<button class="btn btn-default" type="submit">Send Message</button>
+						<button class="btn btn-sm btn-default" type="submit">Send Message</button>
 					</span>
 				</div>
 			</form>

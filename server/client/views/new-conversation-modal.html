@@ -1,0 +1,36 @@
+
+<div ng-controller="newConversationController as ncCtrl">
+	<div class="modal-header">
+		<h3 class="modal-title">New Conversation</h3>
+		<label for="title">Conversation Title</label>
+		<input type="text" name="title" class="form-control" ng-model="ncCtrl.conversationTitle" placeholder="Conversation Title">
+		<h5>In Conversation</h5>
+		<ul class="list-group list-inline">
+			<li class="list-group-item" ng-repeat="friend in ncCtrl.friendsInConversation">
+				<span ng-bind="friend.handle"></span>
+				<button ng-click="ncCtrl.removeFromConvo(friend)" class="btn btn-xs"><span class="glyphicon glyphicon-remove"></span></button>
+			</li>
+		</ul>
+	</div>
+	<div class="modal-body">
+		<input type="text" class="form-control" ng-model="searchFriends" placeholder="Search">
+		<ul class="list-group">
+			<li class="list-group-item" ng-repeat="friend in ncCtrl.allFriends | filter: searchFriends | limitTo: 8">
+				<span ng-bind="friend.handle"></span>
+				<button ng-if="friend.inConvo==false" ng-click="ncCtrl.addFriendToConvo(friend)" class="pull-right btn btn-xs btn-primary">
+					Add <span class="glyphicon glyphicon-plus"></span>
+				</button>
+				<button ng-if="friend.inConvo==true" ng-click="ncCtrl.removeFromConvo(friend)" class="btn btn-xs pull-right">Remove</button>
+				<div style="clear: both;"></div>
+			</li>
+		</ul>
+	</div>	
+	<div class="modal-footer">
+		<div class="col-xs-7 col-sm-9">
+			<input class="btn btn-primary btn-block" type="submit" value="Start Conversation" ng-click="ncCtrl.createConversation();">
+		</div>
+		<div class="col-xs-5 col-sm-3">
+			<button class="pull-right btn btn-block btn-default" ng-click="ncCtrl.close()">Close</button>
+		</div>
+	</div>
+</div>
