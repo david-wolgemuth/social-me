@@ -1,5 +1,5 @@
 //
-//  Message+CoreDataProperties.swift
+//  Conversation+CoreDataProperties.swift
 //  Social
 //
 //  Created by Shuhan Ng on 2/23/16.
@@ -12,12 +12,12 @@
 import Foundation
 import CoreData
 
-extension Message {
+extension Conversation {
 
-    @NSManaged var content: String?
-    @NSManaged var conversationID: String?
-    @NSManaged var senderHandle: String?
-    @NSManaged var senderID: String?
-    @NSManaged var timestamp: NSDate?
+    @NSManaged var friendId: String?
+    @NSManaged var id: String?
+    @NSManaged var lastMessage: String?
+    @NSManaged var updatedAt: NSDate?
+    @NSManaged var unreadMsg: String?
 
 }

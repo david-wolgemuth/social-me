@@ -11,4 +11,6 @@ class UserCell: UITableViewCell {
     
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var profilePicView: UIImageView!
+    
+    
 }

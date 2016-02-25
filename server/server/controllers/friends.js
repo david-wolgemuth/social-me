@@ -66,8 +66,9 @@ module.exports = function (io) {
                     return;
                 }
                 Conversation.findById(sUser.friends[friendIndex].conversation)
-                .deepPopulate()
+                .deepPopulate('messages messages._user')
                 .exec(function (error, conversation) {
+                    console.log(conversation);
                     if (error) { console.log(error); }
                     res.json({ friend: { _id: friend._id, handle: friend.handle }, conversation: conversation });
                 });
@@ -196,6 +197,7 @@ module.exports = function (io) {
                     } else {
                         res.json({ success: true });
                     }
+                    return;
                 });
             } else {  // Make Friends
                 User.findById(friendId,function(error,friend) {

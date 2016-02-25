@@ -10,6 +10,7 @@ import UIKit
 import SCLAlertView
 import CSNotificationView
 import SwiftyButton
+import AVFoundation
 
 extension String
 {
@@ -20,7 +21,7 @@ extension String
 }
 
 
-class searchFriendViewController: UIViewController,UISearchBarDelegate,ConnectionAddFriendDelegate,UITableViewDataSource,UITableViewDelegate {
+class searchFriendViewController: UIViewController,UISearchBarDelegate,ConnectionAddFriendDelegate,UITableViewDataSource,UITableViewDelegate,ConnectionSocketDelegate {
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -28,13 +29,45 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
     var changeQuery: Bool = false
     var SubmitRequest: Bool = false
     var friendIndex: Int = -1
+    
+    var audioPlayer:AVAudioPlayer?
+    var soundPlayer: AVAudioPlayer?
+    
+    var delegate: friendRequestDelegate?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        let requestSound = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("request", ofType: "wav")!)
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOfURL: requestSound)
+            audioPlayer?.prepareToPlay()
+        } catch let error {
+            print("error ::: \(error)")
+            
+        }
+        
+        let sentSound = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("sent", ofType: "wav")!)
+        do {
+            soundPlayer = try AVAudioPlayer(contentsOfURL: sentSound)
+            soundPlayer?.prepareToPlay()
+        } catch let error {
+            print("error ::: \(error)")
+            
+        }
+   
+
+
+    }
 
     override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+        print("View appeared")
         searchBar.delegate = self
         Connection.sharedInstance.addFriendDelegate = self
         self.tableView.dataSource = self
         self.tableView.delegate = self
+        
+        Connection.sharedInstance.delegate = self
+        super.viewWillAppear(animated)
     }
     
     func backgroundTapped(sender: UITapGestureRecognizer) {   
@@ -77,9 +110,10 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
                 cell.AddFriendButton.setTitle("Request\nSent", forState: .Normal)
                 
             }
-            cell.AddFriendButton.enabled = false;
+            cell.AddFriendButton.enabled = false
             
         } else {
+            cell.AddFriendButton.enabled = true
             cell.AddFriendButton.setTitle("Add\nFriend",forState:  .Normal)
             cell.AddFriendButton.tag = indexPath.row
             cell.AddFriendButton.addTarget(self, action: Selector("sendFriendRequest:"), forControlEvents: UIControlEvents.TouchUpInside)
@@ -95,8 +129,12 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
     
     func didSuccessSendRequest(success: Bool,error: String?) {
         if success == true {
+            
             self.friendFound[friendIndex]["requestSent"] = 1
             self.tableView.reloadData()
+            soundPlayer?.play()
+            
+            
         } else {
             CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)
         }
@@ -130,6 +168,26 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
         Connection.sharedInstance.addFriendDelegate = nil
     }
     
+    func didReceiveMessages(message: Message?) {
+        
+    }
+    
+    
+    func didReceiveFriendUpdate(action: String) {
+        if action == "Request" {
+            var newBadge: String
+            if let badge = self.tabBarController!.tabBar.items![1].badgeValue {
+                newBadge = String(Int(badge)!+1)
+            } else {
+                newBadge = "1"
+            }
+            self.tabBarController!.tabBar.items![1].badgeValue = newBadge
+            audioPlayer?.play()
+        } else {
+            self.delegate?.didConfirmNewFriendRequest()
+        }
+    }
+
     
   
 }

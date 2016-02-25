@@ -8,11 +8,12 @@
 
 import Foundation
 import KeychainSwift
+import CoreData
 
 
-@objc protocol ConnectionSocketDelegate {
-    optional func didReceiveMessages(data: AnyObject)
-    optional func didReceiveFriendUpdate(action: String)
+protocol ConnectionSocketDelegate {
+    func didReceiveMessages(message: Message?)
+   func didReceiveFriendUpdate(action: String)
 }
 
 protocol ConnectionLoginDelegate {
@@ -55,10 +56,6 @@ class Connection {
         url = "http://ShuHans-MacBook-Air.local:5000"
         socket = SocketIOClient(socketURL: url)
         socket.connect()
-//        listeners.append("connect")
-//        socket.
-        
-        
         socket.on("connect") { data, ack in
             print("IOS::: WE ARE USING SOCKETS!!!")
         }
@@ -296,12 +293,14 @@ class Connection {
                         if let message = self.parseJSON(found_data) {
                             if let success = message["success"] {
                                 if (success! as! Int == 1) {
-                                    self.Friends.append(["id":FriendId,"handle":self.friendRequest[Index]["handle"]!])
+                                    if (accept == true) {
+                                        self.Friends.append(["id":FriendId,"handle":self.friendRequest[Index]["handle"]!])
+                                    }
                                     self.friendRequest.removeAtIndex(Index)
                                     didRespondRequest(success: true,error:nil)
                                 } else {
                                     let error = message["error"]
-                                    didRespondRequest(success: true,error: error! as? String)
+                                    didRespondRequest(success: false,error: error! as? String)
                                 }
                             }
                         }
@@ -312,9 +311,6 @@ class Connection {
             }
             task.resume()
         }
-        
-    
-        
     }
     
     func checkFriendRequest() {
@@ -332,50 +328,127 @@ class Connection {
                 
             }
         }
-        
     }
     
     
+    func getConversation(friendId: String, loadedMsg: (ConversationId: String ,Message: [Message]?) -> ()) {
+        var newMessage: [Message]?
+        if let urlToReq = NSURL(string: url+"/friends/"+friendId) {
+            if let data = NSData(contentsOfURL: urlToReq) {
+                if let info = self.parseJSON(data) {
+                    newMessage = CoreDataManager.sharedInstance.get_messages(info["conversation"]!!["_id"]! as! String)
+                    if let savedMsg = newMessage {
+                        let convo = info["conversation"]!!["messages"] as? NSArray
+                        if let conversation = convo { //new msg since user offline
+                            for (var i = savedMsg.count; i < conversation.count ; i++) {
+                                let message = conversation[i]
+                                var newMsg: Message? = CoreDataManager.sharedInstance.add_message(message["content"]! as! String, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: info["conversation"]!!["_id"]! as! String, createdAt: message["createdAt"]! as! String)
+                                if newMsg != nil {
+                                    newMessage!.append(newMsg!)
+                                    CoreDataManager.sharedInstance.create_conversation(info["conversation"]!!["_id"] as! String, friendId: friendId, lastMsg: newMsg!.content!, updatedAt: newMsg!.timestamp!, unreadMsg: "1")
+                                    
+                                }
+                            }
+                            
+                        }
+                    }
+                    loadedMsg(ConversationId: info["conversation"]!!["_id"]! as! String,Message: newMessage)
+                }
+            }
+        }
+    }
+    
+  
+
+    
+    func listenForMessages() {
+        socket.on("newMessage") {data, ack in
+            print("Connection::: got message")
+            let msg = self.get_message(data[0]["message"]! as! String)
+            self.delegate?.didReceiveMessages(msg)
+   
+        }
+    }
     
     
-//    
+    func get_message(messageId: String) -> Message? {
+        var receiveMsg: Message?
+        if let urlToReq = NSURL(string: url+"/messages/"+messageId) {
+            if let data = NSData(contentsOfURL: urlToReq) {
+                if let info = self.parseJSON(data) {
+                    if info["_user"]!!["_id"]! as? String != NSUserDefaults.standardUserDefaults().stringForKey("id") { //i did not send the message
+                        receiveMsg = CoreDataManager.sharedInstance.add_message(info["content"]! as! String, senderId: info["_user"]!!["_id"]! as! String, senderHandle: info["_user"]!!["handle"]! as! String, conversationId: info["_conversation"]! as! String, createdAt: info["createdAt"]! as! String)
+                        if receiveMsg != nil {
+                            CoreDataManager.sharedInstance.create_conversation(receiveMsg!.conversationID!, friendId:info["_user"]!!["_id"]! as! String, lastMsg: receiveMsg!.content!, updatedAt: receiveMsg!.timestamp!, unreadMsg: "1")
+                        }
+                    }
+                }
+            }
+        }
+        
+        return receiveMsg
+        
+    }
     
-//    func listenForMessages() {
-//        socket.on("updateMessage") {data, ack in
-//            print("Connection::: got message")
-//            // data will be messageId
-//            // send http request for message
-//            self.delegate?.didReceiveMessages(data[0])
-//        }
-//    }
-//    
-//    
-//    
-//    
-//    func sendMessages(data: AnyObject) {
-//        // Instead of emitting with socket,
-//        // http POST to server (restfully: "/messages") 
-//        socket.emit("newMessage",data)
-//    }
-//    
+    func getFriendUserName(FriendId: String)-> String {
+        for (var i = 0; i < self.Friends.count; i++) {
+            if self.Friends[i]["id"] == FriendId {
+                return self.Friends[i]["handle"]!
+            }
+        }
+        return ""
+    }
+    
+
     
     
+    func sendMessage(conversationId: String,content: String,sendToFriend: String,didSuccessSendMsg:(newMessage: Message?)->()) {
+        
+        if let urlToReq = NSURL(string: url+"/messages") {
+            let request: NSMutableURLRequest = NSMutableURLRequest(URL: urlToReq)
+            request.HTTPMethod = "POST"
+            let bodyData = "conversationId=\(conversationId)&content=\(content)"
+            request.HTTPBody = bodyData.dataUsingEncoding(NSUTF8StringEncoding)
+            let session:NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+            let task = session.dataTaskWithRequest(request) {
+                (data,response,error) in
+                dispatch_sync(dispatch_get_main_queue()) {
+                    if let found_data = data {                        
+                        if let message = self.parseJSON(found_data) {
+                            var newMsg = CoreDataManager.sharedInstance.add_message(message["content"]! as! String, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: message["_conversation"]! as! String, createdAt: message["createdAt"]! as! String)
+                            if (newMsg !== nil ) {
+                                CoreDataManager.sharedInstance.create_conversation(conversationId, friendId: sendToFriend, lastMsg: newMsg!.content!, updatedAt: newMsg!.timestamp!, unreadMsg: "0")
+                            }
+                       
+                            didSuccessSendMsg(newMessage: newMsg)
+                        }
+                        
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+
     func listenForFriendUpdate() {
         socket.on("friendRequest") {
             data, ack in
             print("get friend request")
             let user = data[0]["user"]
             self.friendRequest.append(["id":user!!["_id"]! as! String,"handle":user!!["handle"]! as! String])
-            self.delegate!.didReceiveFriendUpdate?("Request")
+            self.delegate?.didReceiveFriendUpdate("Request")
         }
         socket.on("friendAccepted") {
             data, ack in
             print("get new friend accept")
             let user = data[0]["user"]
             self.Friends.append(["id": user!!["_id"]! as! String, "handle":user!!["handle"]! as! String])
-            self.delegate!.didReceiveFriendUpdate?("Accepted")
+            self.delegate?.didReceiveFriendUpdate("Accepted")
         }
     }
+    
+    
+    
   
    
 }

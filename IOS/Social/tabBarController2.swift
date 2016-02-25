@@ -17,6 +17,7 @@ class TabBarController2: UITabBarController {
         self.tabBar.items![0].image = UIImage.fontAwesomeIconWithName(.Search, textColor: UIColor.blackColor(), size: CGSizeMake(30, 30))
         self.tabBar.items![1].image = UIImage.fontAwesomeIconWithName(.UserPlus, textColor: UIColor.blackColor(), size: CGSizeMake(30, 30))
         let count = Connection.sharedInstance.getFriendRequestCount()
+        
         if count > 0 {
             self.tabBar.items![1].badgeValue = String(count)
         }

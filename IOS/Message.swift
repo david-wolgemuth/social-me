@@ -2,35 +2,36 @@
 //  Message.swift
 //  Social
 //
-//  Created by Shuhan Ng on 2/17/16.
+//  Created by Shuhan Ng on 2/23/16.
 //  Copyright © 2016 Shuhan Ng. All rights reserved.
 //
 
 import Foundation
 import CoreData
+import JSQMessagesViewController
 
 
-class Message: NSManagedObject {
+class Message: NSManagedObject,JSQMessageData {
 
     convenience init(entity: NSEntityDescription,insertIntoManagedObjectContext context:NSManagedObjectContext,text:String,senderID: String,
-        receiverID: String,senderDisplayName: String) {
+        conversationID: String,senderDisplayName: String,createdAt: String) {
             self.init(entity: entity,insertIntoManagedObjectContext: context)
             self.senderID = senderID
-            self.senderUsername = senderDisplayName
-            self.timestamp = NSDate()
+            self.senderHandle = senderDisplayName
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            self.timestamp = dateFormatter.dateFromString(createdAt)
             self.content = text
-            self.receiverID = receiverID
+            self.conversationID = conversationID
             
     }
-    
-    
-    
+
     func senderId() -> String! {
         return self.senderID
     }
     
     func senderDisplayName() -> String! {
-        return self.senderUsername
+        return self.senderHandle
     }
     
     
@@ -50,8 +51,6 @@ class Message: NSManagedObject {
     func text() -> String! {
         return self.content
     }
-    
-    
-    
+
 
 }

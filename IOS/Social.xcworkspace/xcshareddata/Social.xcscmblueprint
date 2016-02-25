@@ -4,20 +4,27 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
-    "6C4534A8E1E960B5782AB3476DDF0053B3DE7F44" : 0,
     "E1A3BAC28BD088EE82D39A78B4DECC34C947871B" : 0,
-    "6635048D429C70A92AE6FF6DE9C25CF18EF4F0A2" : 0
+    "38C85868E92105924E79157F444BCACB521C133E" : 0,
+    "6635048D429C70A92AE6FF6DE9C25CF18EF4F0A2" : 0,
+    "6C4534A8E1E960B5782AB3476DDF0053B3DE7F44" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "E73FFAC8-F2B4-4302-A271-DB4014FFD6F1",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "6C4534A8E1E960B5782AB3476DDF0053B3DE7F44" : "socialME\/",
     "E1A3BAC28BD088EE82D39A78B4DECC34C947871B" : "social-me\/",
-    "6635048D429C70A92AE6FF6DE9C25CF18EF4F0A2" : ".."
+    "38C85868E92105924E79157F444BCACB521C133E" : "Tempo\/",
+    "6635048D429C70A92AE6FF6DE9C25CF18EF4F0A2" : "..",
+    "6C4534A8E1E960B5782AB3476DDF0053B3DE7F44" : "socialME\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "Social",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "IOS\/Social.xcworkspace",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/remirobert\/Tempo.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "38C85868E92105924E79157F444BCACB521C133E"
+    },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ngshuhan\/discussion-board.git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",

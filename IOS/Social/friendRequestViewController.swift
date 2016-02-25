@@ -8,6 +8,7 @@
 
 import UIKit
 import CSNotificationView
+import AVFoundation
 
 
 protocol friendRequestDelegate {
@@ -17,17 +18,37 @@ protocol friendRequestDelegate {
 class friendRequestViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,ConnectionSocketDelegate{
     
   
+    var audioPlayer:AVAudioPlayer?
+
     
-    
-    var friendRequests: [Dictionary<String,String>] = Connection.sharedInstance.getFriendRequest()
+    var friendRequests =  [Dictionary<String,String>]()
     var delegate: friendRequestDelegate?
-    
+ 
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         self.tableView.dataSource = self
         self.tableView.delegate = self
+        
+        
+        
+        let requestSound = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("request", ofType: "wav")!)
+        do {
+            audioPlayer = try AVAudioPlayer(contentsOfURL: requestSound)
+            audioPlayer?.prepareToPlay()
+        } catch let error {
+            print("error ::: \(error)")
+            
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        friendRequests = Connection.sharedInstance.getFriendRequest()
         Connection.sharedInstance.delegate = self
+        self.tableView.reloadData()
+        
     }
     
     
@@ -35,14 +56,27 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
         if action == "Request" {
             friendRequests = Connection.sharedInstance.getFriendRequest()
             self.tableView.reloadData()
+            audioPlayer?.play()
+        } else {
+            self.delegate?.didConfirmNewFriendRequest()
+            
+        
         }
     }
+    
+    
+    
+    
     
 
 
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return friendRequests.count
+    }
+    
+    func didReceiveMessages(message: Message?) {
+        
     }
 
 
@@ -58,9 +92,11 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
         return cell
     }
     
- 
+    
+   
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+      
         let accept = UITableViewRowAction(style: .Normal, title: "\u{2713} \n Accept") { action, index in
             
             Connection.sharedInstance.respondFriend(indexPath.row, accept: true) {
@@ -68,15 +104,20 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
                 if success == false {
                     CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)
                 } else {
-                    self.friendRequests.removeAtIndex(indexPath.row)
-                    let newBadgeValue = String(Int(self.tabBarItem.badgeValue!)!-1)
-                    if newBadgeValue == "0" {
-                        self.tabBarItem.badgeValue = nil
-                    } else {
-                        self.tabBarItem.badgeValue = newBadgeValue
+                    self.friendRequests = Connection.sharedInstance.getFriendRequest()
+                    if let badge = self.tabBarItem.badgeValue {
+                        let newBadgeValue = String(Int(badge)!-1)
+                        if newBadgeValue == "0" {
+                            self.tabBarItem.badgeValue = nil
+                        } else {
+                            self.tabBarItem.badgeValue = newBadgeValue
+                        }
+                        
                     }
+                    
                     self.delegate?.didConfirmNewFriendRequest()
                     self.tableView.reloadData()
+    
                 }
             }
         }
@@ -88,12 +129,16 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
                 if success == false {
                     CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)
                 } else {
-                    self.friendRequests.removeAtIndex(indexPath.row)
-                    let newBadgeValue = String(Int(self.tabBarItem.badgeValue!)!-1)
-                    if newBadgeValue == "0" {
-                        self.tabBarItem.badgeValue = nil
-                    } else {
-                        self.tabBarItem.badgeValue = newBadgeValue
+                    self.friendRequests = Connection.sharedInstance.getFriendRequest()
+                    
+                    if let badge = self.tabBarItem.badgeValue {
+                        let newBadgeValue = String(Int(badge)!-1)
+                        if newBadgeValue == "0" {
+                            self.tabBarItem.badgeValue = nil
+                        } else {
+                            self.tabBarItem.badgeValue = newBadgeValue
+                        }
+                        
                     }
                     self.tableView.reloadData()
                 }
@@ -103,6 +148,8 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
         
         return [ignore,accept]
     }
+  
+   
     
    
 

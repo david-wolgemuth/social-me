@@ -37,6 +37,15 @@
 		127692511C7A7EB800410D79 /* request.wav in Resources */ = {isa = PBXBuildFile; fileRef = 127692501C7A7EB800410D79 /* request.wav */; };
 		127692531C7AD26A00410D79 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692521C7AD26A00410D79 /* SettingsTableViewController.swift */; };
 		127692551C7BDC3F00410D79 /* SearchFriendUserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692541C7BDC3F00410D79 /* SearchFriendUserCell.swift */; };
+		127692571C7C650B00410D79 /* sent.wav in Resources */ = {isa = PBXBuildFile; fileRef = 127692561C7C650B00410D79 /* sent.wav */; };
+		127692661C7D2C2F00410D79 /* Message+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692621C7D2C2F00410D79 /* Message+CoreDataProperties.swift */; };
+		127692671C7D2C2F00410D79 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692631C7D2C2F00410D79 /* Message.swift */; };
+		127692691C7D308F00410D79 /* conversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692681C7D308F00410D79 /* conversationCell.swift */; };
+		127692781C7D366100410D79 /* Conversation+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692761C7D366100410D79 /* Conversation+CoreDataProperties.swift */; };
+		127692791C7D366100410D79 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127692771C7D366100410D79 /* Conversation.swift */; };
+		1276927E1C7DA47600410D79 /* groupChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1276927D1C7DA47600410D79 /* groupChatViewController.swift */; };
+		1278A9611C7E54910001787A /* tempo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1278A9601C7E54910001787A /* tempo.swift */; };
+		1278A9631C7E6E360001787A /* friendsContainerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1278A9621C7E6E360001787A /* friendsContainerTableViewController.swift */; };
 		127E01A91C658EFC007C38C0 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127E01A81C658EFC007C38C0 /* ContactsViewController.swift */; };
 		127E01AB1C6690E9007C38C0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127E01AA1C6690E9007C38C0 /* UserCell.swift */; };
 		12943E2D1C686B7600A8D2FC /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12943E2C1C686B7600A8D2FC /* MessageViewController.swift */; };
@@ -51,8 +60,6 @@
 		12A3805C1C5D4C8B00F2ADF9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12A3805A1C5D4C8B00F2ADF9 /* LaunchScreen.storyboard */; };
 		12A380671C5D4C8B00F2ADF9 /* SocialTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A380661C5D4C8B00F2ADF9 /* SocialTests.swift */; };
 		12A380721C5D4C8B00F2ADF9 /* SocialUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A380711C5D4C8B00F2ADF9 /* SocialUITests.swift */; };
-		12D7F30F1C753A3600D665FF /* Message+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D7F30B1C753A3600D665FF /* Message+CoreDataProperties.swift */; };
-		12D7F3101C753A3600D665FF /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12D7F30C1C753A3600D665FF /* Message.swift */; };
 		B59A45EABEBFABB0DF4332E4 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 86B6582082A7CF2D49566689 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -107,6 +114,15 @@
 		127692501C7A7EB800410D79 /* request.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = request.wav; sourceTree = "<group>"; };
 		127692521C7AD26A00410D79 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		127692541C7BDC3F00410D79 /* SearchFriendUserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchFriendUserCell.swift; sourceTree = "<group>"; };
+		127692561C7C650B00410D79 /* sent.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sent.wav; sourceTree = "<group>"; };
+		127692621C7D2C2F00410D79 /* Message+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Message+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		127692631C7D2C2F00410D79 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		127692681C7D308F00410D79 /* conversationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = conversationCell.swift; sourceTree = "<group>"; };
+		127692761C7D366100410D79 /* Conversation+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Conversation+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		127692771C7D366100410D79 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		1276927D1C7DA47600410D79 /* groupChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = groupChatViewController.swift; sourceTree = "<group>"; };
+		1278A9601C7E54910001787A /* tempo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = tempo.swift; path = ../../../IOS/Tempo/source/tempo.swift; sourceTree = "<group>"; };
+		1278A9621C7E6E360001787A /* friendsContainerTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = friendsContainerTableViewController.swift; sourceTree = "<group>"; };
 		127E01A81C658EFC007C38C0 /* ContactsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		127E01AA1C6690E9007C38C0 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		12943E2C1C686B7600A8D2FC /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
@@ -127,8 +143,6 @@
 		12A3806D1C5D4C8B00F2ADF9 /* SocialUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SocialUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		12A380711C5D4C8B00F2ADF9 /* SocialUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialUITests.swift; sourceTree = "<group>"; };
 		12A380731C5D4C8B00F2ADF9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		12D7F30B1C753A3600D665FF /* Message+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Message+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		12D7F30C1C753A3600D665FF /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		42B1D2C431B1E2CE2BE12680 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		656C1BBA4D9693BE79BEFFF2 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		86B6582082A7CF2D49566689 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -163,6 +177,7 @@
 		12943E371C6882C000A8D2FC /* SocketIO */ = {
 			isa = PBXGroup;
 			children = (
+				1278A9601C7E54910001787A /* tempo.swift */,
 				125EE1F11C75424F00122531 /* SocketAckEmitter.swift */,
 				125EE1F21C75424F00122531 /* SocketAckManager.swift */,
 				125EE1F31C75424F00122531 /* SocketAnyEvent.swift */,
@@ -190,8 +205,10 @@
 		12A380421C5D4C8B00F2ADF9 = {
 			isa = PBXGroup;
 			children = (
-				12D7F30B1C753A3600D665FF /* Message+CoreDataProperties.swift */,
-				12D7F30C1C753A3600D665FF /* Message.swift */,
+				127692761C7D366100410D79 /* Conversation+CoreDataProperties.swift */,
+				127692771C7D366100410D79 /* Conversation.swift */,
+				127692621C7D2C2F00410D79 /* Message+CoreDataProperties.swift */,
+				127692631C7D2C2F00410D79 /* Message.swift */,
 				12A3804D1C5D4C8B00F2ADF9 /* Social */,
 				12A380651C5D4C8B00F2ADF9 /* SocialTests */,
 				12A380701C5D4C8B00F2ADF9 /* SocialUITests */,
@@ -218,12 +235,16 @@
 				12943E601C693ABC00A8D2FC /* CoreDataManager.swift */,
 				127692521C7AD26A00410D79 /* SettingsTableViewController.swift */,
 				127692541C7BDC3F00410D79 /* SearchFriendUserCell.swift */,
+				1278A9621C7E6E360001787A /* friendsContainerTableViewController.swift */,
+				1276927D1C7DA47600410D79 /* groupChatViewController.swift */,
 				127692461C77FE1300410D79 /* searchFriendViewController.swift */,
+				127692681C7D308F00410D79 /* conversationCell.swift */,
 				125EE2191C77DD9900122531 /* tabBarController2.swift */,
 				125EE21B1C77E2DC00122531 /* friendRequestViewController.swift */,
 				12A3804E1C5D4C8B00F2ADF9 /* AppDelegate.swift */,
 				12A380521C5D4C8B00F2ADF9 /* Main.storyboard */,
 				127E01AA1C6690E9007C38C0 /* UserCell.swift */,
+				127692561C7C650B00410D79 /* sent.wav */,
 				12943E2C1C686B7600A8D2FC /* MessageViewController.swift */,
 				12943E351C68829000A8D2FC /* Connection.swift */,
 				12943E2E1C686F2D00A8D2FC /* ConversationViewController.swift */,
@@ -394,6 +415,7 @@
 				12A3805C1C5D4C8B00F2ADF9 /* LaunchScreen.storyboard in Resources */,
 				12A380591C5D4C8B00F2ADF9 /* Assets.xcassets in Resources */,
 				12A380541C5D4C8B00F2ADF9 /* Main.storyboard in Resources */,
+				127692571C7C650B00410D79 /* sent.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,8 +492,11 @@
 				1207C2941C5DAC2A00CBD353 /* LoginViewController.swift in Sources */,
 				125EE2111C75424F00122531 /* SocketIOClientStatus.swift in Sources */,
 				12943E331C6874B000A8D2FC /* TabBarController.swift in Sources */,
+				1278A9611C7E54910001787A /* tempo.swift in Sources */,
 				125EE20D1C75424F00122531 /* SocketEventHandler.swift in Sources */,
+				127692791C7D366100410D79 /* Conversation.swift in Sources */,
 				125EE2061C75424F00122531 /* SocketAckManager.swift in Sources */,
+				127692661C7D2C2F00410D79 /* Message+CoreDataProperties.swift in Sources */,
 				127E01A91C658EFC007C38C0 /* ContactsViewController.swift in Sources */,
 				125EE2051C75424F00122531 /* SocketAckEmitter.swift in Sources */,
 				125EE2141C75424F00122531 /* SocketParsable.swift in Sources */,
@@ -479,8 +504,8 @@
 				12943E2F1C686F2D00A8D2FC /* ConversationViewController.swift in Sources */,
 				125EE2171C75424F00122531 /* SwiftRegex.swift in Sources */,
 				125EE2181C75424F00122531 /* WebSocket.swift in Sources */,
-				12D7F30F1C753A3600D665FF /* Message+CoreDataProperties.swift in Sources */,
 				127692531C7AD26A00410D79 /* SettingsTableViewController.swift in Sources */,
+				1276927E1C7DA47600410D79 /* groupChatViewController.swift in Sources */,
 				125EE21C1C77E2DC00122531 /* friendRequestViewController.swift in Sources */,
 				126961B01C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.m in Sources */,
 				125EE2121C75424F00122531 /* SocketLogger.swift in Sources */,
@@ -488,16 +513,19 @@
 				125EE20F1C75424F00122531 /* SocketIOClient.swift in Sources */,
 				125EE2131C75424F00122531 /* SocketPacket.swift in Sources */,
 				126961AA1C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.m in Sources */,
+				127692781C7D366100410D79 /* Conversation+CoreDataProperties.swift in Sources */,
 				125EE2071C75424F00122531 /* SocketAnyEvent.swift in Sources */,
 				125EE20A1C75424F00122531 /* SocketEngineClient.swift in Sources */,
 				125EE2091C75424F00122531 /* SocketEngine.swift in Sources */,
+				1278A9631C7E6E360001787A /* friendsContainerTableViewController.swift in Sources */,
+				127692671C7D2C2F00410D79 /* Message.swift in Sources */,
 				125EE21A1C77DD9900122531 /* tabBarController2.swift in Sources */,
 				12A380571C5D4C8B00F2ADF9 /* Social.xcdatamodeld in Sources */,
 				125EE20B1C75424F00122531 /* SocketEnginePacketType.swift in Sources */,
+				127692691C7D308F00410D79 /* conversationCell.swift in Sources */,
 				125EE20E1C75424F00122531 /* SocketFixUTF8.swift in Sources */,
 				12A3804F1C5D4C8B00F2ADF9 /* AppDelegate.swift in Sources */,
 				125EE20C1C75424F00122531 /* SocketEngineSpec.swift in Sources */,
-				12D7F3101C753A3600D665FF /* Message.swift in Sources */,
 				12943E2D1C686B7600A8D2FC /* MessageViewController.swift in Sources */,
 				125EE2151C75424F00122531 /* SocketStringReader.swift in Sources */,
 				12943E611C693ABC00A8D2FC /* CoreDataManager.swift in Sources */,

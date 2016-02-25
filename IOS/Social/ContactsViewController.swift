@@ -13,7 +13,7 @@ import MIBadgeButton_Swift
 import AVFoundation
 
 
-class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableViewDataSource,friendRequestDelegate{
+class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableViewDataSource,friendRequestDelegate,UITableViewDelegate{
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -33,8 +33,8 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("view loaded")
-        Connection.sharedInstance.delegate = self
+
+        self.tableView.delegate = self
         self.tableView.dataSource = self
         button.frame = CGRectMake(0,0,70,40)
         button.badgeEdgeInsets = UIEdgeInsetsMake(15, 0, 0, 15)
@@ -43,6 +43,8 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
  
         
         Connection.sharedInstance.listenForFriendUpdate()
+        
+        Connection.sharedInstance.listenForMessages()
         let requestSound = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("request", ofType: "wav")!)
         do {
             audioPlayer = try AVAudioPlayer(contentsOfURL: requestSound)
@@ -51,11 +53,14 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
             print("error ::: \(error)")
             
         }
+        
+        
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        Connection.sharedInstance.delegate = self
         
         let count = Connection.sharedInstance.getFriendRequestCount()
         if count > 0 {
@@ -67,6 +72,9 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
             self.AddFriendButton = UIBarButtonItem(image:userPlusImage, style: UIBarButtonItemStyle.Plain, target:self, action:  Selector("addFriendsButtonPressed:"))
             self.navigationItem.rightBarButtonItem = self.AddFriendButton
         }
+        self.tabBarController!.tabBar.items![0].badgeValue = nil
+        
+
         
 
     }
@@ -75,16 +83,25 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
    
 
 
-//        tableView.delegate = self
+
         
     
 
  
 
  
-    func didReceiveMessages(data: AnyObject) {
-        //implement notification 
+    func didReceiveMessages(message: Message?) {
         
+        
+        var newBadge: String
+        if let badge = self.tabBarController!.tabBar.items![1].badgeValue {
+            newBadge = String(Int(badge)! + 1)
+        } else {
+            newBadge = "1"
+        }
+        self.tabBarController!.tabBar.items![1].badgeValue = newBadge
+        audioPlayer?.play()
+
     }
     
   
@@ -132,18 +149,20 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-//        if segue.identifier == "talk" {
-//            let controller = segue.destinationViewController as! ConversationViewController
-//            let friend = friends[sender as! Int]
-////            controller.friend = friend
-//            controller.hidesBottomBarWhenPushed = true;
-//            
-//            
-//        }
+        if segue.identifier == "talk" {
+            let controller = segue.destinationViewController as! ConversationViewController
+            let friend = self.Friends[sender as! Int]
+            controller.friend = friend
+            controller.hidesBottomBarWhenPushed = true
+            
+        }
         if segue.identifier == "friendView" {
             let tabBar = segue.destinationViewController as! TabBarController2
-            let controller = tabBar.viewControllers![1] as! friendRequestViewController
-            controller.delegate = self
+            let friendReqCtrl = tabBar.viewControllers![1] as! friendRequestViewController
+            friendReqCtrl.delegate = self
+            let searchReqCtrl = tabBar.viewControllers![0] as! searchFriendViewController
+            searchReqCtrl.delegate = self
+            
         }
 
     }
@@ -163,14 +182,15 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
    
         
         if action == "Request" {
-            print("new request")
+            print("Contacts view controller got new request")
             button.badgeString = String(Connection.sharedInstance.getFriendRequestCount())
             let barButton = UIBarButtonItem(customView: button)
             self.navigationItem.rightBarButtonItem = barButton
+            
             audioPlayer?.play()
             
         } else { //new friend from confirming request
-            print("new friend")
+            print("contacts view controller got now friend")
             Friends = Connection.sharedInstance.getFriends()
             self.tableView.reloadData()
             audioPlayer?.play()
