@@ -86,6 +86,9 @@ body {
 	display: block;
 	white-space: nowrap;
 }
+.label-block {
+	display: block;
+}
 .blue {
 	color: blue;
 }
@@ -102,6 +105,9 @@ body {
 	border: 1px solid #18bc9c; 
 	border-radius: 5px;
 	padding: 12px;
+}
+.push-from-nav {
+	margin-top: 60px;
 }
 #slide-nav {
 	margin-top: 60px;

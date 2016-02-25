@@ -22,3 +22,17 @@ messengerModule.filter("isoDate", function () {
 		return Date.parse(input);
 	};
 });
+
+messengerModule.filter("convoTitle", function () {
+	return function (convo) {
+		if (convo.title) {
+			return convo.title;
+		} else {
+			var names = [];
+			convo.users.forEach(function (user) {
+				names.push(user.handle);
+			});
+			return names.join(" | ");
+		}
+	};
+});

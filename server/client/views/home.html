@@ -28,6 +28,7 @@
 						<li><a href ng-click="">User Info <span class="glyphicon glyphicon-edit pull-right"></span></a></li>
 						<li ng-class="{ 'disabled' : homeCtrl.requests.length==0 }"><a href ng-click="homeCtrl.showRequests()">Friend Requests <span class="badge" ng-bind="homeCtrl.requests.length"></span></a></li>
 						<li><a href ng-click="homeCtrl.findFriends()">Find New Friends</a></li>
+						<li><a href ng-click="homeCtrl.newConvo()">New Conversation</a></li>
 						<li class="visible-xs"><a href ng-click="changeBackground()">Change Background</a>	</li>
 						<li class="divider"></li>
 						<li role="menuitem"><a href ng-click="homeCtrl.logout()">Log Out <span class="pull-right glyphicon glyphicon-log-out"></span></a></li>
@@ -39,14 +40,22 @@
 	<div class="container height-100">
 		<div id="left-nav" class="col-md-3 hidden-sm hidden-xs">
 			<!-- Conversations -->
-			<div class="row">
+			<div class="row push-from-nav">
 				<div class="col-md-11">
-					<h3>Conversations</h3>
+					<h3>
+						<span class="label label-default label-block">Conversations 
+							<button ng-click="homeCtrl.newConvo()" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</button>
+						</span>
+					</h3>
 					
+					<input class="form-control" type="text" ng-model="convoSearch" placeholder="Search Conversations">
 					<div class="list-group">
-						<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations | filter: convo.private==false" ng-click="homeCtrl.showConvo(convo, false)">
-								<span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span>
-								<span class="badge">12</span>
+						<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations | filter: convo.private==false | filter:homeCtrl.searchConvos(convoSearch) | limitTo: 6" ng-click="homeCtrl.showConvo(convo, false)">
+							<span class="ellipis" ng-bind="convo | convoTitle"></span>
+								<!-- <span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span> -->
+								<!-- <span class="badge">12</span> -->
 						</button>
 					</div>
 
@@ -55,7 +64,13 @@
 			<!-- Friends -->
 			<div class="row">
 				<div class="col-md-11">
-					<h3>Friends</h3>
+					<h3>
+						<span class="label label-default label-block">Friends
+							<button ng-click="homeCtrl.findFriends()" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-plus-sign"></span>
+							</button>
+						</span>
+					</h3>
 					<input class="form-control" type="text" ng-model="friendSearch" placeholder="Search Friends">
 					<br>
 					<div class="list-group">
@@ -69,19 +84,19 @@
 			</div>
 		</div>
 
-			<div id="slide-nav" ng-show="homeCtrl.slideDown"  class="flexcroll row visible-xs visible-sm">
-				<div class="col-md-11">
-					<input class="form-control" type="text" ng-model="friendSearch" placeholder="Search Friends">
-					<br>
-					<div class="list-group">
-						<button class="list-group-item" ng-repeat="friend in homeCtrl.friends | filter: friendSearch | filter: '!'+homeCtrl.sessUser.handle" ng-click="homeCtrl.showFriend(friend._id, true)">
-								<span ng-bind="friend.handle"></span>
-								
-						</button>
-					</div>
-					<hr>
+		<div id="slide-nav" ng-show="homeCtrl.slideDown"  class="flexcroll row visible-xs visible-sm">
+			<div class="col-md-11">
+				<input class="form-control" type="text" ng-model="friendSearch" placeholder="Search Friends">
+				<br>
+				<div class="list-group">
+					<button class="list-group-item" ng-repeat="friend in homeCtrl.friends | filter: friendSearch | filter: '!'+homeCtrl.sessUser.handle" ng-click="homeCtrl.showFriend(friend._id, true)">
+							<span ng-bind="friend.handle"></span>
+							
+					</button>
 				</div>
+				<hr>
 			</div>
+		</div>
 		
 
 

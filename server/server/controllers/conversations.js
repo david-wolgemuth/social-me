@@ -21,14 +21,19 @@ module.exports = function (io) {
             });
         },
         create: function (req, res) {
+            console.log("Hit Create Method");
             var sUser = req.session.user;
-            if (!sUser) { res.json({ conversation: null, error: "Not Logged In." })}
+            if (!sUser) { res.json({ conversation: null, error: "Not Logged In." }); }
+            var usersInConvo = req.body.users;
+            usersInConvo.push(sUser);
+            title = req.body.title;
             var conversation = new Conversation({
-                users: req.body
+                users: usersInConvo,
+                title: title
             });
             conversation.save(function (error, conversation) {
                 if (error) { console.log(error); }
-                res.json(conversation._id);
+                res.json({ conversation: conversation });
                 conversation.users.forEach(function (cUser) {
                     User.findById(cUser, function (error, user) {
                         if (error) { console.log(error); }
@@ -37,6 +42,26 @@ module.exports = function (io) {
                             if (error) { console.log(error); } else { console.log("Successfully Saved Convo:", user);}
                         });
                     });
+                });
+            });
+        },
+        update: function (req, res) {  // Add to Conversation
+            var sUser = req.session.user;
+            var nUserId = req.body.userId;
+            if (!sUser || !nUserId) {
+                console.log("Not Logged In, Or Missing Arguments In Body");
+                return res.json({ success: false, error: "Not Logged In, Or Missing Arguments In Body" });
+            }
+            Conversation.findById(req.params.id, function(error, conversation) {
+                if (error) { console.log(error); }
+                if (conversation.users.indexOf(sUser.id) <= 0) {
+                    console.log("User Not In Conversation (Doesn't Have Authority To Add Users)");
+                    return res.json({ success: false, error: "User Not In Conversation (Doesn't Have Authority To Add Users)"});
+                }
+                conversation.users.push(nUserId);
+                conversation.save(function (error) {
+                    console.log("User Added:", conversation);
+                    res.json({ success: true, conversation: conversation });
                 });
             });
         },

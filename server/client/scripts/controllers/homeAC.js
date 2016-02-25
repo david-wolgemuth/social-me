@@ -35,7 +35,7 @@ messengerModule.controller("homeController", function (userFactory, conversation
         friendFactory.requests(function (requests) {
             self.requests = requests;
         });
-    }
+    };
     this.resetFriendsAndRequests();
     conversationFactory.index(function (convos) {
         self.conversations = convos;
@@ -46,12 +46,13 @@ messengerModule.controller("homeController", function (userFactory, conversation
         });
     };
     this.newConvo = function (user) {
-        if (!this.sessUser) {
-            return;
-        }
-        conversationFactory.create([user, this.sessUser], function (convo_id) {
-            $location.path("/conversations/" + convo_id);
+        $scope.modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: "views/new-conversation-modal.html",
+            scope: $scope
         });
+        $scope.modalInstance.result.then(this.resetFriendsAndRequests, this.resetFriendsAndRequests);
+
     };
     this.showFriend = function (friendId) {
         friendFactory.show(friendId, function (friendship) {
@@ -59,6 +60,24 @@ messengerModule.controller("homeController", function (userFactory, conversation
             self.slideDown = false;
             $scope.$broadcast("ccid", { id: self.ccid });
         });
+    };
+    this.searchConvos = function (convoSearch) {
+        return function (convo) {
+            if (!convoSearch) {
+                return true;
+            }
+            convoSearch = convoSearch.toLowerCase();
+            console.log(convo, convoSearch);
+            if (convo.title && convo.title.toLowerCase().indexOf(convoSearch) >= 0) {
+                return true;
+            }
+            for (var i = 0; i < convo.users.length; i++) {
+                if (convo.users[i].handle.toLowerCase().indexOf(convoSearch) >= 0) {
+                    return true;
+                } 
+            }
+            return false;
+        };
     };
     this.showConvo = function (convo) {
         this.ccid = convo._id;

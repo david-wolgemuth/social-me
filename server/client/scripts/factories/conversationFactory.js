@@ -7,9 +7,11 @@ messengerModule.factory("conversationFactory", function ($http) {
             method: "POST",
             data: users
         }).then(function (res) {
-            var convo_id = res.data;
-            console.log("RES:", convo_id);
-            if (callback) { callback(convo_id); } 
+            var convo = res.data.conversation;
+            var error = res.data.error;
+            console.log("RES:", convo);
+            console.log("ERROR?", error);
+            if (callback) { callback(convo, error); } 
         });
     };
     factory.index = function (callback) {
