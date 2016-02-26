@@ -18,12 +18,16 @@ module.exports = function (app, io) {
         res.json(backgrounds);
     };
     Ctrl.writeProfileImage = function (image, userId, callback) {
+
         Ctrl.writeImage("/profiles/", image, userId, callback);
     };
     Ctrl.writeMessageImage = function (image, messageId, callback) {
         Ctrl.writeImage("/messages/", image, messageId, callback);
+
+
     };
     Ctrl.writeImage = function (directory, image, id, callback) {
+    
         if (!callback) { callback = function () {}; }
         if (!image) {
             return callback({ success: false, error: "No Image Uploaded" });
@@ -37,6 +41,7 @@ module.exports = function (app, io) {
                 console.log(error);
                 callback({ success: false, error: error });
             } else {
+                console.log("uploadedImage");
                 callback({ success: true });
             }
         });

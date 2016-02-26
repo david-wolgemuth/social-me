@@ -9,8 +9,12 @@ var server = app.listen(5000, function () {
 
 // Body Parser
 var bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+
+// app.use(bodyParser.json());
 
 // Static Files
 var path = require("path");

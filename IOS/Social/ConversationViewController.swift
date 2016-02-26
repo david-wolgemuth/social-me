@@ -21,12 +21,12 @@ class ConversationViewController: JSQMessagesViewController,ConnectionSocketDele
 
     var messages = [Message]()
     var conversationId: String = ""
-//
-//    var avatars = Dictionary<String, JSQMessageAvatarImageDataSource>()
-//   
-//    
-//
-//    
+
+    var avatars = Dictionary<String, JSQMessageAvatarImageDataSource>()
+   
+    
+
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         Connection.sharedInstance.delegate = self
@@ -57,6 +57,7 @@ class ConversationViewController: JSQMessagesViewController,ConnectionSocketDele
         if let newMsg = message {
             self.messages.append(newMsg)
             self.finishReceivingMessage()
+            JSQSystemSoundPlayer.jsq_playMessageReceivedSound()
             CoreDataManager.sharedInstance.update_conversation(self.conversationId)
         }
         
@@ -67,35 +68,37 @@ class ConversationViewController: JSQMessagesViewController,ConnectionSocketDele
     func didReceiveFriendUpdate(action: String) {
         
     }
-//
-//    
-//    func setupAvatarImage(name: String, imageUrl: String?, incoming: Bool) {
-//        let diameter = incoming ? UInt(collectionView!.collectionViewLayout.incomingAvatarViewSize.width) : UInt(collectionView!.collectionViewLayout.outgoingAvatarViewSize.width)
-//        if let stringUrl = imageUrl {
-//            if let url = NSURL(string: stringUrl) {
-//                if let data = NSData(contentsOfURL: url) {
-//                    let image = UIImage(data: data)
-//                    let avatarImage = JSQMessagesAvatarImageFactory.avatarImageWithImage(image,diameter: diameter)
-//                    avatars[name] = avatarImage
-//                    return
-//                }
-//            }
-//        }
-//        let defaultAvatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "profile"), diameter: diameter)
-//        avatars[name] = defaultAvatar
-//        
-//    }
-//
+
+    
+    func setupAvatarImage(name: String, imageUrl: String?, incoming: Bool) {
+        let diameter = incoming ? UInt(collectionView!.collectionViewLayout.incomingAvatarViewSize.width) : UInt(collectionView!.collectionViewLayout.outgoingAvatarViewSize.width)
+        if let stringUrl = imageUrl {
+            if let url = NSURL(string: stringUrl) {
+                if let data = NSData(contentsOfURL: url) {
+                    let image = UIImage(data: data)
+                    let avatarImage = JSQMessagesAvatarImageFactory.avatarImageWithImage(image,diameter: diameter)
+                    avatars[name] = avatarImage
+                    return
+                }
+            }
+        }
+        let defaultAvatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "profile"), diameter: diameter)
+        avatars[name] = defaultAvatar
+        
+    }
+
     override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
-//        let message = messages[indexPath.item]
-//        if let avatar = avatars[message.senderId()] { //if avator is already set up
-//            return avatar
-//        } else {
-//            let urlString = "http://192.168.1.227:8000/\(message.senderId()).jpeg"
-//            setupAvatarImage(message.senderId(), imageUrl: urlString, incoming: true)
-//            return avatars[message.senderId()]
-//        }
-        return nil
+    
+        let message = messages[indexPath.item]
+        if let avatar = avatars[message.senderId()] { //if avator is already set up
+            return avatar
+        } else {
+        
+            let urlString = "http://ShuHans-MacBook-Air.local:5000/images/profiles/\(message.senderId()).jpeg"
+            setupAvatarImage(message.senderId(), imageUrl: urlString, incoming: true)
+            return avatars[message.senderId()]
+        }
+    
     }
 
 

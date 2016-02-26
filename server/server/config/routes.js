@@ -76,7 +76,7 @@ module.exports = function (app, io) {
     app.get("/conversations", conversations.index);
     app.get("/conversations/:id", conversations.show);
 
-<<<<<<< HEAD
+
     app.get("/history",conversations.history);
 
     app.get("/backgrounds", function (req, res) {
@@ -89,8 +89,7 @@ module.exports = function (app, io) {
         console.log("Backgrounds:", backgrounds);
         res.json(backgrounds);
     });
-=======
 
-//     app.get("/backgrounds", images.backgroundIndex);
-// >>>>>>> f6e511685b4383df8d7709d44da445fb6e27cb39
+   
+
 };

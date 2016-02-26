@@ -33,7 +33,7 @@ module.exports = function (io) {
                         }
                     }
                 }
-                arr.push({ _id: user._id, isFriend: user.isFriend, requestSent: Boolean(user.requestSent), requestFromFriend: Boolean(), handle: user.handle });
+                arr.push({ _id: user._id, isFriend: user.isFriend, requestSent: Boolean(user.requestSent), requestFromFriend: Boolean(), handle: user.handle, profileImage: user.profileImage});
             });
             res.json(arr);
         });
@@ -91,7 +91,7 @@ module.exports = function (io) {
             User.find({
                 "_id": { $in: friends }
             })
-            .select("handle")
+            .select("handle profileImage")
             .exec(function (error, users) {
                 if (error) { console.log(error); }
                 res.json(users);
@@ -157,7 +157,7 @@ module.exports = function (io) {
                         if (io.users[friend._id]) {
                             console.log("EMIT REQUEST");
                             io.users[friend._id].emit("friendRequest", 
-                                { user: { _id: user._id, handle: user.handle }}
+                                { user: { _id: user._id, handle: user.handle,profileImage:user.profileImage}}
                             );
                         }
                     }                    
@@ -234,7 +234,9 @@ module.exports = function (io) {
                                             io.users[friend._id].emit("friendAccepted", { 
                                                 user: { 
                                                     _id: user._id,
-                                                    handle: user.handle
+                                                    handle: user.handle,
+                                                    profileImage: user.profileImage
+
                                                 }
                                             });
                                         }

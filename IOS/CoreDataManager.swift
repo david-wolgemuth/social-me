@@ -116,7 +116,6 @@ class CoreDataManager {
         let request = NSFetchRequest(entityName: "Conversation")
         request.predicate = predicate
         var conversation = [Conversation]()
-        print(updatedAt)
         do {
             conversation = try self.managedObjectContext.executeFetchRequest(request) as! [Conversation]
             if conversation.count != 0 { //conversation id already exists

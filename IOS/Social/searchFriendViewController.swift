@@ -60,7 +60,6 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
     }
 
     override func viewWillAppear(animated: Bool) {
-        print("View appeared")
         searchBar.delegate = self
         Connection.sharedInstance.addFriendDelegate = self
         self.tableView.dataSource = self
@@ -94,7 +93,7 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
         
         
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("SearchUserCell")! as! SearchFriendUserCell
+        var cell = tableView.dequeueReusableCellWithIdentifier("SearchUserCell")! as! SearchFriendUserCell
         
         cell.usernameLabel?.text = friendFound[indexPath.row]["handle"] as? String
         let friendAlready = friendFound[indexPath.row]["isFriend"]! as! Int
@@ -119,8 +118,25 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
             cell.AddFriendButton.addTarget(self, action: Selector("sendFriendRequest:"), forControlEvents: UIControlEvents.TouchUpInside)
             
         }
-  
-        cell.profilePicView.image = UIImage(named: "profile") //fetch image later
+        if friendFound[indexPath.row]["profileImage"] as! String  == "1" {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
+                let id = self.friendFound[indexPath.row]["id"]
+                let urlString = "http://ShuHans-MacBook-Air.local:5000/images/profiles/\(id!).jpeg"
+                
+                let urltoReq = NSURL(string: urlString)
+                
+                let image = UIImage(data: NSData(contentsOfURL: urltoReq!)!)
+                dispatch_async(dispatch_get_main_queue()) {
+                    cell = tableView.cellForRowAtIndexPath(indexPath) as! SearchFriendUserCell
+                    cell.profilePicView.image = image
+                    
+                }
+                
+            }
+        } else {
+            cell.profilePicView.image = UIImage(named: "profile")
+            
+        }
         cell.selectionStyle = UITableViewCellSelectionStyle.None
   
 

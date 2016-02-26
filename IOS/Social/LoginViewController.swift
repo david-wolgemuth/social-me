@@ -20,11 +20,9 @@ class LoginViewController: UIViewController,UITextFieldDelegate,LTMorphingLabelD
     
     private var i = 0
     private var textArray = [
-        "Welcome",
-        "to Social ME",
-        "An App that..",
-        "connects you",
-        "with your friends!"]
+        "Social-ME",
+        "- A Cross-platform",
+        "Messenger App 🗣"]
     
     @IBOutlet weak var passwordTextField: IsaoTextField!
     @IBOutlet weak var emailTextField: IsaoTextField!
@@ -56,6 +54,7 @@ class LoginViewController: UIViewController,UITextFieldDelegate,LTMorphingLabelD
         
         if let user = prefs.stringForKey("user"){
              emailTextField.text = user
+            print(keychain.get("password"))
             if let password = keychain.get("password") {
                passwordTextField.text = password
             }

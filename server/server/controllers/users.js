@@ -15,7 +15,7 @@ module.exports = function (io) {
                     ]}, function (error, foundUser) {
                             if (error) { console.log(error); }
                             if (foundUser) {
-                                res.json({ _id: foundUser._id, handle: foundUser.handle });
+                                res.json({ _id: foundUser._id, handle: foundUser.handle, profileImage: foundUser.profileImage});
                             } else {
                                 res.json(null);
                             }
@@ -45,7 +45,7 @@ module.exports = function (io) {
                             if (error) {
                                 console.log(error);
                             } else if (success) {
-                                var sUser = { _id: user._id, handle: user.handle };
+                                var sUser = { _id: user._id, handle: user.handle,profileImage:user.profileImage };
                                 req.session.user = sUser;
                                 res.json({ user: sUser });
                             } else {
@@ -79,7 +79,7 @@ module.exports = function (io) {
                     ]}, function (error, users) {
                 if (error) { console.log(error); }
                 if (users.length) {
-                    res.json({ success: false });
+                    res.json({ success: false ,error: "email or handle has been used"});
                     return;
                 }
                 var user = new User({
@@ -94,7 +94,7 @@ module.exports = function (io) {
                     } else {
                         console.log(user);
                         if (user.profileImage) {
-                            Image.writeProfileImage(info.image.split(",")[1], user._id, function (obj) {
+                            Image.writeProfileImage(req.body.image, user._id, function (obj) {
                                 res.json(obj);
                             });
                         } else {
@@ -112,7 +112,8 @@ module.exports = function (io) {
             User.findById(req.params.id, function (error, user) {
                 if (error) { console.log(error); }
                 if (user) {
-                    Image.writeProfileImage(req.body.image.split(",")[1], user._id, function (obj) {
+
+                    Image.writeProfileImage(req.body.image, user._id, function (obj) {
                         if (obj.success) {
                             user.profileImage = true;
                             user.save(function (error) {

@@ -112,14 +112,14 @@ class RegisterViewController: UIViewController,UITextFieldDelegate,UIImagePicker
     
     
   
-    func didRegister(success: Bool) {
+    func didRegister(success: Bool,error: String?) {
         let alert = SCLAlertView()
         if success == true {
             alert.addButton("Log me in",target:self, selector:  Selector("logNewUserIn"))
             alert.showSuccess("Success!", subTitle: "You have successfully registered!")
            
         } else {
-            alert.showError("Error", subTitle: "Sorry, we could not get you registered. Makesure email and username have not been used before")
+            alert.showError("Error", subTitle: error!)
         }
         self.submitButton.enabled = true
     }

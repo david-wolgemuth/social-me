@@ -84,10 +84,31 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCellWithIdentifier("UserCell")! as! UserCell
+        var cell = tableView.dequeueReusableCellWithIdentifier("UserCell")! as! UserCell
 
         cell.usernameLabel?.text = friendRequests[indexPath.row]["handle"]
-        cell.profilePicView.image = UIImage(named: "profile") //fetch image later
+        cell.profilePicView.image = UIImage(named: "profile")
+     
+        if friendRequests[indexPath.row]["profileImage"] == "1" {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
+                let id = self.friendRequests[indexPath.row]["id"]
+                let urlString = "http://ShuHans-MacBook-Air.local:5000/images/profiles/\(id!).jpeg"
+                
+                let urltoReq = NSURL(string: urlString)
+                
+                let image = UIImage(data: NSData(contentsOfURL: urltoReq!)!)
+                dispatch_async(dispatch_get_main_queue()) {
+                    cell = tableView.cellForRowAtIndexPath(indexPath) as! UserCell
+                    cell.profilePicView.image = image
+                    
+                }
+                
+            }
+        } else {
+            cell.profilePicView.image = UIImage(named: "profile")
+
+        }
+
         
         return cell
     }

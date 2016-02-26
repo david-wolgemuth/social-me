@@ -321,8 +321,10 @@ extension LTMorphingLabel {
                 ] {
                     return closure(char, index: index, progress: progress)
             } else {
-                currentFontSize = CGFloat(
-                    LTEasing.easeOutQuint(progress, 0.0, Float(font.pointSize))
+                let fontEase = CGFloat(
+               LTEasing.easeOutQuint(
+                 progress, 0, Float(font.pointSize)
+                    )
                 )
                 // For emojis
                 currentFontSize = max(0.0001, currentFontSize)

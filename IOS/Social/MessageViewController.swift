@@ -48,25 +48,12 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("conversationCell")! as! conversationCell
+        var cell = tableView.dequeueReusableCellWithIdentifier("conversationCell")! as! conversationCell
         cell.lastMessageLabel?.text = conversations[indexPath.row].lastMessage
         
         let tempo = Tempo(date: self.conversations[indexPath.row].updatedAt!)
          cell.dateLabel?.text = tempo.timeAgoNow()
-        
-   
-        
-  
-        
-        
-        
-        
-        
-        
-        
-        
-        
-//        print(self.conversations[indexPath.row].unreadMsg!)
+    
         if Int(self.conversations[indexPath.row].unreadMsg!)! > 0 {
             let fontSize: CGFloat = 14.0
             let label = UILabel()
@@ -89,32 +76,38 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
             cell.accessoryType = .DisclosureIndicator
         }
         
-     
-        cell.userNameLabel?.text = Connection.sharedInstance.getFriendUserName(conversations[indexPath.row].friendId!)
-        cell.conversationImage.image = UIImage(named: "profile")
-  
-    
-      
-     
-        
-       
+        let userInfo = Connection.sharedInstance.getFriendUserName(conversations[indexPath.row].friendId!)
+        if userInfo.count > 0 {
+             cell.userNameLabel?.text = userInfo["handle"]
+            if userInfo["profileImage"] == "1" {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
+                    let id = self.conversations[indexPath.row].friendId!
+                    let urlString = "http://ShuHans-MacBook-Air.local:5000/images/profiles/\(id).jpeg"
+                    
+                    let urltoReq = NSURL(string: urlString)
+                    
+                    let image = UIImage(data: NSData(contentsOfURL: urltoReq!)!)
+                    dispatch_async(dispatch_get_main_queue()) {
+                        cell = tableView.cellForRowAtIndexPath(indexPath) as! conversationCell
+                        cell.conversationImage.image = image
+                        
+                    }
+                    
+                }
 
-//        cell.profilePicView.image = UIImage(named: "profile")
+                
+            } else {
+                cell.conversationImage.image = UIImage(named: "profile")
+
+                
+            }
+            
+        } else {
+             cell.userNameLabel?.text = ""
+            
+        }
         
-        //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
-        //            let id = self.friends[indexPath.row].id
-        //            let urlString = "http://192.168.1.227:8000/\(id!).jpeg"
-        //
-        //            let urltoReq = NSURL(string: urlString)
-        //
-        //            let image = UIImage(data: NSData(contentsOfURL: urltoReq!)!)
-        //            dispatch_async(dispatch_get_main_queue()) {
-        //                cell = tableView.cellForRowAtIndexPath(indexPath) as! UserCell
-        //                cell.profilePicView.image = image
-        //
-        //            }
-        //            
-        //        }
+ 
         return cell
     }
     
@@ -154,7 +147,8 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
         if segue.identifier == "goToConvo" {
             let controller = segue.destinationViewController as! ConversationViewController
             let friendId = self.conversations[sender as! Int].friendId
-            controller.friend = ["id":friendId!,"handle":Connection.sharedInstance.getFriendUserName(friendId!)]
+            let friendDict = Connection.sharedInstance.getFriendUserName(friendId!)
+            controller.friend = ["id":friendId!,"handle":friendDict["handle"]!,"profileImage":friendDict["profileImage"]!]
             controller.hidesBottomBarWhenPushed = true
         }
         
