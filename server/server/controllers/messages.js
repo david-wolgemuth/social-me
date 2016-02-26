@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var Message = mongoose.model("Message");
 var Conversation = mongoose.model("Conversation");
+var Image = require("./../controllers/images.js")();
 
 module.exports = function (io) {
     return {
@@ -13,12 +14,20 @@ module.exports = function (io) {
             var message = new Message({
                 _user: user._id,
                 _conversation: req.body.conversationId,
+                image: Boolean(req.body.image),
                 content: req.body.content
             });
+            console.log(req.body.image);
             message.save(function (error, savedMessage) {
                 if (error) { console.log(error); }
+
                 Conversation.findById(savedMessage._conversation, function (error, conversation) {
                     if (error) { console.log(error); }
+
+                    if (savedMessage.image) {
+                        Image.writeMessageImage(req.body.image.split(",")[1], savedMessage._id);
+                    }
+
                     conversation.messages.push(savedMessage._id);
                     conversation.save(function (error, savedConversation) {
                         savedMessage.deepPopulate("_user", function () {

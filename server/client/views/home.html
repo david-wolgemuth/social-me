@@ -25,7 +25,7 @@
 						<span class="glyphicon glyphicon-menu-down"></span>
 					</button>
 					<ul uib-dropdown-menu role="menu" aria-labelledby="user-button">
-						<li><a href ng-click="">User Info <span class="glyphicon glyphicon-edit pull-right"></span></a></li>
+						<li><a href ng-click="homeCtrl.updateUser()">User Info <span class="glyphicon glyphicon-edit pull-right"></span></a></li>
 						<li ng-class="{ 'disabled' : homeCtrl.requests.length==0 }"><a href ng-click="homeCtrl.showRequests()">Friend Requests <span class="badge" ng-bind="homeCtrl.requests.length"></span></a></li>
 						<li><a href ng-click="homeCtrl.findFriends()">Find New Friends</a></li>
 						<li><a href ng-click="homeCtrl.newConvo()">New Conversation</a></li>
@@ -51,18 +51,21 @@
 					</h3>
 					
 					<input class="form-control" type="text" ng-model="convoSearch" placeholder="Search Conversations">
+					<br>
 					<div class="list-group">
-						<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations | filter: convo.private==false | filter:homeCtrl.searchConvos(convoSearch) | limitTo: 6" ng-click="homeCtrl.showConvo(convo, false)">
-							<span class="ellipis" ng-bind="convo | convoTitle"></span>
+						<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations | filter:homeCtrl.searchConvos(convoSearch) | orderBy: '-createdAt' | limitTo:12 as listOfShownConvos" ng-click="homeCtrl.showConvo(convo, false)">
+							<span class="ellipis" ng-bind="convo | convoTitle: homeCtrl.sessUser"></span>
 								<!-- <span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span> -->
 								<!-- <span class="badge">12</span> -->
 						</button>
+						<label class="list-group-item" ng-if="listOfShownConvos.length == 12">
+							<span class="glyphicon glyphicon-option-horizontal"></span>
+						</label>
 					</div>
-
 				</div>
 			</div>
 			<!-- Friends -->
-			<div class="row">
+			<!-- <div class="row">
 				<div class="col-md-11">
 					<h3>
 						<span class="label label-default label-block">Friends
@@ -81,11 +84,11 @@
 					</div>
 					<hr>
 				</div>
-			</div>
+			</div> -->
 		</div>
 
 		<div id="slide-nav" ng-show="homeCtrl.slideDown"  class="flexcroll row visible-xs visible-sm">
-			<div class="col-md-11">
+			<!-- <div class="col-md-11">
 				<input class="form-control" type="text" ng-model="friendSearch" placeholder="Search Friends">
 				<br>
 				<div class="list-group">
@@ -95,6 +98,27 @@
 					</button>
 				</div>
 				<hr>
+			</div> -->
+
+			<h3>
+				<span class="label label-default label-block">Conversations 
+					<button ng-click="homeCtrl.newConvo()" class="btn btn-xs btn-default">
+						<span class="glyphicon glyphicon-plus-sign"></span>
+					</button>
+				</span>
+			</h3>
+			
+			<input class="form-control" type="text" ng-model="convoSearch" placeholder="Search Conversations">
+			<br>
+			<div class="list-group">
+				<button class="list-group-item" ng-repeat="convo in homeCtrl.conversations | filter:homeCtrl.searchConvos(convoSearch) | orderBy: '-createdAt' | limitTo: 5 as listOfShownConvosNav" ng-click="homeCtrl.showConvo(convo, false)">
+					<span class="ellipis" ng-bind="convo | convoTitle: homeCtrl.sessUser"></span>
+						<!-- <span ng-repeat="user in convo.users | filter: '!'+homeCtrl.sessUser.handle">| {{ user.handle }} |</span> -->
+						<!-- <span class="badge">12</span> -->
+				</button>
+				<label class="list-group-item" ng-if="listOfShownConvosNav.length == 5">
+					<span class="glyphicon glyphicon-option-horizontal"></span>
+				</label>
 			</div>
 		</div>
 		

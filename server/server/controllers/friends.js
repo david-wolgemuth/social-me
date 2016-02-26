@@ -18,16 +18,13 @@ module.exports = function (io) {
         }).lean().exec(function(error, users) {
             if (error) { console.log(error); } 
             var arr = [];
-            console.log(users);
             users.forEach(function (user) {
-                console.log(user.handle);
                 if (user._id == req.session.user._id) {
                     return;
                 }
                 user.isFriend = false;
                 for (var i = 0; i < user.friends.length; i++) {
                     if (user.friends[i].friendId == req.session.user._id) {
-                        console.log("Is Confirmed?", user.friends[i].confirmed);
                         if (user.friends[i].confirmed) {
                             user.isFriend = true;
                         } else {
@@ -45,8 +42,6 @@ module.exports = function (io) {
         fCtrl.getFriends(req, res, true);
     };
     fCtrl.show = function (req, res) {
-        console.log("Params:", req.params.id);
-        console.log("Session:", req.session.user._id);
         User.findById(req.params.id, function (errorA, friend) {
             User.findById(req.session.user._id, function (errorB, sUser) {
                 if (errorA || errorB || !friend || !sUser) {
@@ -99,7 +94,6 @@ module.exports = function (io) {
             .select("handle")
             .exec(function (error, users) {
                 if (error) { console.log(error); }
-                console.log("Users:", users);
                 res.json(users);
             });
         });

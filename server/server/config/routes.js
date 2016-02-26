@@ -1,6 +1,5 @@
 // Messenger Server Routes
 
-var fs = require("fs");
 
 module.exports = function (app, io) {
     // Sockets
@@ -18,6 +17,7 @@ module.exports = function (app, io) {
     var friends = require("./../controllers/friends.js")(io);
     var messages = require("./../controllers/messages.js")(io);
     var conversations = require("./../controllers/conversations.js")(io);
+    var images = require("./../controllers/images.js")(io);
 
 
     //------------ Users -------------//
@@ -33,6 +33,7 @@ module.exports = function (app, io) {
     app.post("/users", users.create);
     //      -> { success: Boolean }
 
+    app.put("/users/:id", users.update);
 
     //------------ Friends -------------//
     app.get("/friends", friends.index);
@@ -75,6 +76,7 @@ module.exports = function (app, io) {
     app.get("/conversations", conversations.index);
     app.get("/conversations/:id", conversations.show);
 
+<<<<<<< HEAD
     app.get("/history",conversations.history);
 
     app.get("/backgrounds", function (req, res) {
@@ -87,4 +89,8 @@ module.exports = function (app, io) {
         console.log("Backgrounds:", backgrounds);
         res.json(backgrounds);
     });
+=======
+
+//     app.get("/backgrounds", images.backgroundIndex);
+// >>>>>>> f6e511685b4383df8d7709d44da445fb6e27cb39
 };

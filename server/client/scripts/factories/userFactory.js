@@ -1,6 +1,7 @@
 messengerModule.factory("userFactory", function ($http, socket) {
     var factory = {};
     factory.create = function (user, callback) {
+        console.log(user);
         $http({
             url: "/users",
             method: "POST",
@@ -41,6 +42,18 @@ messengerModule.factory("userFactory", function ($http, socket) {
             console.log(res);
             var user = res.data;
             if (callback) { callback(user); }
+        });
+    };
+    factory.updateProfileImage = function (info, callback) {
+        $http({
+            url: "/users/" + info.userId,
+            method: "PUT",
+            data: info
+        }).then(function (res) {
+            console.log(res.data);
+            if (res.data.success) {
+                if (callback) { callback(); }
+            }
         });
     };
     factory.index = function (callback) {
