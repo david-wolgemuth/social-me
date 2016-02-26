@@ -33,7 +33,7 @@ module.exports = function (app, io) {
             return callback({ success: false, error: "No Image Uploaded" });
         }
         var split = image.split(",");
-        if (split.length === 0) {
+        if (split.length === 1) {
             image = split[0];
         } else {
             image = split[1];
