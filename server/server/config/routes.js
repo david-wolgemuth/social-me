@@ -79,16 +79,7 @@ module.exports = function (app, io) {
 
     app.get("/history",conversations.history);
 
-    app.get("/backgrounds", function (req, res) {
-        backgrounds = [];
-        backgrounds_path = __dirname + "/../../client/styles/background-images";
-        fs.readdirSync(backgrounds_path).forEach(function (file) {
-            console.log(file);
-            backgrounds.push(file);
-        });
-        console.log("Backgrounds:", backgrounds);
-        res.json(backgrounds);
-    });
+    app.get("/backgrounds", images.backgroundIndex);
 
    
 
