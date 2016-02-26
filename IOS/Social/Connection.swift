@@ -58,7 +58,7 @@ class Connection {
     var listeners = [String]();
     
     private init() {
-        url = "http://ShuHans-MacBook-Air.local:5000"
+        url = "http://52.36.153.231"
         socket = SocketIOClient(socketURL: url)
         socket.connect()
         socket.on("connect") { data, ack in
@@ -85,8 +85,23 @@ class Connection {
     }
     
     
-
-
+    func getProfile(id: String,didGetImage:(imageGot: UIImage?)->()) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
+            let urlString = self.url + "/images/profiles/\(id).jpeg"
+            let urlToReq = NSURL(string: urlString)
+            if let data = NSData(contentsOfURL: urlToReq!) {
+                if let image = UIImage(data: data) {
+                    didGetImage(imageGot: image)
+                    return
+                } else {
+                    didGetImage(imageGot: nil)
+                }
+            } else {
+                didGetImage(imageGot: nil)
+            }
+        }
+    }
+    
     
     func login(email:String,password:String){
 

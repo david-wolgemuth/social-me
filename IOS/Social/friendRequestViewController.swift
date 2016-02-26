@@ -88,28 +88,22 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
 
         cell.usernameLabel?.text = friendRequests[indexPath.row]["handle"]
         cell.profilePicView.image = UIImage(named: "profile")
-     
+        
         if friendRequests[indexPath.row]["profileImage"] == "1" {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
-                let id = self.friendRequests[indexPath.row]["id"]
-                let urlString = "http://ShuHans-MacBook-Air.local:5000/images/profiles/\(id!).jpeg"
-                
-                let urltoReq = NSURL(string: urlString)
-                
-                let image = UIImage(data: NSData(contentsOfURL: urltoReq!)!)
-                dispatch_async(dispatch_get_main_queue()) {
+            Connection.sharedInstance.getProfile(self.friendRequests[indexPath.row]["id"]!) {
+                image in
+                if let imageReceived = image {
                     cell = tableView.cellForRowAtIndexPath(indexPath) as! UserCell
-                    cell.profilePicView.image = image
                     
+                    cell.profilePicView.image = imageReceived
+                } else {
+                    cell.profilePicView.image = UIImage(named: "profile")
                 }
                 
             }
         } else {
             cell.profilePicView.image = UIImage(named: "profile")
-
         }
-
-        
         return cell
     }
     

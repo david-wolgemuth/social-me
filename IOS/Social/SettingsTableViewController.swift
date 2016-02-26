@@ -75,27 +75,21 @@ class SettingsTableViewController: UITableViewController,ConnectionSocketDelegat
         
         
         if NSUserDefaults.standardUserDefaults().boolForKey("profileImage") {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
-                let id = NSUserDefaults.standardUserDefaults().stringForKey("id")
-                let urlString = "http://ShuHans-MacBook-Air.local:5000/images/profiles/\(id!).jpeg"
-                
-                let urltoReq = NSURL(string: urlString)
-                
-                let image = UIImage(data: NSData(contentsOfURL: urltoReq!)!)
-                dispatch_async(dispatch_get_main_queue()) {
-                   
-                    self.userProfileImageView.image = image
-                    
+   
+            Connection.sharedInstance.getProfile(NSUserDefaults.standardUserDefaults().stringForKey("id")!) {
+                image in
+                if let imageReceived = image {
+                    self.userProfileImageView.image = imageReceived
+
+                } else {
+                    self.userProfileImageView.image = UIImage(named: "profile")
                 }
-                
             }
         } else {
-            userProfileImageView.image = UIImage(named: "profile")
-
+            self.userProfileImageView.image = UIImage(named: "profile")
         }
         
-        
-        
+    
         
         let requestSound = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("request", ofType: "wav")!)
         do {

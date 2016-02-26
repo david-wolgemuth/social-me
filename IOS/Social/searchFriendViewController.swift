@@ -119,24 +119,22 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
             
         }
         if friendFound[indexPath.row]["profileImage"] as! String  == "1" {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
-                let id = self.friendFound[indexPath.row]["id"]
-                let urlString = "http://ShuHans-MacBook-Air.local:5000/images/profiles/\(id!).jpeg"
-                
-                let urltoReq = NSURL(string: urlString)
-                
-                let image = UIImage(data: NSData(contentsOfURL: urltoReq!)!)
-                dispatch_async(dispatch_get_main_queue()) {
+            Connection.sharedInstance.getProfile(self.friendFound[indexPath.row]["id"]! as! String) {
+                image in
+                if let imageReceived = image {
                     cell = tableView.cellForRowAtIndexPath(indexPath) as! SearchFriendUserCell
-                    cell.profilePicView.image = image
-                    
+
+                    cell.profilePicView.image = imageReceived
+                } else {
+                    cell.profilePicView.image = UIImage(named: "profile")
                 }
                 
             }
         } else {
             cell.profilePicView.image = UIImage(named: "profile")
-            
         }
+
+        
         cell.selectionStyle = UITableViewCellSelectionStyle.None
   
 

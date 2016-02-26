@@ -72,16 +72,17 @@ class ConversationViewController: JSQMessagesViewController,ConnectionSocketDele
     
     func setupAvatarImage(name: String, imageUrl: String?, incoming: Bool) {
         let diameter = incoming ? UInt(collectionView!.collectionViewLayout.incomingAvatarViewSize.width) : UInt(collectionView!.collectionViewLayout.outgoingAvatarViewSize.width)
-        if let stringUrl = imageUrl {
-            if let url = NSURL(string: stringUrl) {
-                if let data = NSData(contentsOfURL: url) {
-                    let image = UIImage(data: data)
-                    let avatarImage = JSQMessagesAvatarImageFactory.avatarImageWithImage(image,diameter: diameter)
-                    avatars[name] = avatarImage
-                    return
-                }
+        
+       
+        Connection.sharedInstance.getProfile(name) {
+            image in
+            if let imageReceived = image {
+                let avatarImage = JSQMessagesAvatarImageFactory.avatarImageWithImage(imageReceived,diameter: diameter)
+                self.avatars[name] = avatarImage
+                return
             }
         }
+        
         let defaultAvatar = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "profile"), diameter: diameter)
         avatars[name] = defaultAvatar
         
@@ -93,9 +94,7 @@ class ConversationViewController: JSQMessagesViewController,ConnectionSocketDele
         if let avatar = avatars[message.senderId()] { //if avator is already set up
             return avatar
         } else {
-        
-            let urlString = "http://ShuHans-MacBook-Air.local:5000/images/profiles/\(message.senderId()).jpeg"
-            setupAvatarImage(message.senderId(), imageUrl: urlString, incoming: true)
+            setupAvatarImage(message.senderId(), imageUrl: nil, incoming: true)
             return avatars[message.senderId()]
         }
     

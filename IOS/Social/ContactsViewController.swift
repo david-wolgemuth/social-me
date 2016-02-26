@@ -134,18 +134,15 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
         var cell = tableView.dequeueReusableCellWithIdentifier("UserCell")! as! UserCell
         cell.usernameLabel?.text = Friends[indexPath.row]["handle"]
         
+        print(Friends[indexPath.row])
         if Friends[indexPath.row]["profileImage"] == "1" {
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
-                let id = self.Friends[indexPath.row]["id"]
-                let urlString = "http://ShuHans-MacBook-Air.local:5000/images/profiles/\(id!).jpeg"
-                
-                let urltoReq = NSURL(string: urlString)
-                
-                let image = UIImage(data: NSData(contentsOfURL: urltoReq!)!)
-                dispatch_async(dispatch_get_main_queue()) {
+            Connection.sharedInstance.getProfile(self.Friends[indexPath.row]["id"]!) {
+                image in
+                if let imageReceived = image {
                     cell = tableView.cellForRowAtIndexPath(indexPath) as! UserCell
-                    cell.profilePicView.image = image
-                    
+                    cell.profilePicView.image = imageReceived
+                } else {
+                    cell.profilePicView.image = UIImage(named: "profile")
                 }
                 
             }

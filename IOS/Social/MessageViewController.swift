@@ -79,27 +79,20 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
         let userInfo = Connection.sharedInstance.getFriendUserName(conversations[indexPath.row].friendId!)
         if userInfo.count > 0 {
              cell.userNameLabel?.text = userInfo["handle"]
+            
             if userInfo["profileImage"] == "1" {
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
-                    let id = self.conversations[indexPath.row].friendId!
-                    let urlString = "http://ShuHans-MacBook-Air.local:5000/images/profiles/\(id).jpeg"
-                    
-                    let urltoReq = NSURL(string: urlString)
-                    
-                    let image = UIImage(data: NSData(contentsOfURL: urltoReq!)!)
-                    dispatch_async(dispatch_get_main_queue()) {
+                Connection.sharedInstance.getProfile(self.conversations[indexPath.row].friendId!) {
+                    image in
+                    if let imageReceived = image {
                         cell = tableView.cellForRowAtIndexPath(indexPath) as! conversationCell
-                        cell.conversationImage.image = image
-                        
+                        cell.conversationImage.image = imageReceived
+                    } else {
+                        cell.conversationImage.image = UIImage(named: "profile")
                     }
                     
                 }
-
-                
             } else {
                 cell.conversationImage.image = UIImage(named: "profile")
-
-                
             }
             
         } else {
