@@ -32,6 +32,12 @@ module.exports = function (app, io) {
         if (!image) {
             return callback({ success: false, error: "No Image Uploaded" });
         }
+        var split = image.split(",");
+        if (split.length === 0) {
+            image = split[0];
+        } else {
+            image = split[1];
+        }
         if (!id) {
             return callback({ success: false, error: "Must Contain User Id."});
         }
