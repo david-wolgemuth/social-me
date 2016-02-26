@@ -25,7 +25,7 @@ module.exports = function (io) {
                     if (error) { console.log(error); }
 
                     if (savedMessage.image) {
-                        Image.writeMessageImage(req.body.image.split(",")[1], savedMessage._id);
+                        Image.writeMessageImage(req.body.image, savedMessage._id);
                     }
 
                     conversation.messages.push(savedMessage._id);
