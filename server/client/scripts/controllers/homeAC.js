@@ -62,6 +62,8 @@ messengerModule.controller("homeController", function (userFactory, conversation
 
     };
     this.showFriend = function (friendId) {
+
+
         friendFactory.show(friendId, function (friendship) {
             self.ccid = friendship.conversation._id;
             self.slideDown = false;
@@ -86,6 +88,8 @@ messengerModule.controller("homeController", function (userFactory, conversation
         };
     };
     this.showConvo = function (convo) {
+        self.slideDown = false;
+        console.log("Stop Showing, Please.");
         this.ccid = convo._id;
         $scope.$broadcast("ccid", { id: this.ccid });
     };
