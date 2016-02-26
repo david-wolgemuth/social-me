@@ -21,6 +21,12 @@ messengerModule.controller("homeController", function (userFactory, conversation
             self.friends.push(friendship.user);
         });
     });
+    socket.on("newConversation", function (convo) {
+        console.log("New Convo:", convo);
+        $scope.$apply(function () {
+            self.conversations.push(convo.conversation);
+        });
+    });
         
     userFactory.getSessionUser(function (user) {
         if (!user) {
@@ -35,11 +41,12 @@ messengerModule.controller("homeController", function (userFactory, conversation
         friendFactory.requests(function (requests) {
             self.requests = requests;
         });
+        conversationFactory.index(function (convos) {
+            self.conversations = convos;
+        });
     };
     this.resetFriendsAndRequests();
-    conversationFactory.index(function (convos) {
-        self.conversations = convos;
-    });
+    
     this.logout = function () {
         userFactory.logout(function () {
             $location.path("/welcome");
@@ -67,7 +74,6 @@ messengerModule.controller("homeController", function (userFactory, conversation
                 return true;
             }
             convoSearch = convoSearch.toLowerCase();
-            console.log(convo, convoSearch);
             if (convo.title && convo.title.toLowerCase().indexOf(convoSearch) >= 0) {
                 return true;
             }
@@ -82,6 +88,13 @@ messengerModule.controller("homeController", function (userFactory, conversation
     this.showConvo = function (convo) {
         this.ccid = convo._id;
         $scope.$broadcast("ccid", { id: this.ccid });
+    };
+    this.updateUser = function () {
+        $scope.modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: "views/update-user-modal.html",
+            scope: $scope
+        });
     };
     this.findFriends = function () {
         $scope.modalInstance = $uibModal.open({

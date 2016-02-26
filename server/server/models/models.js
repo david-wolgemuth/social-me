@@ -16,7 +16,7 @@ var UserSchema = new mongoose.Schema({
         conversation: { type: mongoose.Schema.Types.ObjectId, ref: "Conversation" }
     }],
 
-    profileImage: { type: mongoose.Schema.Types.ObjectId, ref: "Image" },
+    profileImage: { type: Boolean, default: false },  // if true, image path is "images/profiles/user._id"
     conversations: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Conversation"
@@ -59,6 +59,7 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
 //------------ Messages -------------//
 var MessageSchema = new mongoose.Schema({
     content: String,
+    image: { type: Boolean, default: false },  // if true, image path is "images/messages/message._id"
     _user: {  // .populate("_user", "handle", "image")
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
@@ -69,15 +70,6 @@ var MessageSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true
-});
-
-//------------ Images -------------//
-var ImageSchema = new mongoose.Schema({
-    private: { type: Boolean, default: true },
-    users: [{  // Users authorized to view photo
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    }]
 });
 
 //------------ Conversations -------------//
@@ -101,29 +93,29 @@ var deepPopulate = require("mongoose-deep-populate");
 UserSchema.plugin(deepPopulate, { 
     populate: {
         "conversations.users": {
-            select: "handle"
+            select: "handle profileImage"
         }
     }
 });
 ConversationSchema.plugin(deepPopulate, {
     populate: {
         "users": {
-            select: "handle"
+            select: "handle profileImage"
         },
         "messages._user": {
-            select: "handle"
+            select: "handle profileImage"
         }
     }
 });
 MessageSchema.plugin(deepPopulate, {
     populate: {
         "_user": {
-            select: "handle"
+            select: "handle profileImage"
         }
     }
 });
 
 mongoose.model("User", UserSchema);
 mongoose.model("Message", MessageSchema);
-mongoose.model("Image", ImageSchema);
+// mongoose.model("Image", ImageSchema);
 mongoose.model("Conversation", ConversationSchema);

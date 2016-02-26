@@ -1,0 +1,18 @@
+
+<div ng-controller="updateUserController as uuCtrl">
+		<div class="modal-header">
+			<h3 class="modal-title">Update User</h3>
+		</div>
+		<div class="modal-body">
+			<img ng-if="uuCtrl.user.profileImage" ng-src="/images/profiles/{{ uuCtrl.user._id }}.jpeg" alt="Profile Image">
+			<form ng-submit="uuCtrl.updateUser(info)">
+				<span class="btn btn-file btn-default">
+					Choose Profile Photo <span class="glyphicon glyphicon-camera"></span><input type="file" id="image-field" name="image" fileread="info.image" accept="image/*">
+				</span>
+				<input class="btn pull-right btn-primary" type="submit" value="Upload">
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button class="pull-right btn btn-default" ng-click="uuCtrl.close()">Close</button>
+		</div>
+</div>

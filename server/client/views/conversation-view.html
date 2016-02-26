@@ -1,6 +1,6 @@
 <div ng-controller="conversationsController as convoCtrl" class="height-100 test-border">
 
-	<h4><span ng-repeat="user in convoCtrl.users | filter: user.sessUser=false"> {{ user.handle }} </span></h4>
+	<!-- <h4><span ng-repeat="user in convoCtrl.users | filter: user.sessUser=false"> {{ user.handle }} </span></h4> -->
 
 	<div id="conversation-box" class="row flexcroll">
 		<div class="row" ng-repeat="message in convoCtrl.messages">
@@ -8,17 +8,29 @@
 			<div class="col-md-8" ng-if="message._user._id!=convoCtrl.sessUser._id">
 				<!-- Header -->
 				<div class="inline">
-					<h3 ng-if="message.hideHandle==false"><span class="label label-primary" ng-bind="message._user.handle"></span></h3>
+					<div ng-if="message.hideHandle==false">
+						<h3><span class="label label-primary" ng-bind="message._user.handle"></span></h3>
+						<img class="xs-img" ng-if="message._user.profileImage" ng-src="/images/profiles/{{ message._user._id }}.jpeg" alt="{{ message._user.handle }}">
+					</div>
 					<h6 ng-bind="message.createdAt | date: 'EEE HH:mm'"></h6>
 				</div>
-				<div class="inline bubble" ng-bind="message.content"></div>
+				<div class="inline bubble">
+					<span ng-bind="message.content"></span>
+					<img ng-if="message.image==true" ng-src="/images/messages/{{ message._id }}.jpeg" alt="Image Message?">
+				</div>
 			</div>
 			<!-- User -->
 			<div class="col-md-8 col-md-offset-4 align-right" ng-if="message._user._id==convoCtrl.sessUser._id">
-				<div class="inline bubble align-right" ng-bind="message.content"></div>
+				<div class="inline bubble align-right">
+					<span ng-bind="message.content"></span>
+					<img ng-if="message.image==true" ng-src="/images/messages/{{ message._id }}.jpeg" alt="Image Message?">
+				</div>
 				<!-- Header -->
 				<div class="inline">
-					<h3 ng-if="message.hideHandle==false"><span class="label label-primary" ng-bind="message._user.handle"></span></h3>
+					<div ng-if="message.hideHandle==false">
+						<h3><span class="label label-primary" ng-bind="message._user.handle"></span></h3>
+						<img class="xs-img" ng-if="message._user.profileImage" ng-src="/images/profiles/{{ message._user._id }}.jpeg" alt="{{ message._user.handle }}">
+					</div>
 					<h6 ng-bind="message.createdAt | date: 'EEE HH:mm'"></h6>
 				</div>
 			</div>
@@ -29,10 +41,16 @@
 			<form ng-submit="convoCtrl.createMessage(message)">
 				<div class="input-group">
 					<input class="form-control input-sm" type="text" ng-model="message.content" placeholder="New Message">
+
 					<span class="input-group-btn">
+						<span class="btn-sm btn btn-primary btn-file">
+							<span class="glyphicon glyphicon-camera"></span> <input type="file" fileread="message.image">
+						</span>
 						<button class="btn btn-sm btn-default" type="submit">Send Message</button>
 					</span>
+						
 				</div>
+					
 			</form>
 	</div>
 	

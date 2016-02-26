@@ -1,6 +1,13 @@
 messengerModule.controller("welcomeController", function (userFactory, $location) {
     var self = this;
     this.currentForm = "login";
+
+    userFactory.getSessionUser(function (user) {
+        if (user) {
+            $location.path("/home");
+        }
+    });
+
     this.changeForm = function (form) {
         this.error = ""; this.warning = ""; this.message = "";
         this.currentForm = form;
@@ -19,11 +26,15 @@ messengerModule.controller("welcomeController", function (userFactory, $location
             this.warning = "Passwords Do Not Match";
             return;
         }
+        
         user = {
             email: info.email,
             handle: info.handle,
-            password: info.passA
+            password: info.passA,
+            image: info.image
         };
+        console.log(info, user);
+          
         userFactory.create(user, function (success) {
             if (success) {
                 self.message = "User Successfully Created";

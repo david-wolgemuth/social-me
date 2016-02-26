@@ -86,7 +86,7 @@ messengerModule.controller("conversationsController", function ($scope, $routePa
         var scroller = document.getElementById("conversation-box");
             scroller.scrollTop = scroller.scrollHeight;
         }, 0, false);
-    }
+    };
 })
 .directive("conversation", function () {
     return {

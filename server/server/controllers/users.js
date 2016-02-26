@@ -1,11 +1,12 @@
 
 var mongoose = require("mongoose");
 var User = mongoose.model("User");
+var Image = require("./../controllers/images.js")();
 
 module.exports = function (io) {
+
     return {
         index: function (req, res) {
-            console.log("Search Query:", req.query);
             if (req.query.user) {
                 var user = req.query.user;
                 User.findOne({
@@ -14,7 +15,6 @@ module.exports = function (io) {
                     ]}, function (error, foundUser) {
                             if (error) { console.log(error); }
                             if (foundUser) {
-                                console.log(foundUser);
                                 res.json({ _id: foundUser._id, handle: foundUser.handle });
                             } else {
                                 res.json(null);
@@ -30,7 +30,6 @@ module.exports = function (io) {
         },
         login: function (req, res) {
             var info = req.body;
-            console.log("Login Attempt:", info);
             // info = { user: "david@wolgemuth.com", password: "abc123" };
             User.findOne({
                 $or: [
@@ -48,7 +47,6 @@ module.exports = function (io) {
                             } else if (success) {
                                 var sUser = { _id: user._id, handle: user.handle };
                                 req.session.user = sUser;
-                                console.log("Logged In!");
                                 res.json({ user: sUser });
                             } else {
                                 res.json({ user: null });
@@ -60,12 +58,13 @@ module.exports = function (io) {
         logout: function (req, res) {
             req.session.destroy();
             console.log("Logged Out");
-            console.log(req.session);
             res.json();
         },
         current: function (req, res) {
-            console.log("Sess User:", req.session);
-            res.json(req.session.user);
+            User.findById(req.session.user._id, function (error, user) {
+                if (error) { console.log(error); }
+                res.json(user);
+            });
         },
         show: function (req, res) {
             User.findById(req.params.id, function (error, user) {
@@ -76,26 +75,56 @@ module.exports = function (io) {
         create: function (req, res) {
             var info = req.body;
             User.find({ $or: [
-                    { "handle": info.handle }, { "email": info.email}
-                ]}, function (error, users) {
-                    if (error) { console.log(error); }
-                    if (users.length) {
-                        res.json({ success: false });
-                        return;
-                    }
-                    var user = new User({
-                        email: info.email,
-                        handle: info.handle,
-                        password: info.password
-                    });
-                    user.save(function (error, user) {
-                        if (error) {
-                            console.log(error);
+                        { "handle": info.handle }, { "email": info.email}
+                    ]}, function (error, users) {
+                if (error) { console.log(error); }
+                if (users.length) {
+                    res.json({ success: false });
+                    return;
+                }
+                var user = new User({
+                    email: info.email,
+                    handle: info.handle,
+                    password: info.password,
+                    profileImage: Boolean(info.image)
+                });
+                user.save(function (error, user) {
+                    if (error) {
+                        console.log(error);
+                    } else {
+                        console.log(user);
+                        if (user.profileImage) {
+                            Image.writeProfileImage(info.image.split(",")[1], user._id, function (obj) {
+                                res.json(obj);
+                            });
                         } else {
-                            console.log(user);
                             res.json({ success: true });
                         }
+                    }
+                });
+            });
+        },
+        update: function (req, res) {
+            if (!req.body.image) {
+                console.log("Only Can Update Images Currently");
+                return;
+            }
+            User.findById(req.params.id, function (error, user) {
+                if (error) { console.log(error); }
+                if (user) {
+                    Image.writeProfileImage(req.body.image.split(",")[1], user._id, function (obj) {
+                        if (obj.success) {
+                            user.profileImage = true;
+                            user.save(function (error) {
+                                if (error) { console.log(error); }
+                                res.json(obj);
+                            });
+                        } else {
+                            console.log("Could Not Update Image ...");
+                            res.json(obj);
+                        }
                     });
+                }
             });
         }
     };

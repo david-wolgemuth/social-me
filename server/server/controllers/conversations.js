@@ -35,6 +35,11 @@ module.exports = function (io) {
                 if (error) { console.log(error); }
                 res.json({ conversation: conversation });
                 conversation.users.forEach(function (cUser) {
+                    if (io.users[cUser]) {
+                        io.users[cUser].emit("newConversation", { 
+                            conversation: conversation 
+                        });
+                    }     
                     User.findById(cUser, function (error, user) {
                         if (error) { console.log(error); }
                         user.conversations.push(conversation._id);

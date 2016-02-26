@@ -57,6 +57,24 @@ messengerModule.controller("friendRequestsController", function ($scope, friendF
     };
 });
 
+messengerModule.controller("updateUserController", function ($scope, userFactory) {
+    var self = this;
+    userFactory.getSessionUser(function (user) {
+        self.user = user;
+    });
+    this.close = function () {
+        $scope.modalInstance.close();
+    };
+    this.updateUser = function (info) {
+        info.userId = self.user._id;
+        if (info.image) {
+            userFactory.updateProfileImage(info, function () {
+                self.close();
+            });
+        }
+    };
+});
+
 messengerModule.controller("newConversationController", function ($scope, friendFactory, conversationFactory) {
     this.allFriends = [];
     this.friendsInConversation = [];
@@ -76,6 +94,7 @@ messengerModule.controller("newConversationController", function ($scope, friend
         }
         conversationFactory.create(conversation, function (created, error) {
             if (error) { console.log(error); }
+            $scope.modalInstance.close();
         });
     };
     this.addFriendToConvo = function (friend) {

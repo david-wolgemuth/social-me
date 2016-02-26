@@ -19,6 +19,11 @@
 				<input class="form-control" name="passA" type="password" required ng-model="info.passA" placeholder="Password">
 				<label for="confirm">Confirm Password:</label>
 				<input class="form-control" name="passB" type="password" ng-required="true" ng-model="info.passB" placeholder="Confirm Password">
+				<label for="image">Profile Image:</label>
+				<span class="btn btn-file btn-default">
+					Choose Profile Photo <span class="glyphicon glyphicon-camera"></span>
+					<input type="file" id="image-field" name="image" fileread="info.image" accept="image/*">
+				</span>
 				<br>
 				<span>{{ rForm.email.$valid }}</span>
 				<input class="btn btn-success btn-block" type="submit" value="Register">

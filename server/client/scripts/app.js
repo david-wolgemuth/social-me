@@ -17,6 +17,25 @@ messengerModule.config(function($routeProvider){
 	});
 });
 
+messengerModule.directive("fileread", [function () {
+	return {
+		scope: {
+			fileread: "="
+		},
+		link: function (scope, element, attributes) {
+			element.bind("change", function (changeEvent) {
+				var reader = new FileReader();
+				reader.onload = function (loadEvent) {
+					scope.$apply(function () {
+						scope.fileread = loadEvent.target.result;
+					});
+				};
+				reader.readAsDataURL(changeEvent.target.files[0]);
+			});
+		}
+	};
+}]);
+
 messengerModule.filter("isoDate", function () {
 	return function (input) {
 		return Date.parse(input);
@@ -24,13 +43,15 @@ messengerModule.filter("isoDate", function () {
 });
 
 messengerModule.filter("convoTitle", function () {
-	return function (convo) {
+	return function (convo, sUser) {
 		if (convo.title) {
 			return convo.title;
 		} else {
 			var names = [];
 			convo.users.forEach(function (user) {
-				names.push(user.handle);
+				if (!sUser || sUser._id != user._id) {
+					names.push(user.handle);
+				}
 			});
 			return names.join(" | ");
 		}
