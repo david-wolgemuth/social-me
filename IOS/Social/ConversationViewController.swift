@@ -37,7 +37,7 @@ class ConversationViewController: JSQMessagesViewController,ConnectionSocketDele
         automaticallyScrollsToMostRecentMessage = true
         
         
-        Connection.sharedInstance.getConversation(friend!["id"]!) {
+        Connection.sharedInstance.showConversation(friend!["id"]!) {
             conversationId,messages in
             
 
@@ -53,7 +53,7 @@ class ConversationViewController: JSQMessagesViewController,ConnectionSocketDele
 
     }
 
-    func didReceiveMessages(message: Message?) {
+    func didReceiveMessages(message: Message?,count:Int?) {
         if let newMsg = message {
             self.messages.append(newMsg)
             self.finishReceivingMessage()

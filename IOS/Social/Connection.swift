@@ -12,7 +12,7 @@ import CoreData
 
 
 protocol ConnectionSocketDelegate {
-    func didReceiveMessages(message: Message?)
+    func didReceiveMessages(message: Message?,count:Int?)
    func didReceiveFriendUpdate(action: String)
 }
 
@@ -330,28 +330,101 @@ class Connection {
         }
     }
     
+    func getFriendInConversation(users: NSArray) -> String{
+        var returnString = ""
+        for var i = 0; i < users.count; i++ {
+            if users[i] as! String != NSUserDefaults.standardUserDefaults().stringForKey("id")! {
+                let userId = users[i] as! String
+                if returnString == "" {
+                    returnString += userId
+                    
+                } else {
+                    returnString += "," + userId
+                }
+              
+                
+            }
+        }
+        return returnString
+    }
     
-    func getConversation(friendId: String, loadedMsg: (ConversationId: String ,Message: [Message]?) -> ()) {
+    func getConversation() {
+        var count = 0
+        if let urlToReq = NSURL(string: url+"/history") {
+       
+            if let data = NSData(contentsOfURL: urlToReq) {
+                if let info = self.parseJSON(data) as? NSArray{
+                    for var i = 0; i < info.count; i++ {
+                        let convoId = info[i]["_id"] as! String
+                        let savedConvo = CoreDataManager.sharedInstance.GetConversationById(convoId)
+                        let friendId = getFriendInConversation(info[i]["users"] as! NSArray)
+                        
+                        var writeToCoreData: Bool = false
+                        if savedConvo?.count == 0 { //newConvo
+                            CoreDataManager.sharedInstance.create_conversation(convoId, friendId: friendId)
+                            writeToCoreData = true
+                        } else {
+                            let conversation = savedConvo![0]
+                            if let unread = conversation.unreadMsg {
+                                count += Int(unread)!
+                            }
+                            var lastUpdateCoreData = conversation.updatedAt
+                            let lastUpdateServerString = info[i]["updatedAt"] as! String
+                            let lastUpdateServer = lastUpdateServerString.toNSDate()
+                            if let lastUpdate = lastUpdateCoreData {
+                                if lastUpdate.compare(lastUpdateServer) != NSComparisonResult.OrderedSame {
+                                    writeToCoreData = true
+                                }
+                            }
+                        }
+                        if writeToCoreData { //new message since user offline
+                            let convo = info[i]["messages"] as? NSArray
+                            
+                            var newMessage = CoreDataManager.sharedInstance.get_messages(convoId)
+                         
+                            if let savedMsg = newMessage {
+                                print("saveMsg count: \(savedMsg.count)")
+                                print("convo count: \(convo!.count)")
+                                for (var i = savedMsg.count; i < convo!.count ; i++) {
+                                    let message = convo![i]
+                                    var newMsg: Message? = CoreDataManager.sharedInstance.add_message(message["content"]! as! String, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: convoId, createdAt: message["createdAt"]! as! String)
+                                    if newMsg != nil {
+                                        count += 1
+                                        CoreDataManager.sharedInstance.create_conversation(convoId, friendId: friendId, lastMsg: newMsg!.content!, updatedAt: newMsg!.timestamp!, unreadMsg: "1")
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        delegate?.didReceiveMessages(nil,count:count)
+    }
+    
+    
+    
+    func showConversation(friendId: String, loadedMsg: (ConversationId: String ,Message: [Message]?) -> ()) {
         var newMessage: [Message]?
         if let urlToReq = NSURL(string: url+"/friends/"+friendId) {
             if let data = NSData(contentsOfURL: urlToReq) {
                 if let info = self.parseJSON(data) {
                     newMessage = CoreDataManager.sharedInstance.get_messages(info["conversation"]!!["_id"]! as! String)
-                    if let savedMsg = newMessage {
-                        let convo = info["conversation"]!!["messages"] as? NSArray
-                        if let conversation = convo { //new msg since user offline
-                            for (var i = savedMsg.count; i < conversation.count ; i++) {
-                                let message = conversation[i]
-                                var newMsg: Message? = CoreDataManager.sharedInstance.add_message(message["content"]! as! String, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: info["conversation"]!!["_id"]! as! String, createdAt: message["createdAt"]! as! String)
-                                if newMsg != nil {
-                                    newMessage!.append(newMsg!)
-                                    CoreDataManager.sharedInstance.create_conversation(info["conversation"]!!["_id"] as! String, friendId: friendId, lastMsg: newMsg!.content!, updatedAt: newMsg!.timestamp!, unreadMsg: "1")
-                                    
-                                }
-                            }
-                            
-                        }
-                    }
+//                    if let savedMsg = newMessage {
+//                        let convo = info["conversation"]!!["messages"] as? NSArray
+//                        if let conversation = convo { //new msg since user offline
+//                            for (var i = savedMsg.count; i < conversation.count ; i++) {
+//                                let message = conversation[i]
+//                                var newMsg: Message? = CoreDataManager.sharedInstance.add_message(message["content"]! as! String, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: info["conversation"]!!["_id"]! as! String, createdAt: message["createdAt"]! as! String)
+//                                if newMsg != nil {
+//                                    newMessage!.append(newMsg!)
+//                                    CoreDataManager.sharedInstance.create_conversation(info["conversation"]!!["_id"] as! String, friendId: friendId, lastMsg: newMsg!.content!, updatedAt: newMsg!.timestamp!, unreadMsg: "1")
+//                                    
+//                                }
+//                            }
+//                            
+//                        }
+//                    }
                     loadedMsg(ConversationId: info["conversation"]!!["_id"]! as! String,Message: newMessage)
                 }
             }
@@ -365,7 +438,7 @@ class Connection {
         socket.on("newMessage") {data, ack in
             print("Connection::: got message")
             let msg = self.get_message(data[0]["message"]! as! String)
-            self.delegate?.didReceiveMessages(msg)
+            self.delegate?.didReceiveMessages(msg,count:nil)
    
         }
     }
@@ -446,10 +519,5 @@ class Connection {
             self.delegate?.didReceiveFriendUpdate("Accepted")
         }
     }
-    
-    
-    
-  
-   
-}
 
+}

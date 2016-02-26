@@ -763,7 +763,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kcI-C5-Ueq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="37" y="1637"/>
+            <point key="canvasLocation" x="116" y="1571"/>
         </scene>
         <!--Group Chat Table View Controller-->
         <scene sceneID="OOI-B9-X0t">
@@ -787,6 +787,12 @@
                                                     <rect key="frame" x="13" y="8" width="63" height="32"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.1058823529" green="0.73725490199999999" blue="0.60784313729999995" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Yp-up-m3Q">
+                                                    <rect key="frame" x="77" y="10" width="208" height="27"/>
+                                                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -847,9 +853,12 @@
                             <outlet property="delegate" destination="GhX-FR-eyd" id="E2J-6z-L6i"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="SmP-EU-L4u"/>
+                    <navigationItem key="navigationItem" id="SmP-EU-L4u">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="Cyd-Q6-jJ9"/>
+                    </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                     <connections>
+                        <outlet property="groupPeopleLabel" destination="4Yp-up-m3Q" id="PUL-FF-k57"/>
                         <outlet property="peopleLabel" destination="oK5-II-yyg" id="4Q5-gH-DiQ"/>
                         <outlet property="searchCell" destination="dfU-Jf-MfP" id="SbG-LP-LIj"/>
                         <outlet property="searchLabel" destination="Vm7-7n-0al" id="dvr-y7-9zc"/>

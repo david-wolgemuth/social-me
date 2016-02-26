@@ -13,6 +13,7 @@ import MIBadgeButton_Swift
 import AVFoundation
 
 
+
 class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableViewDataSource,friendRequestDelegate,UITableViewDelegate{
     
     @IBOutlet weak var tableView: UITableView!
@@ -23,7 +24,7 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
     
 
     
-    
+    var playSound = false
  
     
     var audioPlayer:AVAudioPlayer?
@@ -41,7 +42,7 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
         button.setImage(userPlusImage, forState: .Normal)
         button.addTarget(self, action: Selector("addFriendsButtonPressed:"), forControlEvents: UIControlEvents.TouchUpInside)
  
-        
+        Connection.sharedInstance.delegate = self
         Connection.sharedInstance.listenForFriendUpdate()
         
         Connection.sharedInstance.listenForMessages()
@@ -53,6 +54,7 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
             print("error ::: \(error)")
             
         }
+        Connection.sharedInstance.getConversation()
         
         
     }
@@ -61,7 +63,11 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
         super.viewWillAppear(animated)
         
         Connection.sharedInstance.delegate = self
-        
+        if playSound {
+            audioPlayer?.play()
+            playSound = false
+            
+        }
         let count = Connection.sharedInstance.getFriendRequestCount()
         if count > 0 {
             button.badgeString = String(count)
@@ -78,7 +84,7 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
         
 
     }
-  
+    
 
    
 
@@ -90,19 +96,32 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
  
 
  
-    func didReceiveMessages(message: Message?) {
-        
-        
+    func didReceiveMessages(message: Message?,count: Int?) {
         var newBadge: String
-        if let badge = self.tabBarController!.tabBar.items![1].badgeValue {
-            newBadge = String(Int(badge)! + 1)
+        print(count)
+        if count == nil {
+            
+            if let badge = self.tabBarController!.tabBar.items![1].badgeValue {
+                newBadge = String(Int(badge)! + 1)
+            } else {
+                newBadge = "1"
+            }
+             self.tabBarController!.tabBar.items![1].badgeValue = newBadge
+            audioPlayer?.play()
         } else {
-            newBadge = "1"
+            
+            if count != 0 {
+                newBadge = String(count!)
+                playSound = true
+                self.tabBarController!.tabBar.items![1].badgeValue = newBadge
+                
+            }
+            
         }
-        self.tabBarController!.tabBar.items![1].badgeValue = newBadge
-        audioPlayer?.play()
-
+       
     }
+    
+    
     
   
     
@@ -143,6 +162,7 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
         performSegueWithIdentifier("talk", sender: indexPath.row)
         self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
+    
     
     
     

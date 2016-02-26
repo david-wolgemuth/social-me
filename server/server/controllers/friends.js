@@ -66,7 +66,7 @@ module.exports = function (io) {
                     return;
                 }
                 Conversation.findById(sUser.friends[friendIndex].conversation)
-                .deepPopulate('messages messages._user')
+                .deepPopulate()
                 .exec(function (error, conversation) {
                     console.log(conversation);
                     if (error) { console.log(error); }

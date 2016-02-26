@@ -10,6 +10,15 @@ import CoreData
 import Foundation
 
 
+extension String{
+    func toNSDate() -> NSDate {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        return dateFormatter.dateFromString(self)!
+        
+    }
+}
+
 class CoreDataManager {
     static let sharedInstance = CoreDataManager()
     
@@ -38,6 +47,7 @@ class CoreDataManager {
         request.sortDescriptors = [NSSortDescriptor(key: "timestamp", ascending: true)]
         do {
             messages = try managedObjectContext.executeFetchRequest(request) as! [Message]
+     
             return messages
         } catch let error {
             print("error in fetching messages : \(error)")
@@ -82,11 +92,31 @@ class CoreDataManager {
     }
     
     
+    func create_conversation(id:String,friendId:String) {
+        let _ = Conversation(entity: NSEntityDescription.entityForName("Conversation", inManagedObjectContext: managedObjectContext)!, insertIntoManagedObjectContext: self.managedObjectContext, id: id,updatedAt: nil,lastMsg: nil,friendId: friendId,unreadMsg: nil)
+        do {
+            try self.managedObjectContext.save()
+        } catch let error {
+            print("error in saving convo: \(error)")
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
     func create_conversation(id: String,friendId: String,lastMsg: String,updatedAt: NSDate,unreadMsg:String) {
         let predicate = NSPredicate(format: "(id == %@)", id)
         let request = NSFetchRequest(entityName: "Conversation")
         request.predicate = predicate
         var conversation = [Conversation]()
+        print(updatedAt)
         do {
             conversation = try self.managedObjectContext.executeFetchRequest(request) as! [Conversation]
             if conversation.count != 0 { //conversation id already exists
@@ -96,7 +126,12 @@ class CoreDataManager {
                     conversation[0].unreadMsg!  = unreadMsg
 
                 } else {
-                    conversation[0].unreadMsg! = String(Int(conversation[0].unreadMsg!)! + 1)
+                    if (conversation[0].unreadMsg == nil) {
+                        conversation[0].unreadMsg = "1"
+                    } else {
+                        conversation[0].unreadMsg! = String(Int(conversation[0].unreadMsg!)! + 1)
+                    }
+                    
                 }
                 
             } else {
@@ -130,6 +165,23 @@ class CoreDataManager {
         return result
         
         
+    }
+    
+    func GetConversationById(id:String) -> [Conversation]? {
+        let predicate = NSPredicate(format: "(id == %@)", id)
+        let request = NSFetchRequest(entityName: "Conversation")
+        request.predicate = predicate
+        var conversation: Conversation?
+        do {
+            let conversationResult = try self.managedObjectContext.executeFetchRequest(request) as! [Conversation]
+            return conversationResult
+           
+            
+        } catch {
+            return nil
+            
+            
+        }
     }
 
     func deleteAllMessages() {

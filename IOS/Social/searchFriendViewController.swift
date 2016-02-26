@@ -168,7 +168,7 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
         Connection.sharedInstance.addFriendDelegate = nil
     }
     
-    func didReceiveMessages(message: Message?) {
+    func didReceiveMessages(message: Message?,count:Int?) {
         
     }
     
@@ -187,6 +187,10 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
             self.delegate?.didConfirmNewFriendRequest()
         }
     }
+    
+
+    
+
 
     
   

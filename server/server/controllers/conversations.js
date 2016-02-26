@@ -20,6 +20,7 @@ module.exports = function (io) {
                 });
             });
         },
+        
         create: function (req, res) {
             console.log("Hit Create Method");
             var sUser = req.session.user;
@@ -73,6 +74,35 @@ module.exports = function (io) {
                 // console.log(conversation);
                 res.json(conversation);
             });
+        },
+
+        history: function(req,res) {
+            if (!req.session.user) {
+                res.json(null);
+                return;
+            }
+            Conversation.find({ 
+                // $or:[
+                //     {
+                        $and:[
+                            {users: req.session.user._id},
+                            {messages:{
+                                $not:{$size:0}
+                            }}
+
+
+
+                        ]
+
+                    // }, {private: false}
+                // ]
+            })
+            .deepPopulate("User messages messages._user")
+            .exec(function(error,conversations) {
+                if (error) {console.log(error);}
+                res.json(conversations);
+
+            })
         }
     };
 }; 

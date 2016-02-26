@@ -75,6 +75,8 @@ module.exports = function (app, io) {
     app.get("/conversations", conversations.index);
     app.get("/conversations/:id", conversations.show);
 
+    app.get("/history",conversations.history);
+
     app.get("/backgrounds", function (req, res) {
         backgrounds = [];
         backgrounds_path = __dirname + "/../../client/styles/background-images";

@@ -75,7 +75,7 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
         return friendRequests.count
     }
     
-    func didReceiveMessages(message: Message?) {
+    func didReceiveMessages(message: Message?,count: Int?) {
         
     }
 

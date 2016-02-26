@@ -81,7 +81,7 @@ class SettingsTableViewController: UITableViewController,ConnectionSocketDelegat
         
     }
     
-    func didReceiveMessages(message: Message?) {
+    func didReceiveMessages(message: Message?,count:Int?) {
         
         
         var newBadge: String

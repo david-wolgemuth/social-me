@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 import TextFieldEffects
 
-class groupChatTableViewController: UITableViewController,UITextFieldDelegate{
+class groupChatTableViewController: UITableViewController,UITextFieldDelegate,updateGroupDelegate{
     
     @IBOutlet weak var peopleLabel: UILabel!
     
@@ -20,6 +20,11 @@ class groupChatTableViewController: UITableViewController,UITextFieldDelegate{
     
     @IBOutlet weak var searchTextField: IsaoTextField!
     
+    @IBOutlet weak var groupPeopleLabel: UILabel!
+    
+    var selected = [Dictionary<String,String>]()
+    
+ 
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,16 +34,58 @@ class groupChatTableViewController: UITableViewController,UITextFieldDelegate{
         searchLabel.text = String.fontAwesomeIconWithName(.Search)
         searchTextField.delegate = self
         tableView.allowsSelection = false
-        searchCell.separatorInset = UIEdgeInsetsMake(0, searchCell.bounds.size.width, 0, 0);
+        searchCell.separatorInset = UIEdgeInsetsMake(0, searchCell.bounds.size.width, 0, 0)
+        searchTextField.addTarget(self, action: Selector("textFieldDidChange:"), forControlEvents: .EditingChanged)
+        let containerCtrl = self.childViewControllers[0] as! friendsContainerTableViewController
+        containerCtrl.delegate = self
+        groupPeopleLabel.text = ""
+      
+       
+        
     }
+
+  
+    
+    
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
-    func textFieldDidBeginEditing(textField: UITextField) {
-        print(textField.text)
+    
+    func textFieldDidChange(sender: UITextField) {
+        
+        let containerCtrl = self.childViewControllers[0] as! friendsContainerTableViewController
+        containerCtrl.updateSearchResults(sender.text!)
+    }
+    
+    func firstSelect(user: Dictionary<String, String>) {
+        self.selected.append(user)
+        self.updateUI()
+    }
+    
+    
+    func didUpdateGroupPeople(action: String, user: Dictionary<String, String>?, index: Int?) {
+        if action == "delete" {
+            self.selected.removeAtIndex(index!)
+        } else {
+            self.selected.append(user!)
+        }
+        self.updateUI()
+        
+    }
+    
+    func updateUI() {
+        var string = ""
+        for var i = 0; i < self.selected.count; i++ {
+            if i != 0 {
+                string+=","+self.selected[i]["handle"]!
+            } else {
+                string += self.selected[i]["handle"]!
+            }
+        }
+        groupPeopleLabel.text = string
     }
     
 

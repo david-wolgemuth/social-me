@@ -89,7 +89,7 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
             cell.accessoryType = .DisclosureIndicator
         }
         
-        
+     
         cell.userNameLabel?.text = Connection.sharedInstance.getFriendUserName(conversations[indexPath.row].friendId!)
         cell.conversationImage.image = UIImage(named: "profile")
   
@@ -137,7 +137,7 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
         
     }
     
-    func didReceiveMessages(message: Message?) {
+    func didReceiveMessages(message: Message?,count: Int?) {
         if message != nil {
             conversations = CoreDataManager.sharedInstance.checkConversation()
             audioPlayer?.play()
