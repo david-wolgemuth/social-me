@@ -1,14 +1,14 @@
 <div ng-controller="welcomeController as welcomeCtrl">
-	<fieldset class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+	<div ng-show="welcomeCtrl.error" class="alert alert-danger">{{ welcomeCtrl.error }}</div>
+	<div ng-show="welcomeCtrl.message" class="alert alert-primary">{{ welcomeCtrl.message }}</div>
+	<div ng-show="welcomeCtrl.warning" class="alert alert-warning">{{ welcomeCtrl.warning }}</div>
 
-		<div ng-show="welcomeCtrl.error" class="alert alert-danger">{{ welcomeCtrl.error }}</div>
-		<div ng-show="welcomeCtrl.message" class="alert alert-primary">{{ welcomeCtrl.message }}</div>
-
-		<div ng-show="welcomeCtrl.warning" class="alert alert-warning">{{ welcomeCtrl.warning }}</div>
+	<fieldset id="welcome-box" class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+		<legend><h3><span class="label label-success">Social ME <span class="glyphicon glyphicon-fire"></span></span></h3></legend>
 
 		<div ng-if="welcomeCtrl.currentForm=='registration'">
 			<h3>Register New User</h3>
-				
+			<br>
 			<form name="rForm" ng-submit="welcomeCtrl.register(info)" novalidate>
 				<label for="email">Email:</label>
 				<input class="form-control" name="email" type="email" ng-required="true" ng-model="info.email" placeholder="joseph@park.com">
@@ -20,12 +20,11 @@
 				<label for="confirm">Confirm Password:</label>
 				<input class="form-control" name="passB" type="password" ng-required="true" ng-model="info.passB" placeholder="Confirm Password">
 				<label for="image">Profile Image:</label>
-				<span class="btn btn-file btn-default">
+				<span class="btn btn-file btn-block ">
 					Choose Profile Photo <span class="glyphicon glyphicon-camera"></span>
 					<input type="file" id="image-field" name="image" fileread="info.image" accept="image/*">
 				</span>
 				<br>
-				<span>{{ rForm.email.$valid }}</span>
 				<input class="btn btn-success btn-block" type="submit" value="Register">
 			</form>
 
@@ -36,7 +35,7 @@
 
 		<div ng-if="welcomeCtrl.currentForm=='login'">
 			<h3>Login Existing User</h3>
-			
+			<br>
 			<form ng-submit="welcomeCtrl.login(info)">
 				<label for="handle">Email / Handle:</label>
 				<input class="form-control" type="text" name="handle" ng-model="info.user" placeholder="j_park">
