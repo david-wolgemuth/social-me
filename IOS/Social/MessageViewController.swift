@@ -38,7 +38,7 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
         conversations = CoreDataManager.sharedInstance.checkConversation()
         self.tableView.reloadData()
         Connection.sharedInstance.delegate = self
-        self.tabBarController!.tabBar.items![1].badgeValue = nil
+        self.tabBarController?.tabBar.items?[1].badgeValue = nil
 
     }
     
@@ -51,6 +51,7 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
         var cell = tableView.dequeueReusableCellWithIdentifier("conversationCell")! as! conversationCell
         cell.lastMessageLabel?.text = conversations[indexPath.row].lastMessage
         
+
         let tempo = Tempo(date: self.conversations[indexPath.row].updatedAt!)
          cell.dateLabel?.text = tempo.timeAgoNow()
     
@@ -75,31 +76,43 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
             cell.accessoryView = nil;
             cell.accessoryType = .DisclosureIndicator
         }
-        
-        let userInfo = Connection.sharedInstance.getFriendUserName(conversations[indexPath.row].friendId!)
-        if userInfo.count > 0 {
-             cell.userNameLabel?.text = userInfo["handle"]
+
             
-            if userInfo["profileImage"] == "1" {
-                Connection.sharedInstance.getProfile(self.conversations[indexPath.row].friendId!) {
-                    image in
-                    if let imageReceived = image {
-                        cell = tableView.cellForRowAtIndexPath(indexPath) as! conversationCell
-                        cell.conversationImage.image = imageReceived
-                    } else {
-                        cell.conversationImage.image = UIImage(named: "profile")
-                    }
-                    
+        
+        if conversations[indexPath.row].friendId?.componentsSeparatedByString(",").count > 1 {
+            Connection.sharedInstance.showGroupConversation(self.conversations[indexPath.row].id!) {
+                title,users in
+                dispatch_async(dispatch_get_main_queue()) {
+                    cell.userNameLabel.text = title
+                    cell.conversationImage.image = UIImage(named: "group")
                 }
-            } else {
-                cell.conversationImage.image = UIImage(named: "profile")
             }
-            
         } else {
-             cell.userNameLabel?.text = ""
-            
-        }
-        
+            let userInfo = Connection.sharedInstance.getFriendUserName(conversations[indexPath.row].friendId!)
+            if userInfo.count > 0 {
+                cell.userNameLabel?.text = userInfo["handle"]
+                
+                if userInfo["profileImage"] == "1" {
+                    Connection.sharedInstance.getProfile(self.conversations[indexPath.row].friendId!) {
+                        image in
+                        dispatch_async(dispatch_get_main_queue()) {
+                            if let imageReceived = image {
+                                if self.tableView.cellForRowAtIndexPath(indexPath) != nil {
+                                    cell = self.tableView.cellForRowAtIndexPath(indexPath) as! conversationCell
+                                    cell.conversationImage.image = imageReceived
+                                    
+                                }
+                              
+                            } else {
+                                cell.conversationImage.image = UIImage(named: "profile")
+                            }
+                        }
+                    }
+                } else {
+                    cell.conversationImage.image = UIImage(named: "profile")
+                }
+            }
+        } 
  
         return cell
     }
@@ -123,7 +136,14 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
         
     }
     
+    func didReceiveConversation() {
+        conversations = CoreDataManager.sharedInstance.checkConversation()
+        self.tableView.reloadData()
+    }
+    
     func didReceiveMessages(message: Message?,count: Int?) {
+        print("message view controller did receive")
+//        print(message)
         if message != nil {
             conversations = CoreDataManager.sharedInstance.checkConversation()
             audioPlayer?.play()
@@ -140,8 +160,16 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
         if segue.identifier == "goToConvo" {
             let controller = segue.destinationViewController as! ConversationViewController
             let friendId = self.conversations[sender as! Int].friendId
-            let friendDict = Connection.sharedInstance.getFriendUserName(friendId!)
-            controller.friend = ["id":friendId!,"handle":friendDict["handle"]!,"profileImage":friendDict["profileImage"]!]
+            
+            let friendArray = friendId?.componentsSeparatedByString(",")
+            if friendArray!.count > 1 {
+                controller.friend = ["id":friendId!]
+                controller.conversationId = self.conversations[sender as! Int].id!
+            } else {
+                let friendDict = Connection.sharedInstance.getFriendUserName(friendId!)
+                controller.friend = ["id":friendId!,"handle":friendDict["handle"]!,"profileImage":friendDict["profileImage"]!]
+               
+            }
             controller.hidesBottomBarWhenPushed = true
         }
         
@@ -158,6 +186,10 @@ class MessageViewController: UIViewController,UITableViewDataSource, UITableView
         
     }
     
+    
+    @IBAction func unwindFromGroup(segue:UIStoryboardSegue) {
+        
+    }
     
     
     

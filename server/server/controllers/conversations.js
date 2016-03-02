@@ -87,24 +87,25 @@ module.exports = function (io) {
                 return;
             }
             Conversation.find({ 
-                // $or:[
-                //     {
+                $or:[
+                    {
                         $and:[
                             {users: req.session.user._id},
                             {messages:{
                                 $not:{$size:0}
                             }}
-
-
-
                         ]
 
-                    // }, {private: false}
-                // ]
+                    }, { $and:[
+                            {users: req.session.user._id},
+                            {private: false}
+                        ]}
+                ]
             })
             .deepPopulate("User messages messages._user")
             .exec(function(error,conversations) {
                 if (error) {console.log(error);}
+                console.log(conversations);
                 res.json(conversations);
 
             })

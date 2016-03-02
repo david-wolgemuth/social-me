@@ -53,6 +53,9 @@ class SettingsTableViewController: UITableViewController,ConnectionSocketDelegat
         
     }
     
+    func didDownloadImage() {
+        
+    }
     func imageCropViewControllerDidCancelCrop(controller: RSKImageCropViewController) {
         self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
 
@@ -78,12 +81,15 @@ class SettingsTableViewController: UITableViewController,ConnectionSocketDelegat
    
             Connection.sharedInstance.getProfile(NSUserDefaults.standardUserDefaults().stringForKey("id")!) {
                 image in
-                if let imageReceived = image {
-                    self.userProfileImageView.image = imageReceived
-
-                } else {
-                    self.userProfileImageView.image = UIImage(named: "profile")
+                dispatch_async(dispatch_get_main_queue()) {
+                    if let imageReceived = image {
+                        self.userProfileImageView.image = imageReceived
+                        
+                    } else {
+                        self.userProfileImageView.image = UIImage(named: "profile")
+                    }
                 }
+               
             }
         } else {
             self.userProfileImageView.image = UIImage(named: "profile")
@@ -115,6 +121,8 @@ class SettingsTableViewController: UITableViewController,ConnectionSocketDelegat
         
         
     }
+    
+    
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -168,6 +176,17 @@ class SettingsTableViewController: UITableViewController,ConnectionSocketDelegat
         self.tabBarController!.tabBar.items![1].badgeValue = newBadge
         audioPlayer?.play()
         
+    }
+    
+    func didReceiveConversation() {
+        var newBadge: String
+        if let badge = self.tabBarController!.tabBar.items![1].badgeValue {
+            newBadge = String(Int(badge)! + 1)
+        } else {
+            newBadge = "1"
+        }
+        self.tabBarController!.tabBar.items![1].badgeValue = newBadge
+        audioPlayer?.play()
     }
   
     

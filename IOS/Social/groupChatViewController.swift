@@ -9,6 +9,7 @@
 import UIKit
 import Foundation
 import TextFieldEffects
+import SCLAlertView
 
 class groupChatTableViewController: UITableViewController,UITextFieldDelegate,updateGroupDelegate{
     
@@ -25,6 +26,17 @@ class groupChatTableViewController: UITableViewController,UITextFieldDelegate,up
     var selected = [Dictionary<String,String>]()
     
  
+    @IBAction func DoneButtonClicked(sender: UIBarButtonItem) {
+        let alert  = SCLAlertView()
+        let titleTextField = alert.addTextField("xxxxx")
+        alert.addButton("Confirm") {
+            Connection.sharedInstance.createGroupConversation(self.selected, title: titleTextField.text)
+            self.performSegueWithIdentifier("unwind", sender: nil)
+        }
+        alert.showEdit("Conversation Name", subTitle: "Give a Groupchat name",closeButtonTitle: "Cancel")
+        
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

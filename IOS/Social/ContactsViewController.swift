@@ -34,6 +34,12 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.tabBarController!.tabBar.items![0].image = UIImage.fontAwesomeIconWithName(.Users, textColor: UIColor.blackColor(), size: CGSizeMake(30, 30))
+        self.tabBarController!.tabBar.items![1].image = UIImage.fontAwesomeIconWithName(.Commenting, textColor: UIColor.blackColor(), size: CGSizeMake(30, 30))
+        self.tabBarController!.tabBar.items![2].image = UIImage.fontAwesomeIconWithName(.Cog, textColor: UIColor.blackColor(), size: CGSizeMake(30, 30))
+        
+        
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -46,6 +52,8 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
         Connection.sharedInstance.listenForFriendUpdate()
         
         Connection.sharedInstance.listenForMessages()
+        Connection.sharedInstance.listenForNewConversation()
+        
         let requestSound = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("request", ofType: "wav")!)
         do {
             audioPlayer = try AVAudioPlayer(contentsOfURL: requestSound)
@@ -121,6 +129,19 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
        
     }
     
+    func didReceiveConversation() {
+        var newBadge: String
+        
+            if let badge = self.tabBarController!.tabBar.items![1].badgeValue {
+                newBadge = String(Int(badge)! + 1)
+            } else {
+                newBadge = "1"
+            }
+            self.tabBarController!.tabBar.items![1].badgeValue = newBadge
+            audioPlayer?.play()
+        
+    }
+    
 
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return Friends.count
@@ -134,16 +155,23 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
         var cell = tableView.dequeueReusableCellWithIdentifier("UserCell")! as! UserCell
         cell.usernameLabel?.text = Friends[indexPath.row]["handle"]
         
-        print(Friends[indexPath.row])
+     
         if Friends[indexPath.row]["profileImage"] == "1" {
             Connection.sharedInstance.getProfile(self.Friends[indexPath.row]["id"]!) {
                 image in
-                if let imageReceived = image {
-                    cell = tableView.cellForRowAtIndexPath(indexPath) as! UserCell
-                    cell.profilePicView.image = imageReceived
-                } else {
-                    cell.profilePicView.image = UIImage(named: "profile")
+                dispatch_async(dispatch_get_main_queue()) {
+                    if let imageReceived = image {
+                        if tableView.cellForRowAtIndexPath(indexPath) != nil {
+                            cell = tableView.cellForRowAtIndexPath(indexPath) as! UserCell
+                            cell.profilePicView.image = imageReceived
+
+                            
+                        }
+                    } else {
+                        cell.profilePicView.image = UIImage(named: "profile")
+                    }
                 }
+               
                 
             }
         } else {
@@ -183,7 +211,9 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
     
     func didConfirmNewFriendRequest() {
         self.Friends = Connection.sharedInstance.getFriends()
-        self.tableView.reloadData()
+        dispatch_async(dispatch_get_main_queue()) {
+            self.tableView.reloadData()
+        }
        
     }
  
@@ -206,7 +236,11 @@ class ContactsViewController: UIViewController,ConnectionSocketDelegate,UITableV
         } else { //new friend from confirming request
             print("contacts view controller got now friend")
             Friends = Connection.sharedInstance.getFriends()
-            self.tableView.reloadData()
+            dispatch_async(dispatch_get_main_queue()) {
+                self.tableView.reloadData()
+                
+            }
+            
             audioPlayer?.play()
         }
     }

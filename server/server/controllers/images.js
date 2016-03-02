@@ -27,21 +27,24 @@ module.exports = function (app, io) {
 
     };
     Ctrl.writeImage = function (directory, image, id, callback) {
-    
+        console.log(images_path);
         if (!callback) { callback = function () {}; }
         if (!image) {
             return callback({ success: false, error: "No Image Uploaded" });
         }
+       // console.log(image);
         var split = image.split(",");
-        if (split.length === 0) {
+        if (split.length === 1) {
             image = split[0];
         } else {
             image = split[1];
         }
+        // console.log("Image:", image);
         if (!id) {
             return callback({ success: false, error: "Must Contain User Id."});
         }
         var image_path = images_path + directory + id + ".jpeg";
+        // console.log(image_path);
         fs.writeFile(image_path, image, "base64", function (error) {
             if (error) { 
                 console.log(error);

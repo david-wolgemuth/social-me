@@ -58,8 +58,11 @@ class CoreDataManager {
     
     
     
-    func add_message(messageText: String,senderId: String,senderHandle: String, conversationId: String,createdAt:String)-> Message? {
-        let newMessage = Message(entity: NSEntityDescription.entityForName("Message", inManagedObjectContext: managedObjectContext)!,insertIntoManagedObjectContext: self.managedObjectContext,text: messageText,senderID: senderId,conversationID: conversationId,senderDisplayName: senderHandle,createdAt: createdAt)
+    func add_message(messageId: String,messageText: String,senderId: String,senderHandle: String, conversationId: String,createdAt:String)-> Message? {
+        
+        
+        let newMessage = Message(entity: NSEntityDescription.entityForName("Message", inManagedObjectContext: managedObjectContext)!,insertIntoManagedObjectContext: self.managedObjectContext,text: messageText,senderID: senderId,conversationID: conversationId,senderDisplayName: senderHandle,createdAt: createdAt,messageId:messageId,isMediaMessage: false,media: nil)
+    
         do {
             try self.managedObjectContext.save()
             return newMessage
@@ -68,6 +71,35 @@ class CoreDataManager {
             
         }
         return nil
+    }
+    
+    
+    func update_message(messageId: String,media: UIImage) {
+        var imageData: NSData?
+        
+        imageData = UIImagePNGRepresentation(media)
+   
+        
+        let predicate = NSPredicate(format: "(messageID == %@)", messageId)
+        let request = NSFetchRequest(entityName: "Message")
+        request.predicate = predicate
+        var message: [Message]
+        do {
+            message = try self.managedObjectContext.executeFetchRequest(request) as! [Message]
+            if message.count != 0 {
+                message[0].mediaMessage = true
+                message[0].mediaData = imageData
+            }
+            do {
+                try self.managedObjectContext.save()
+            } catch let error {
+                print("error in saving convo: \(error)")
+            }
+            
+        } catch let error {
+            print("error in update message :\(error)")
+        }
+        
     }
     
     func update_conversation(id: String) { //setting unread msg = '0'

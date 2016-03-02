@@ -18,7 +18,9 @@
 
 #import "JSQMessagesCellTextView.h"
 
-@implementation JSQMessagesCellTextView
+@implementation JSQMessagesCellTextView {
+    BOOL _hasText;
+}
 
 - (void)awakeFromNib
 {
@@ -28,10 +30,10 @@
     self.editable = NO;
     self.selectable = YES;
     self.userInteractionEnabled = YES;
-    self.dataDetectorTypes = UIDataDetectorTypeNone;
+    self.dataDetectorTypes = UIDataDetectorTypeAll;
     self.showsHorizontalScrollIndicator = NO;
     self.showsVerticalScrollIndicator = NO;
-    self.scrollEnabled = NO;
+//    self.scrollEnabled = NO;
     self.backgroundColor = [UIColor clearColor];
     self.contentInset = UIEdgeInsetsZero;
     self.scrollIndicatorInsets = UIEdgeInsetsZero;
@@ -79,5 +81,38 @@
     
     return YES;
 }
+
+
+- (void)setText:(NSString *)text {
+
+        if (text) {
+                [super setText:text];
+        }
+    _hasText = text;
+     [self setNeedsLayout];
+}
+
+
+
+
+
+- (NSString *)text {
+    return (_hasText) ?  [super text] :  nil;
+}
+
+- (void)setAttributedText:(NSAttributedString *)attributedText
+{
+      if (attributedText) {
+            [super setAttributedText:attributedText];
+      }
+    _hasText = !!attributedText.length;
+    [self setNeedsLayout];
+}
+
+- (NSAttributedString *)attributedText
+{
+    return (_hasText) ? [super attributedText] : nil;
+}
+
 
 @end

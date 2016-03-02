@@ -24,6 +24,7 @@ class friendsContainerTableViewController: UITableViewController{
     
     var selectedFriends = [Dictionary<String,String>]()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.allowsMultipleSelectionDuringEditing = true
@@ -43,17 +44,43 @@ class friendsContainerTableViewController: UITableViewController{
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-         let cell = tableView.dequeueReusableCellWithIdentifier("userCell")! as! UserCell
+         var cell = tableView.dequeueReusableCellWithIdentifier("userCell")! as! UserCell
         
         // Configure the cell...
+        
+        var array = [Dictionary<String,String>]()
         if search {
             cell.usernameLabel.text = filteredFriends[indexPath.row]["handle"]
+            array = filteredFriends
         }
         else {
             cell.usernameLabel.text = friends[indexPath.row]["handle"]
+            array = friends
            
         }
-        cell.profilePicView.image = UIImage(named: "profile")
+    
+        if array[indexPath.row]["profileImage"] == "1" {
+            Connection.sharedInstance.getProfile(array[indexPath.row]["id"]!) {
+                image in
+                dispatch_async(dispatch_get_main_queue()) {
+                    if let imageReceived = image {
+                        if (tableView.cellForRowAtIndexPath(indexPath) != nil) {
+                            cell = tableView.cellForRowAtIndexPath(indexPath) as! UserCell
+                            cell.profilePicView.image = imageReceived
+                            
+                        }
+                        
+                    } else {
+                        cell.profilePicView.image = UIImage(named: "profile")
+                    }
+                }
+                
+                
+            }
+        } else {
+            cell.profilePicView.image = UIImage(named: "profile")
+        }
+
         return cell
     }
     

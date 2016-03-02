@@ -61,6 +61,8 @@
 {
     _image = [image copy];
     _cachedImageView = nil;
+    
+    
 }
 
 - (void)setAppliesMediaViewMaskAsOutgoing:(BOOL)appliesMediaViewMaskAsOutgoing

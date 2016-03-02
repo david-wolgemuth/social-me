@@ -29,6 +29,8 @@ module.exports = function (io) {
             }
         },
         login: function (req, res) {
+
+            console.log("i got the login request");
             var info = req.body;
             // info = { user: "david@wolgemuth.com", password: "abc123" };
             User.findOne({

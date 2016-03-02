@@ -54,7 +54,6 @@ class LoginViewController: UIViewController,UITextFieldDelegate,LTMorphingLabelD
         
         if let user = prefs.stringForKey("user"){
              emailTextField.text = user
-            print(keychain.get("password"))
             if let password = keychain.get("password") {
                passwordTextField.text = password
             }
@@ -72,14 +71,18 @@ class LoginViewController: UIViewController,UITextFieldDelegate,LTMorphingLabelD
     
     
     func didLogin(success: Bool) {
-        if success == true {
-            self.performSegueWithIdentifier("finishLog", sender: nil)
+        dispatch_async(dispatch_get_main_queue()) {
+            if success == true {
+                self.performSegueWithIdentifier("finishLog", sender: nil)
+                
+            } else {
+                let alert = SCLAlertView()
+                alert.showError("Error",subTitle: "Email/Password is wrong.")
+                self.loginButton.enabled = true
+            }
             
-        } else {
-            let alert = SCLAlertView()
-            alert.showError("Error",subTitle: "Email/Password is wrong.")
-            loginButton.enabled = true
         }
+       
     }
     
     

@@ -15,6 +15,7 @@ import CoreData
 protocol ConnectionSocketDelegate {
     func didReceiveMessages(message: Message?,count:Int?)
    func didReceiveFriendUpdate(action: String)
+    func didReceiveConversation()
 }
 
 protocol ConnectionLoginDelegate {
@@ -32,6 +33,8 @@ protocol ConnectionAddFriendDelegate {
 
 protocol ConnectionImageDelegate{
     func didUploadImage(success: Bool)
+    func didDownloadImage()
+    
 }
 
 
@@ -58,7 +61,8 @@ class Connection {
     var listeners = [String]();
     
     private init() {
-        url = "http://52.36.153.231"
+//        url = "http://52.36.153.231"
+        url = "http://shuhan.local:5000"
         socket = SocketIOClient(socketURL: url)
         socket.connect()
         socket.on("connect") { data, ack in
@@ -75,6 +79,10 @@ class Connection {
                 self.Friends = []
                 self.friendRequest = []
                 socket.removeAllHandlers()
+                socket.off("newMessage")
+                socket.off("newConversation")
+                socket.off("friendRequest")
+                socket.off("friendAccepted")
                 
             } else {
                 didLogOut(success: false)
@@ -86,8 +94,30 @@ class Connection {
     
     
     func getProfile(id: String,didGetImage:(imageGot: UIImage?)->()) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
+        
+     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
             let urlString = self.url + "/images/profiles/\(id).jpeg"
+            let urlToReq = NSURL(string: urlString)
+            if let data = NSData(contentsOfURL: urlToReq!) {
+
+                if let image = UIImage(data: data) {
+                    didGetImage(imageGot: image)
+                    return
+                } else {
+                    didGetImage(imageGot: nil)
+                    return
+                }
+
+            } else {
+                didGetImage(imageGot: nil)
+            }
+        }
+
+    }
+    
+    func getMessageImage(id: String,didGetImage:(imageGot: UIImage?)->()) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
+            let urlString = self.url + "/images/messages/\(id).jpeg"
             let urlToReq = NSURL(string: urlString)
             if let data = NSData(contentsOfURL: urlToReq!) {
                 if let image = UIImage(data: data) {
@@ -96,6 +126,7 @@ class Connection {
                 } else {
                     didGetImage(imageGot: nil)
                 }
+              
             } else {
                 didGetImage(imageGot: nil)
             }
@@ -111,36 +142,39 @@ class Connection {
             let bodyData = "user=\(email.trim())&password=\(password)"
             request.HTTPBody = bodyData.dataUsingEncoding(NSUTF8StringEncoding)
             let session: NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+            print("ready to log in..")
             let task = session.dataTaskWithRequest(request) {
                 (data,response,error) in
-                
-                dispatch_sync(dispatch_get_main_queue()) {
+                    print("get data back")
                     if let found_data = data {
                         if let userInfo = self.parseJSON(found_data) {
+                            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
                             if let user = userInfo["user"] {
-                                print(user)
                                 if let _ = user!["_id"] {
                                     let userId = user!["_id"]!
                                     let prefs = NSUserDefaults.standardUserDefaults()
                                     let keychain = KeychainSwift()
-                                    var setValue: Bool = false
+                                 
                                     if let saved_userId = prefs.stringForKey("id") {//we have a saved user
                                         if saved_userId != userId as! String{
-                                            CoreDataManager.sharedInstance.overwrite_user()
-                                            setValue = true
+                                            print("overwrite")
+                                            dispatch_sync(dispatch_get_main_queue()) {
+                                                CoreDataManager.sharedInstance.overwrite_user()
+                                                
+                                            }
+                            
                                         }
                                     
-                                    } else {
-                                        setValue = true
                                     }
-//                                    if setValue {
-                                        prefs.setValue(userId as! String,forKey: "id")
-                                        prefs.setValue(email,forKey:"user")
-                                        prefs.setValue(user!["profileImage"],forKey:"profileImage")
+                                    prefs.setValue(userId as! String,forKey: "id")
+                                    prefs.setValue(email,forKey:"user")
+                                    prefs.setValue(user!["profileImage"],forKey:"profileImage")
+                                    keychain.set(password,forKey: "password")
+                                    dispatch_async(dispatch_get_main_queue()) {
+                                        self.loginDelegate?.didLogin(true)
                                         
-                                        keychain.set(password,forKey: "password")
-//                                    }
-                                    self.loginDelegate?.didLogin(true)
+                                    }
+                                    
                                     self.socket.emit("loggedIn",userId as! String)
                                 } else {
                                     self.loginDelegate?.didLogin(false)
@@ -149,6 +183,7 @@ class Connection {
                         }
                     }
                 }
+         
             }
             task.resume()
         }
@@ -179,7 +214,8 @@ class Connection {
                 let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
                 let task = session.dataTaskWithRequest(request) {
                     (data,response,error) in
-                     dispatch_sync(dispatch_get_main_queue()) {
+              
+                     dispatch_async(dispatch_get_main_queue()) {
                         if let found_data = data {
                             if let message = self.parseJSON(found_data) {
                                 if let success = message["success"] {
@@ -292,7 +328,8 @@ class Connection {
             let session:NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
             let task = session.dataTaskWithRequest(request) {
                 (data,response,error) in
-                dispatch_sync(dispatch_get_main_queue()) {
+             
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
                     if let found_data = data {
                         if let message = self.parseJSON(found_data) {
                             if let success = message["success"] {
@@ -313,6 +350,63 @@ class Connection {
         
     }
     
+    func makeTitle(users:[Dictionary<String,String>]) -> String {
+        var title = ""
+        for var i = 0; i < users.count; i++ {
+            if i == 0 {
+                title += users[i]["handle"]! as! String
+               
+            } else {
+                 title += "," + (users[i]["handle"]! as! String)
+            }
+        }
+        
+        return title
+        
+        
+    }
+    
+    func createGroupConversation(users:[Dictionary<String,String>], title: String?) {
+        var usersToSend = Array<String>()
+        for var i = 0; i < users.count; i++ {
+            usersToSend.append(users[i]["id"]!)
+        }
+        
+        var titleToSend = title!
+        if titleToSend  == "" {
+            self.makeTitle(users)
+            titleToSend = self.makeTitle(users)
+        }
+    
+        if let urlToReq = NSURL(string: url+"/conversations") {
+            let request: NSMutableURLRequest = NSMutableURLRequest(URL: urlToReq)
+            request.HTTPMethod = "POST"
+            let userData: NSMutableDictionary = ["users":usersToSend,"title":titleToSend]
+            var userJsonData: NSData?
+            do {
+                userJsonData = try NSJSONSerialization.dataWithJSONObject(userData, options: NSJSONWritingOptions.PrettyPrinted)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(NSString(format: "%lu", userJsonData!.length) as String, forHTTPHeaderField: "Content-Length")
+                request.HTTPBody = userJsonData!
+                let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+                let task = session.dataTaskWithRequest(request) {
+                    data,response,error in
+                    if let found_data = data {
+                        if let JSON = self.parseJSON(found_data) {
+                        }
+                    }
+                    
+                }
+                task.resume()
+            } catch let error {
+                print("error : \(error)")
+            }
+        }
+
+        
+        
+    }
+    
     func respondFriend(Index: Int,accept: Bool,didRespondRequest:(success:Bool,error: String?)->()) {
         let FriendId = self.friendRequest[Index]["id"]!
         if let urlToReq = NSURL(string: self.url + "/friends/" + FriendId) {
@@ -324,7 +418,7 @@ class Connection {
             let session:NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
             let task = session.dataTaskWithRequest(request) {
                 (data,response,error) in
-                dispatch_sync(dispatch_get_main_queue()) {
+                dispatch_async(dispatch_get_main_queue()) {
                     if let found_data = data {
                         if let message = self.parseJSON(found_data) {
                             if let success = message["success"] {
@@ -391,17 +485,18 @@ class Connection {
     func getConversation() {
         var count = 0
         if let urlToReq = NSURL(string: url+"/history") {
-       
+            print("get conversation...")
             if let data = NSData(contentsOfURL: urlToReq) {
                 if let info = self.parseJSON(data) as? NSArray{
                     for var i = 0; i < info.count; i++ {
                         let convoId = info[i]["_id"] as! String
                         let savedConvo = CoreDataManager.sharedInstance.GetConversationById(convoId)
                         let friendId = getFriendInConversation(info[i]["users"] as! NSArray)
-                        
                         var writeToCoreData: Bool = false
                         if savedConvo?.count == 0 { //newConvo
-                            CoreDataManager.sharedInstance.create_conversation(convoId, friendId: friendId)
+                            let date = info[i]["createdAt"] as! String
+                            CoreDataManager.sharedInstance.create_conversation(convoId, friendId: friendId, lastMsg: "", updatedAt: date.toNSDate(), unreadMsg: "0")
+                    
                             writeToCoreData = true
                         } else {
                             let conversation = savedConvo![0]
@@ -410,6 +505,7 @@ class Connection {
                             }
                             var lastUpdateCoreData = conversation.updatedAt
                             let lastUpdateServerString = info[i]["updatedAt"] as! String
+//                            print("conversation::: \(info[i])")
                             let lastUpdateServer = lastUpdateServerString.toNSDate()
                             if let lastUpdate = lastUpdateCoreData {
                                 if lastUpdate.compare(lastUpdateServer) != NSComparisonResult.OrderedSame {
@@ -422,19 +518,44 @@ class Connection {
                             
                             var newMessage = CoreDataManager.sharedInstance.get_messages(convoId)
                          
-                            if let savedMsg = newMessage {
-//                                print("saveMsg count: \(savedMsg.count)")
-//                                print("convo count: \(convo!.count)")
+                            if let savedMsg = newMessage{
+                            
+                      
+                               
                                 for (var i = savedMsg.count; i < convo!.count ; i++) {
                                     let message = convo![i]
-                                    var newMsg: Message? = CoreDataManager.sharedInstance.add_message(message["content"]! as! String, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: convoId, createdAt: message["createdAt"]! as! String)
-                                    if newMsg != nil {
+                                    var hasImage: Bool = false
+                                    if message["image"] as? Int == 1 {
+                                        hasImage = true
+                                    }
+                                    if hasImage {
+                                        let date = message["createdAt"] as! String
+                                        
+                                        CoreDataManager.sharedInstance.create_conversation(convoId, friendId: friendId, lastMsg:
+                                        "[Picture]", updatedAt: date.toNSDate(), unreadMsg: "1")
+                                        Connection.sharedInstance.getMessageImage(message["_id"]! as! String) {
+                                            image in
+                                            
+                                            if let imageReceived = image {
+                                                CoreDataManager.sharedInstance.update_message(message["_id"]! as! String, media: imageReceived)
+                                                self.imageDelegate?.didDownloadImage()
+                                            }
+                                                
+                                        }
+                                    }
+                                    var newMsg = CoreDataManager.sharedInstance.add_message(message["_id"]! as! String,messageText: message["content"]! as! String, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: convoId,createdAt: message["createdAt"]! as! String)
+                                    
+                                    if newMsg != nil && !hasImage {
                                         count += 1
                                         CoreDataManager.sharedInstance.create_conversation(convoId, friendId: friendId, lastMsg: newMsg!.content!, updatedAt: newMsg!.timestamp!, unreadMsg: "1")
                                     }
                                 }
+                                
+                                
+                                
                             }
                         }
+                    
                     }
                 }
             }
@@ -456,13 +577,55 @@ class Connection {
         }
     }
     
+    
+    func Convert(dict: [Dictionary<String,AnyObject>]) -> [Dictionary<String,String>] {
+        var returnDict = [Dictionary<String,String>]()
+        for var i = 0; i < dict.count; i++ {
+            returnDict.append(["id":dict[i]["_id"]! as! String,"handle":dict[i]["handle"]! as! String])
+            
+        
+        }
+        return returnDict
+        
+        
+    }
+    
+    
+    
+    func showGroupConversation(convoId: String,loadedConvo:(title:String,Message: [Message]?)->()) {
+        var newMessage: [Message]?
+        if let urlToReq = NSURL(string: url+"/conversations/"+convoId) {
+            if let data = NSData(contentsOfURL: urlToReq) {
+                if let info = self.parseJSON(data) as? NSDictionary {
+                    newMessage = CoreDataManager.sharedInstance.get_messages(convoId)
+                 
+                    if info["title"] == nil {
+                        let users = self.Convert((info["users"] as? [Dictionary<String,AnyObject>])!)
+                        let Title = self.makeTitle(users)
+                        loadedConvo(title: Title, Message: newMessage)
+                        
+                    } else {
+                        loadedConvo(title: info["title"] as! String, Message: newMessage)
+                    }
+                    
+                }
+            }
+        }
+        
+    }
+    
   
 
     
     func listenForMessages() {
         socket.on("newMessage") {data, ack in
             print("Connection::: got message")
+            
+         
+            
             let msg = self.get_message(data[0]["message"]! as! String)
+            
+      
             self.delegate?.didReceiveMessages(msg,count:nil)
    
         }
@@ -475,19 +638,36 @@ class Connection {
             if let data = NSData(contentsOfURL: urlToReq) {
                 if let info = self.parseJSON(data) {
                     if info["_user"]!!["_id"]! as? String != NSUserDefaults.standardUserDefaults().stringForKey("id") { //i did not send the message
-                        receiveMsg = CoreDataManager.sharedInstance.add_message(info["content"]! as! String, senderId: info["_user"]!!["_id"]! as! String, senderHandle: info["_user"]!!["handle"]! as! String, conversationId: info["_conversation"]! as! String, createdAt: info["createdAt"]! as! String)
-                        if receiveMsg != nil {
+                        var hasImage: Bool = false
+                        if info["image"] as? Int == 1 {
+                            hasImage = true
+                
+                        }
+                        if hasImage {
+                            let date = info["createdAt"]! as! String
+                            CoreDataManager.sharedInstance.create_conversation(info["_conversation"]! as! String, friendId:info["_user"]!!["_id"]! as! String, lastMsg: "[Picture]", updatedAt:date.toNSDate() , unreadMsg: "1")
+                            Connection.sharedInstance.getMessageImage(messageId) {
+                                image in
+                                    if let imageReceived = image {
+                                        CoreDataManager.sharedInstance.update_message(messageId, media: imageReceived)
+                                        self.imageDelegate?.didDownloadImage()
+                                    }
+                            }
+                        }
+                    
+                        receiveMsg = CoreDataManager.sharedInstance.add_message(messageId,messageText: info["content"]! as! String, senderId: info["_user"]!!["_id"]! as! String, senderHandle: info["_user"]!!["handle"]! as! String, conversationId: info["_conversation"]! as! String, createdAt: info["createdAt"]! as! String)
+                        print(receiveMsg)
+                        if receiveMsg != nil  && !hasImage{
                             CoreDataManager.sharedInstance.create_conversation(receiveMsg!.conversationID!, friendId:info["_user"]!!["_id"]! as! String, lastMsg: receiveMsg!.content!, updatedAt: receiveMsg!.timestamp!, unreadMsg: "1")
                         }
-                    }
+                     }
                 }
             }
         }
-        
         return receiveMsg
-        
     }
     
+ 
     func getFriendUserName(FriendId: String)-> Dictionary<String,String> {
         var result = Dictionary<String,String>()
         for (var i = 0; i < self.Friends.count; i++) {
@@ -521,7 +701,7 @@ class Connection {
                     dispatch_sync(dispatch_get_main_queue()) {
                         if let found_data = data {
                             if let message = self.parseJSON(found_data) {
-                                print(message)
+//                                print(message)
                                 if let success = message["success"] {
                                     if (success! as! Int == 1) {
                                         self.imageDelegate?.didUploadImage(true)
@@ -550,68 +730,122 @@ class Connection {
     }
     
    
-    
-            
-            
-    
-  
-            
-            
-
-    
-    
-    func sendMessage(conversationId: String,content: String,sendToFriend: String,didSuccessSendMsg:(newMessage: Message?)->()) {
+    func sendMessage(conversationId: String,content: String,image:UIImage?,sendToFriend: String,didSuccessSendMsg:(newMessage: Message?)->()) {
         
+       
         if let urlToReq = NSURL(string: url+"/messages") {
             let request: NSMutableURLRequest = NSMutableURLRequest(URL: urlToReq)
             request.HTTPMethod = "POST"
-            let bodyData = "conversationId=\(conversationId)&content=\(content)"
-            request.HTTPBody = bodyData.dataUsingEncoding(NSUTF8StringEncoding)
-            let session:NSURLSession = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-            let task = session.dataTaskWithRequest(request) {
-                (data,response,error) in
-                dispatch_sync(dispatch_get_main_queue()) {
-                    if let found_data = data {                        
-                        if let message = self.parseJSON(found_data) {
-                            var newMsg = CoreDataManager.sharedInstance.add_message(message["content"]! as! String, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: message["_conversation"]! as! String, createdAt: message["createdAt"]! as! String)
-                            if (newMsg !== nil ) {
-                                CoreDataManager.sharedInstance.create_conversation(conversationId, friendId: sendToFriend, lastMsg: newMsg!.content!, updatedAt: newMsg!.timestamp!, unreadMsg: "0")
+            let userData: NSMutableDictionary = ["conversationId":conversationId,"content":content,"image":""]
+            if let sendImage = image {
+                let data = UIImageJPEGRepresentation(sendImage, 0.1)
+                let imageData = data?.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+                userData.setValue(imageData, forKey: "image")
+            }
+            var userJsonData: NSData?
+            do {
+                userJsonData = try NSJSONSerialization.dataWithJSONObject(userData, options: NSJSONWritingOptions.PrettyPrinted)
+                request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                request.setValue(NSString(format: "%lu", userJsonData!.length) as String, forHTTPHeaderField: "Content-Length")
+                request.HTTPBody = userJsonData!
+                let session = NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+                let task = session.dataTaskWithRequest(request) {
+                    (data,response,error) in
+                    dispatch_sync(dispatch_get_main_queue()) {
+                        var newMsg: Message?
+                        if let found_data = data {
+                            if let message = self.parseJSON(found_data) {
+                                var hasImage: Bool = false
+                               
+                                if message["image"] as? Int == 1 {
+                                    hasImage = true
+                                }
+                                if hasImage {
+                                    let date = message["createdAt"] as! String
+                                    CoreDataManager.sharedInstance.create_conversation(conversationId, friendId: sendToFriend, lastMsg: "[Picture]", updatedAt: date.toNSDate(), unreadMsg: "0")
+                                    
+                                    Connection.sharedInstance.getMessageImage(message["_id"]! as! String) {
+                                        image in
+                                        
+                                        if let imageReceived = image {
+                                            CoreDataManager.sharedInstance.update_message(message["_id"]! as! String, media: imageReceived)
+                                            self.imageDelegate?.didDownloadImage()
+                                         
+                                        }
+                                    }
+                                }
+                                newMsg = CoreDataManager.sharedInstance.add_message(message["_id"]! as! String,messageText:message["content"]! as! String, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: message["_conversation"]! as! String, createdAt: message["createdAt"]! as! String)
+                                if newMsg !== nil && !hasImage {
+                                    CoreDataManager.sharedInstance.create_conversation(conversationId, friendId: sendToFriend, lastMsg: newMsg!.content!, updatedAt: newMsg!.timestamp!, unreadMsg: "0")
+                                }
                             }
-                       
                             didSuccessSendMsg(newMessage: newMsg)
                         }
-                        
                     }
                 }
+                task.resume()
+            }catch let error {
+                print("error : \(error)")
             }
-            task.resume()
         }
     }
+    
+    func listenForNewConversation() {
+        socket.on("newConversation") {
+            data, ack in
+            let userArray = data[0]["conversation"]!!["users"] as! NSArray
+            var friendIdString = ""
+            for var i = 0; i < userArray.count; i++ {
+                if i != 0 {
+                    friendIdString += ","+(userArray[i] as! String)
+                } else {
+                    friendIdString += userArray[i] as! String
+                }
+            }
+            let date = data[0]["conversation"]!!["createdAt"] as! String
+            CoreDataManager.sharedInstance.create_conversation(data[0]["conversation"]!!["_id"] as! String, friendId: friendIdString, lastMsg: "", updatedAt: date.toNSDate(), unreadMsg: "1")
+            self.delegate?.didReceiveConversation()
+            
+        }
+    }
+
+    
+ 
 
     func listenForFriendUpdate() {
         socket.on("friendRequest") {
             data, ack in
             print("get friend request")
             let user = data[0]["user"]
-            
-            var hasImage = "0"
-            if  user!!["profileImage"] as! Int == 1 {
-                hasImage = "1"
+
+            if user!!["_id"] as? String != NSUserDefaults.standardUserDefaults().stringForKey("id") {
+                var hasImage = "0"
+                if  user!!["profileImage"] as! Int == 1 {
+                    hasImage = "1"
+                }
+                
+                self.friendRequest.append(["id":user!!["_id"]! as! String,"handle":user!!["handle"]! as! String, "profileImage":hasImage])
+                self.delegate?.didReceiveFriendUpdate("Request")
+                
             }
             
-            self.friendRequest.append(["id":user!!["_id"]! as! String,"handle":user!!["handle"]! as! String, "profileImage":hasImage])
-            self.delegate?.didReceiveFriendUpdate("Request")
+           
         }
         socket.on("friendAccepted") {
             data, ack in
             print("get new friend accept")
             let user = data[0]["user"]
-            var hasImage = "0"
-            if  user!!["profileImage"] as! Int == 1 {
-                hasImage = "1"
+            
+            if user!!["_id"] as? String != NSUserDefaults.standardUserDefaults().stringForKey("id") {
+                var hasImage = "0"
+                if  user!!["profileImage"] as! Int == 1 {
+                    hasImage = "1"
+                }
+                self.Friends.append(["id": user!!["_id"]! as! String, "handle":user!!["handle"]! as! String,"profileImage":hasImage])
+                self.delegate?.didReceiveFriendUpdate("Accepted")
+                
             }
-            self.Friends.append(["id": user!!["_id"]! as! String, "handle":user!!["handle"]! as! String,"profileImage":hasImage])
-            self.delegate?.didReceiveFriendUpdate("Accepted")
+           
         }
     }
 

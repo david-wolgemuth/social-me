@@ -47,6 +47,11 @@
                BlueprintName = "SocialUITests"
                ReferencedContainer = "container:Social.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "SocialUITests/testExample()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>

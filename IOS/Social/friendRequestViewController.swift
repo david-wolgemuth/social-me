@@ -92,13 +92,16 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
         if friendRequests[indexPath.row]["profileImage"] == "1" {
             Connection.sharedInstance.getProfile(self.friendRequests[indexPath.row]["id"]!) {
                 image in
-                if let imageReceived = image {
-                    cell = tableView.cellForRowAtIndexPath(indexPath) as! UserCell
-                    
-                    cell.profilePicView.image = imageReceived
-                } else {
-                    cell.profilePicView.image = UIImage(named: "profile")
+                dispatch_async(dispatch_get_main_queue()) {
+                    if let imageReceived = image {
+                        cell = tableView.cellForRowAtIndexPath(indexPath) as! UserCell
+                        
+                        cell.profilePicView.image = imageReceived
+                    } else {
+                        cell.profilePicView.image = UIImage(named: "profile")
+                    }
                 }
+              
                 
             }
         } else {
@@ -162,6 +165,10 @@ class friendRequestViewController: UIViewController,UITableViewDataSource,UITabl
         ignore.backgroundColor = UIColor.redColor()
         
         return [ignore,accept]
+    }
+    
+    func didReceiveConversation() {
+        
     }
   
    

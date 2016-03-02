@@ -50,7 +50,6 @@
 		127E01AB1C6690E9007C38C0 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127E01AA1C6690E9007C38C0 /* UserCell.swift */; };
 		12943E2D1C686B7600A8D2FC /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12943E2C1C686B7600A8D2FC /* MessageViewController.swift */; };
 		12943E2F1C686F2D00A8D2FC /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12943E2E1C686F2D00A8D2FC /* ConversationViewController.swift */; };
-		12943E331C6874B000A8D2FC /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12943E321C6874B000A8D2FC /* TabBarController.swift */; };
 		12943E361C68829000A8D2FC /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12943E351C68829000A8D2FC /* Connection.swift */; };
 		12943E611C693ABC00A8D2FC /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12943E601C693ABC00A8D2FC /* CoreDataManager.swift */; };
 		12A3804F1C5D4C8B00F2ADF9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A3804E1C5D4C8B00F2ADF9 /* AppDelegate.swift */; };
@@ -127,7 +126,6 @@
 		127E01AA1C6690E9007C38C0 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
 		12943E2C1C686B7600A8D2FC /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
 		12943E2E1C686F2D00A8D2FC /* ConversationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
-		12943E321C6874B000A8D2FC /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		12943E351C68829000A8D2FC /* Connection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		12943E601C693ABC00A8D2FC /* CoreDataManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CoreDataManager.swift; path = ../CoreDataManager.swift; sourceTree = "<group>"; };
 		12A3804B1C5D4C8B00F2ADF9 /* Social.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Social.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -249,7 +247,6 @@
 				12943E351C68829000A8D2FC /* Connection.swift */,
 				12943E2E1C686F2D00A8D2FC /* ConversationViewController.swift */,
 				127E01A81C658EFC007C38C0 /* ContactsViewController.swift */,
-				12943E321C6874B000A8D2FC /* TabBarController.swift */,
 				1207C2951C5DBB6500CBD353 /* RegisterViewController.swift */,
 				126961A81C5DD6160008F8EC /* TPKeyboardAvoidingScrollView.h */,
 				126961AE1C5DD7070008F8EC /* UIScrollView+TPKeyboardAvoidingAdditions.h */,
@@ -491,7 +488,6 @@
 				127692471C77FE1300410D79 /* searchFriendViewController.swift in Sources */,
 				1207C2941C5DAC2A00CBD353 /* LoginViewController.swift in Sources */,
 				125EE2111C75424F00122531 /* SocketIOClientStatus.swift in Sources */,
-				12943E331C6874B000A8D2FC /* TabBarController.swift in Sources */,
 				1278A9611C7E54910001787A /* tempo.swift in Sources */,
 				125EE20D1C75424F00122531 /* SocketEventHandler.swift in Sources */,
 				127692791C7D366100410D79 /* Conversation.swift in Sources */,
@@ -688,7 +684,7 @@
 					"$(PROJECT_DIR)/SCLAlertView-Swift/build/SCLAlertView.build/Release-iphoneos/SCLAlertView.build/Objects-normal/arm64",
 					"$(PROJECT_DIR)/SCLAlertView-Swift/build/SCLAlertView.build/Release-iphoneos/SCLAlertView.build/Objects-normal/armv7",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ngshuhan.Socialme;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ngshuhan.SocialApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Social/Social-Bridging-Header.h";
 			};
@@ -710,7 +706,7 @@
 					"$(PROJECT_DIR)/SCLAlertView-Swift/build/SCLAlertView.build/Release-iphoneos/SCLAlertView.build/Objects-normal/arm64",
 					"$(PROJECT_DIR)/SCLAlertView-Swift/build/SCLAlertView.build/Release-iphoneos/SCLAlertView.build/Objects-normal/armv7",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.ngshuhan.Socialme;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ngshuhan.SocialApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Social/Social-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";

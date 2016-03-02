@@ -121,13 +121,17 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
         if friendFound[indexPath.row]["profileImage"] as! String  == "1" {
             Connection.sharedInstance.getProfile(self.friendFound[indexPath.row]["id"]! as! String) {
                 image in
-                if let imageReceived = image {
-                    cell = tableView.cellForRowAtIndexPath(indexPath) as! SearchFriendUserCell
-
-                    cell.profilePicView.image = imageReceived
-                } else {
-                    cell.profilePicView.image = UIImage(named: "profile")
+                dispatch_async(dispatch_get_main_queue()) {
+                    if let imageReceived = image {
+                        cell = tableView.cellForRowAtIndexPath(indexPath) as! SearchFriendUserCell
+                        
+                        cell.profilePicView.image = imageReceived
+                    } else {
+                        cell.profilePicView.image = UIImage(named: "profile")
+                    }
+                    
                 }
+               
                 
             }
         } else {
@@ -142,17 +146,22 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
     }
     
     func didSuccessSendRequest(success: Bool,error: String?) {
-        if success == true {
+       
+            if success == true {
+                
+                self.friendFound[self.friendIndex]["requestSent"] = 1
+                 dispatch_async(dispatch_get_main_queue()) {
+                    self.tableView.reloadData()
+                }
+                self.soundPlayer?.play()
+                
+                
+            } else {
+                CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)
+            }
+            self.SubmitRequest = false
             
-            self.friendFound[friendIndex]["requestSent"] = 1
-            self.tableView.reloadData()
-            soundPlayer?.play()
-            
-            
-        } else {
-            CSNotificationView.showInViewController(self, style: CSNotificationViewStyle.Error, message: error!)
-        }
-        SubmitRequest = false
+      
     }
     
 
@@ -202,6 +211,9 @@ class searchFriendViewController: UIViewController,UISearchBarDelegate,Connectio
         }
     }
     
+    func didReceiveConversation() {
+        
+    }
 
     
 

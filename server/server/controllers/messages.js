@@ -11,19 +11,20 @@ module.exports = function (io) {
                 console.log("Not Logged In?");
                 return;
             }
+
             var message = new Message({
                 _user: user._id,
                 _conversation: req.body.conversationId,
                 image: Boolean(req.body.image),
                 content: req.body.content
             });
-            console.log(req.body.image);
+            // console.log(req.body.image);
             message.save(function (error, savedMessage) {
                 if (error) { console.log(error); }
 
                 Conversation.findById(savedMessage._conversation, function (error, conversation) {
                     if (error) { console.log(error); }
-
+                    
                     if (savedMessage.image) {
                         Image.writeMessageImage(req.body.image, savedMessage._id);
                     }

@@ -14,7 +14,7 @@ import JSQMessagesViewController
 class Message: NSManagedObject,JSQMessageData {
 
     convenience init(entity: NSEntityDescription,insertIntoManagedObjectContext context:NSManagedObjectContext,text:String,senderID: String,
-        conversationID: String,senderDisplayName: String,createdAt: String) {
+        conversationID: String,senderDisplayName: String,createdAt: String,messageId: String, isMediaMessage: Bool,media: NSData?) {
             self.init(entity: entity,insertIntoManagedObjectContext: context)
             self.senderID = senderID
             self.senderHandle = senderDisplayName
@@ -23,6 +23,9 @@ class Message: NSManagedObject,JSQMessageData {
             self.timestamp = dateFormatter.dateFromString(createdAt)
             self.content = text
             self.conversationID = conversationID
+            self.messageID = messageId
+            self.mediaMessage = isMediaMessage
+            self.mediaData = media
             
     }
 
@@ -40,17 +43,46 @@ class Message: NSManagedObject,JSQMessageData {
     }
     
     func isMediaMessage() -> Bool {
-        return false
+        return self.mediaMessage as! Bool
     }
     
+    
     func messageHash() -> UInt {
-        let contentHash = self.content?.hash
-        return UInt(abs(contentHash!))
+        let contentHash = self.isMediaMessage() ? self.messageID?.hashValue : self.content?.hash
+        return UInt(abs(self.senderID!.hash ^ self.timestamp!.hash ^ contentHash!))
+        
+        
+     
+        
+        
     }
     
     func text() -> String! {
         return self.content
     }
+    
+    
+    func media() -> JSQMessageMediaData? {
+        if let media = self.mediaData {
+            let imageUI = UIImage(data: media)
+            let photoItem: JSQPhotoMediaItem = JSQPhotoMediaItem(image: imageUI)
+            if self.senderId() != NSUserDefaults.standardUserDefaults().stringForKey("id") {
+                photoItem.appliesMediaViewMaskAsOutgoing = false
+            }
+           
+            return photoItem
+        } else {
+            return nil
+        }
+    }
+    
+    
+   
+    
+
+    
+  
+    
 
 
 }
