@@ -89,11 +89,11 @@ class CoreDataManager {
             if message.count != 0 {
                 message[0].mediaMessage = true
                 message[0].mediaData = imageData
-            }
-            do {
-                try self.managedObjectContext.save()
-            } catch let error {
-                print("error in saving convo: \(error)")
+                do {
+                    try self.managedObjectContext.save()
+                } catch let error {
+                    print("error in saving convo: \(error)")
+                }
             }
             
         } catch let error {

@@ -127,8 +127,10 @@ class SettingsTableViewController: UITableViewController,ConnectionSocketDelegat
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         Connection.sharedInstance.delegate = self
+         Connection.sharedInstance.imageDelegate = self
     }
     func didUploadImage(success: Bool) {
+        print("here")
         if success == true {
             CSNotificationView.showInViewController(self, style: .Success, message: "Successfully uploaded image")
         } else {

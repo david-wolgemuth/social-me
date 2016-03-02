@@ -58,11 +58,11 @@ class Connection {
     var imageDelegate: ConnectionImageDelegate?
     private var url: String
     
-    var listeners = [String]();
+  
     
     private init() {
-//        url = "http://52.36.153.231"
-        url = "http://shuhan.local:5000"
+        url = "http://52.36.153.231"
+//        url = "http://shuhan.local:5000"
         socket = SocketIOClient(socketURL: url)
         socket.connect()
         socket.on("connect") { data, ack in
@@ -79,10 +79,7 @@ class Connection {
                 self.Friends = []
                 self.friendRequest = []
                 socket.removeAllHandlers()
-                socket.off("newMessage")
-                socket.off("newConversation")
-                socket.off("friendRequest")
-                socket.off("friendAccepted")
+
                 
             } else {
                 didLogOut(success: false)
@@ -148,8 +145,12 @@ class Connection {
                     print("get data back")
                     if let found_data = data {
                         if let userInfo = self.parseJSON(found_data) {
+                            
+//                            dispatch_async(dispatch_get_main_queue()) {
+                            
                             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0)) {
                             if let user = userInfo["user"] {
+                                print("here")
                                 if let _ = user!["_id"] {
                                     let userId = user!["_id"]!
                                     let prefs = NSUserDefaults.standardUserDefaults()
@@ -535,15 +536,25 @@ class Connection {
                                         "[Picture]", updatedAt: date.toNSDate(), unreadMsg: "1")
                                         Connection.sharedInstance.getMessageImage(message["_id"]! as! String) {
                                             image in
-                                            
-                                            if let imageReceived = image {
-                                                CoreDataManager.sharedInstance.update_message(message["_id"]! as! String, media: imageReceived)
-                                                self.imageDelegate?.didDownloadImage()
-                                            }
+                                            dispatch_async(dispatch_get_main_queue()) {
+                                                if let imageReceived = image {
+                                                    CoreDataManager.sharedInstance.update_message(message["_id"]! as! String, media: imageReceived)
+                                                    self.imageDelegate?.didDownloadImage()
+                                                }
+
                                                 
+                                                
+                                                
+                                            }
+                                            
                                         }
                                     }
-                                    var newMsg = CoreDataManager.sharedInstance.add_message(message["_id"]! as! String,messageText: message["content"]! as! String, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: convoId,createdAt: message["createdAt"]! as! String)
+                                    
+                                    var content = message["content"] as? String
+                                    if (content == nil) {
+                                        content = ""
+                                    }
+                                    var newMsg = CoreDataManager.sharedInstance.add_message(message["_id"]! as! String,messageText:content!, senderId: message["_user"]!!["_id"]! as! String, senderHandle: message["_user"]!!["handle"]! as! String, conversationId: convoId,createdAt: message["createdAt"]! as! String)
                                     
                                     if newMsg != nil && !hasImage {
                                         count += 1
@@ -654,8 +665,12 @@ class Connection {
                                     }
                             }
                         }
-                    
-                        receiveMsg = CoreDataManager.sharedInstance.add_message(messageId,messageText: info["content"]! as! String, senderId: info["_user"]!!["_id"]! as! String, senderHandle: info["_user"]!!["handle"]! as! String, conversationId: info["_conversation"]! as! String, createdAt: info["createdAt"]! as! String)
+                        print(info)
+                        var content = info["content"] as? String
+                        if content == nil {
+                            content = ""
+                        }
+                        receiveMsg = CoreDataManager.sharedInstance.add_message(messageId,messageText: content!, senderId: info["_user"]!!["_id"]! as! String, senderHandle: info["_user"]!!["handle"]! as! String, conversationId: info["_conversation"]! as! String, createdAt: info["createdAt"]! as! String)
                         print(receiveMsg)
                         if receiveMsg != nil  && !hasImage{
                             CoreDataManager.sharedInstance.create_conversation(receiveMsg!.conversationID!, friendId:info["_user"]!!["_id"]! as! String, lastMsg: receiveMsg!.content!, updatedAt: receiveMsg!.timestamp!, unreadMsg: "1")
@@ -768,7 +783,11 @@ class Connection {
                                         image in
                                         
                                         if let imageReceived = image {
-                                            CoreDataManager.sharedInstance.update_message(message["_id"]! as! String, media: imageReceived)
+                                            dispatch_sync(dispatch_get_main_queue()) {
+                                                CoreDataManager.sharedInstance.update_message(message["_id"]! as! String, media: imageReceived)
+                                                
+                                            }
+                                            
                                             self.imageDelegate?.didDownloadImage()
                                          
                                         }
@@ -817,17 +836,19 @@ class Connection {
             data, ack in
             print("get friend request")
             let user = data[0]["user"]
+            
+          
 
-            if user!!["_id"] as? String != NSUserDefaults.standardUserDefaults().stringForKey("id") {
-                var hasImage = "0"
-                if  user!!["profileImage"] as! Int == 1 {
-                    hasImage = "1"
-                }
-                
-                self.friendRequest.append(["id":user!!["_id"]! as! String,"handle":user!!["handle"]! as! String, "profileImage":hasImage])
-                self.delegate?.didReceiveFriendUpdate("Request")
-                
+            
+            var hasImage = "0"
+            if  user!!["profileImage"] as! Int == 1 {
+                hasImage = "1"
             }
+            
+            self.friendRequest.append(["id":user!!["_id"]! as! String,"handle":user!!["handle"]! as! String, "profileImage":hasImage])
+            self.delegate?.didReceiveFriendUpdate("Request")
+                
+            
             
            
         }
@@ -836,15 +857,14 @@ class Connection {
             print("get new friend accept")
             let user = data[0]["user"]
             
-            if user!!["_id"] as? String != NSUserDefaults.standardUserDefaults().stringForKey("id") {
-                var hasImage = "0"
-                if  user!!["profileImage"] as! Int == 1 {
-                    hasImage = "1"
-                }
-                self.Friends.append(["id": user!!["_id"]! as! String, "handle":user!!["handle"]! as! String,"profileImage":hasImage])
-                self.delegate?.didReceiveFriendUpdate("Accepted")
-                
+            var hasImage = "0"
+            if  user!!["profileImage"] as! Int == 1 {
+                hasImage = "1"
             }
+            self.Friends.append(["id": user!!["_id"]! as! String, "handle":user!!["handle"]! as! String,"profileImage":hasImage])
+            self.delegate?.didReceiveFriendUpdate("Accepted")
+                
+    
            
         }
     }
