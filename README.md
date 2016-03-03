@@ -1,6 +1,6 @@
 # Social ME
 
-Social ME is a modern cross-platform messenger app that has both a web and mobile (iOS) interface. Registered users can chat with others with have accepted their friend requests. Photo messaging and group chat are also supported. Real-time communication on both ends for instant messaging and friend requests.
+Social ME is a modern cross-platform messenger app that has both a web and mobile (iOS) interface. Registered users can chat with others who have accepted their friend requests. Photo messaging and group chat are also supported. Real-time communication on both ends for instant messaging and friend requests.
 
 
 **Technoloy that built with**
